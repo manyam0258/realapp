@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-30 11:14:55.624509",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_defaults",
+  "base_price_per_sft",
+  "floor_rise_rate",
+  "facing_premium_charges",
+  "corner_premium_charges",
+  "car_parking_amount",
+  "column_break_1",
+  "amenities_charges_per_sft",
+  "infra_charges_per_sft",
+  "documentation_charges",
+  "section_break_taxes",
+  "gst_rate",
+  "tds_rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_defaults",
+   "fieldtype": "Section Break",
+   "label": "Default Pricing"
+  },
+  {
+   "fieldname": "base_price_per_sft",
+   "fieldtype": "Currency",
+   "label": "Base Price per Sft"
+  },
+  {
+   "fieldname": "facing_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Facing Premium Charges"
+  },
+  {
+   "fieldname": "corner_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Corner Premium Charges"
+  },
+  {
+   "fieldname": "car_parking_amount",
+   "fieldtype": "Currency",
+   "label": "Car Parking Amount"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amenities_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Amenities Charges (per sft)"
+  },
+  {
+   "fieldname": "infra_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Infra Charges (per sft)"
+  },
+  {
+   "fieldname": "documentation_charges",
+   "fieldtype": "Currency",
+   "label": "Documentation Charges"
+  },
+  {
+   "fieldname": "section_break_taxes",
+   "fieldtype": "Section Break",
+   "label": "Taxes & Deductions"
+  },
+  {
+   "default": "5",
+   "fieldname": "gst_rate",
+   "fieldtype": "Percent",
+   "label": "GST Rate"
+  },
+  {
+   "default": "1",
+   "fieldname": "tds_rate",
+   "fieldtype": "Percent",
+   "label": "TDS Rate"
+  },
+  {
+   "fieldname": "floor_rise_rate",
+   "fieldtype": "Currency",
+   "label": "Floor Rise Rate"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-09-30 11:41:11.780425",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Realapp Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

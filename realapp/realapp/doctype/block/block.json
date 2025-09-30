@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:block",
+ "creation": "2025-09-26 13:29:54.281794",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tower_name",
+  "project",
+  "column_break_avka",
+  "block",
+  "section_break_payment_schemes",
+  "available_payment_schemes"
+ ],
+ "fields": [
+  {
+   "fieldname": "tower_name",
+   "fieldtype": "Data",
+   "label": "Tower Name",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Data",
+   "label": "Block",
+   "unique": 1,
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_avka",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_payment_schemes",
+   "fieldtype": "Section Break",
+   "label": "Payment Schemes"
+  },
+  {
+   "fieldname": "available_payment_schemes",
+   "fieldtype": "Table",
+   "label": "Available Payment Schemes",
+   "options": "Block Payment Scheme"
+  },
+  {
+   "fieldname": "tower_milestones",
+   "fieldtype": "Table",
+   "label": "Tower Milestones",
+   "options": "Tower Milestone"
+  }
+ ],
+ "grid_page_length": 20,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Project",
+   "link_fieldname": "project_name"
+  }
+ ],
+ "modified": "2025-10-01 12:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Block",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

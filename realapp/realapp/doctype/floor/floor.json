@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:floor_name",
+ "creation": "2025-09-26 13:36:07.886957",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "floor_name",
+  "block",
+  "column_break_jnne",
+  "floor",
+  "tower_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "floor_name",
+   "fieldtype": "Data",
+   "label": "Floor Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block"
+  },
+  {
+   "fieldname": "column_break_jnne",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Int",
+   "label": "Floor"
+  },
+  {
+   "fetch_from": "block.tower_name",
+   "fieldname": "tower_name",
+   "fieldtype": "Read Only",
+   "label": "Tower Name"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Unit",
+   "link_fieldname": "floor"
+  }
+ ],
+ "modified": "2025-09-26 15:37:31.275073",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Floor",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

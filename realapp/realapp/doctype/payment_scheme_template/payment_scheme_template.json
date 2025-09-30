@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:scheme_name",
+ "creation": "2025-09-30 23:04:38.871586",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "scheme_name",
+  "is_active",
+  "section_break_details",
+  "payment_scheme_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "scheme_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Scheme Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Milestones"
+  },
+  {
+   "fieldname": "payment_scheme_details",
+   "fieldtype": "Table",
+   "label": "Payment Scheme Details",
+   "options": "Payment Scheme Detail",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 12,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-30 23:38:07.020985",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Payment Scheme Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

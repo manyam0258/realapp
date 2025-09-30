@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-01 13:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "scheme_code",
+  "milestone",
+  "milestone_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "scheme_code",
+   "fieldtype": "Select",
+   "label": "Scheme Code",
+   "options": "\nC-1\nC-2\nC-3\nC-4\nC-5\nC-6\nC-7\nC-8\nC-9\nC-10\nC-11\nC-12",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "milestone",
+   "fieldtype": "Data",
+   "label": "Milestone",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "milestone_date",
+   "fieldtype": "Date",
+   "label": "Milestone Date",
+   "reqd": 0,
+   "in_list_view": 1
+  }
+ ],
+ "grid_page_length": 12,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-01 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Tower Milestone",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "scheme_code",
+ "sort_order": "ASC",
+ "states": []
+}

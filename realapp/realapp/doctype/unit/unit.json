@@ -1,0 +1,344 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:unit_name",
+ "creation": "2025-09-26 14:13:30.563800",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "unit_name",
+  "floor",
+  "basic_price_per_sft",
+  "carpet_area",
+  "utility_area",
+  "common_area",
+  "facing",
+  "facing_premium_charges",
+  "corner_premium_charges",
+  "sharing",
+  "car_parking_amount",
+  "corner_preference",
+  "column_break_idbc",
+  "flat_no",
+  "status",
+  "area_in_sft",
+  "balcony_area",
+  "outer_wall_area",
+  "uds",
+  "is_floor_rise_applicable",
+  "floor_rise_rate",
+  "effective_floor_rise_rate",
+  "floor_rise_charges",
+  "mortgage",
+  "unit_type",
+  "car_parkings",
+  "section_break_wmjp",
+  "east",
+  "west",
+  "column_break_enab",
+  "north",
+  "south",
+  "section_break_dynamic",
+  "amenities_charges_per_sft",
+  "amenities_charges_amt",
+  "infra_charges_per_sft",
+  "infra_charges_amt",
+  "documentation_charges",
+  "full_unit_value",
+  "value_excluding_bp",
+  "aos_value",
+  "gst_rate", 
+  "aos_value_gst_5",
+  "tds_rate", 
+  "tds_1",
+  "net_payable"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "basic_price_per_sft",
+   "fieldtype": "Currency",
+   "label": "Basic Price Per Sft"
+  },
+  {
+   "fieldname": "column_break_idbc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "flat_no",
+   "fieldtype": "Data",
+   "label": "Flat No"
+  },
+  {
+   "fieldname": "area_in_sft",
+   "fieldtype": "Int",
+   "label": "Area in Sft"
+  },
+  {
+   "fieldname": "carpet_area",
+   "fieldtype": "Int",
+   "label": "Carpet Area"
+  },
+  {
+   "fieldname": "utility_area",
+   "fieldtype": "Int",
+   "label": "Utility Area"
+  },
+  {
+   "fieldname": "common_area",
+   "fieldtype": "Int",
+   "label": "Common Area"
+  },
+  {
+   "fieldname": "facing",
+   "fieldtype": "Select",
+   "label": "Facing",
+   "options": "\nEast\nWest\nNorth\nSouth"
+  },
+  {
+   "fieldname": "balcony_area",
+   "fieldtype": "Int",
+   "label": "Balcony Area"
+  },
+  {
+   "fieldname": "outer_wall_area",
+   "fieldtype": "Int",
+   "label": "Outer Wall Area"
+  },
+  {
+   "fieldname": "uds",
+   "fieldtype": "Float",
+   "label": "UDS"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_floor_rise_applicable",
+   "fieldtype": "Check",
+   "label": "Is Floor Rise Applicable"
+  },
+  {
+   "fieldname": "floor_rise_rate",
+   "fieldtype": "Currency",
+   "label": "Floor Rise Rate (per sft per floor)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "effective_floor_rise_rate",
+   "fieldtype": "Currency",
+   "label": "Effective Floor Rise Rate (per sft)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor_rise_charges",
+   "fieldtype": "Currency",
+   "label": "Floor Rise Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facing_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Facing Premium Charges"
+  },
+  {
+   "fieldname": "corner_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Corner Premium Charges"
+  },
+  {
+   "fieldname": "mortgage",
+   "fieldtype": "Select",
+   "label": "Mortgage",
+   "options": "\nGHMC(Mortgage)\nDef.Pymt(Mortgage)\nNala(Mortgage)"
+  },
+  {
+   "fieldname": "sharing",
+   "fieldtype": "Select",
+   "label": "Sharing",
+   "options": "\nAshok Raju Garu\nLava Chary Garu\nRama Raju Garu\nTridasa\nVanaja Housing Pvt.Ltd.\nVara Lakshmi Garu"
+  },
+  {
+   "fieldname": "unit_type",
+   "fieldtype": "Select",
+   "label": "Unit Type",
+   "options": "\n3 BHK\n4 BHK"
+  },
+  {
+   "fieldname": "car_parkings",
+   "fieldtype": "Select",
+   "label": "Car Parkings",
+   "options": "\n2\n3"
+  },
+  {
+   "fieldname": "car_parking_amount",
+   "fieldtype": "Currency",
+   "label": "Car Parking Amount"
+  },
+  {
+   "fieldname": "section_break_wmjp",
+   "fieldtype": "Section Break",
+   "label": "Boundaries"
+  },
+  {
+   "fieldname": "east",
+   "fieldtype": "Select",
+   "label": "East",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "west",
+   "fieldtype": "Select",
+   "label": "West",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "column_break_enab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "north",
+   "fieldtype": "Select",
+   "label": "North",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "south",
+   "fieldtype": "Select",
+   "label": "South",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nAvailable\nBlocked\nSold\nMortgage",
+   "reqd": 1
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Link",
+   "label": "Floor",
+   "options": "Floor"
+  },
+  {
+   "fieldname": "corner_preference",
+   "fieldtype": "Select",
+   "label": "Corner Preference",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "section_break_dynamic",
+   "fieldtype": "Section Break",
+   "label": "Dynamic Pricing & Computed Values"
+  },
+  {
+   "fieldname": "amenities_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Amenities Charges (per sft)"
+  },
+  {
+   "fieldname": "amenities_charges_amt",
+   "fieldtype": "Currency",
+   "label": "Amenities Charges (Amount)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "infra_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Infra Charges (per sft)"
+  },
+  {
+   "fieldname": "infra_charges_amt",
+   "fieldtype": "Currency",
+   "label": "Infra Charges (Amount)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "documentation_charges",
+   "fieldtype": "Currency",
+   "label": "Documentation Charges"
+  },
+  {
+   "fieldname": "full_unit_value",
+   "fieldtype": "Currency",
+   "label": "Full Unit Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "value_excluding_bp",
+   "fieldtype": "Currency",
+   "label": "Value Excluding Base Price",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aos_value",
+   "fieldtype": "Currency",
+   "label": "Agreement of Sale Value (AOS)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aos_value_gst_5",
+   "fieldtype": "Currency",
+   "label": "AOS Value + GST @5%",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tds_1",
+   "fieldtype": "Currency",
+   "label": "TDS @1%",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_payable",
+   "fieldtype": "Currency",
+   "label": "Net Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gst_rate",
+   "fieldtype": "Percent",
+   "label": "GST Rate",
+   "read_only": 1
+},
+{
+   "fieldname": "tds_rate",
+   "fieldtype": "Percent",
+   "label": "TDS Rate",
+   "read_only": 1
+}
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-30 18:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Unit",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
