@@ -1,0 +1,383 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{unit}-{cost_sheet_type}-{####}",
+ "creation": "2025-10-01 14:21:19.907943",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_cost_details",
+  "cost_sheet_type",
+  "unit",
+  "party_type",
+  "party",
+  "project",
+  "block",
+  "floor",
+  "floor_no",
+  "basic_price_per_sft",
+  "amenities_charges_per_sft",
+  "infra_charges_per_sft",
+  "carpet_area",
+  "builtup_area",
+  "balcony_area",
+  "uds",
+  "facing",
+  "corner_preference",
+  "section_agreement_value",
+  "base_price_value",
+  "floor_rise_charges",
+  "facing_premium_charges",
+  "corner_premium_charges",
+  "infra_charges_amt",
+  "amenities_charges_amt",
+  "documentation_charges",
+  "car_parking_amount",
+  "agreement_value",
+  "section_payment_schedule",
+  "payment_schedule",
+  "section_before_registration",
+  "maintenance_rate_per_sft",
+  "maintenance_gst_rate",
+  "maintenance_years",
+  "maintenance_total",
+  "maintenance_gst",
+  "corpus_fund_rate_per_sft",
+  "corpus_fund_total",
+  "refundable_caution_deposit",
+  "move_in_charges",
+  "registration_charges",
+  "section_grand_total",
+  "gst_rate",
+  "tds_rate",
+  "registration_charges_total",
+  "other_deposits_total",
+  "gst_total",
+  "grand_total_payable",
+  "floor_rise_rate",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_cost_details",
+   "fieldtype": "Section Break",
+   "label": "Cost Sheet Details"
+  },
+  {
+   "fieldname": "cost_sheet_type",
+   "fieldtype": "Select",
+   "label": "Cost Sheet Type",
+   "options": "\nStandard\nCustomized",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Unit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "label": "Party Type",
+   "options": "\nLead\nOpportunity\nCustomer"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Link",
+   "label": "Floor",
+   "options": "Floor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor_no",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Floor No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "basic_price_per_sft",
+   "fieldtype": "Currency",
+   "label": "Basic Price per Sft"
+  },
+  {
+   "fieldname": "amenities_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Amenities Charges (per sft)"
+  },
+  {
+   "fieldname": "infra_charges_per_sft",
+   "fieldtype": "Currency",
+   "label": "Infra Charges (per sft)"
+  },
+  {
+   "fieldname": "carpet_area",
+   "fieldtype": "Float",
+   "label": "Carpet Area"
+  },
+  {
+   "fieldname": "builtup_area",
+   "fieldtype": "Float",
+   "label": "Built-up Area"
+  },
+  {
+   "fieldname": "balcony_area",
+   "fieldtype": "Float",
+   "label": "Balcony Area"
+  },
+  {
+   "fieldname": "uds",
+   "fieldtype": "Float",
+   "label": "UDS"
+  },
+  {
+   "fieldname": "facing",
+   "fieldtype": "Select",
+   "label": "Facing",
+   "options": "\nEast\nWest\nNorth\nSouth"
+  },
+  {
+   "fieldname": "corner_preference",
+   "fieldtype": "Select",
+   "label": "Corner Preference",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "section_agreement_value",
+   "fieldtype": "Section Break",
+   "label": "Agreement Value Section"
+  },
+  {
+   "fieldname": "base_price_value",
+   "fieldtype": "Currency",
+   "label": "Base Price Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor_rise_charges",
+   "fieldtype": "Currency",
+   "label": "Floor Rise Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "facing_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Facing Premium Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "corner_premium_charges",
+   "fieldtype": "Currency",
+   "label": "Corner Premium Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "infra_charges_amt",
+   "fieldtype": "Currency",
+   "label": "Infra Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amenities_charges_amt",
+   "fieldtype": "Currency",
+   "label": "Amenities Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "documentation_charges",
+   "fieldtype": "Currency",
+   "label": "Documentation Charges",
+   "read_only": 1
+  },
+  {
+   "fieldname": "car_parking_amount",
+   "fieldtype": "Currency",
+   "label": "Car Parking Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "agreement_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Agreement Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_payment_schedule",
+   "fieldtype": "Section Break",
+   "label": "Payment Schedule"
+  },
+  {
+   "fieldname": "payment_schedule",
+   "fieldtype": "Table",
+   "label": "Cost Sheet Payment Schedule",
+   "options": "Cost Sheet Payment Schedule"
+  },
+  {
+   "fieldname": "section_before_registration",
+   "fieldtype": "Section Break",
+   "label": "Amount Payable Before Registration"
+  },
+  {
+   "fieldname": "maintenance_rate_per_sft",
+   "fieldtype": "Currency",
+   "label": "Maintenance Rate (per sft)"
+  },
+  {
+   "fieldname": "maintenance_gst_rate",
+   "fieldtype": "Percent",
+   "label": "Maintenance GST Rate"
+  },
+  {
+   "fieldname": "maintenance_years",
+   "fieldtype": "Int",
+   "label": "Maintenance Years"
+  },
+  {
+   "fieldname": "maintenance_total",
+   "fieldtype": "Currency",
+   "label": "Maintenance Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "maintenance_gst",
+   "fieldtype": "Currency",
+   "label": "Maintenance GST",
+   "read_only": 1
+  },
+  {
+   "fieldname": "corpus_fund_rate_per_sft",
+   "fieldtype": "Currency",
+   "label": "Corpus Fund Rate (per sft)"
+  },
+  {
+   "fieldname": "corpus_fund_total",
+   "fieldtype": "Currency",
+   "label": "Corpus Fund Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "refundable_caution_deposit",
+   "fieldtype": "Currency",
+   "label": "Refundable Caution Deposit"
+  },
+  {
+   "fieldname": "move_in_charges",
+   "fieldtype": "Currency",
+   "label": "Move-in Charges"
+  },
+  {
+   "fieldname": "registration_charges",
+   "fieldtype": "Currency",
+   "label": "Registration Charges"
+  },
+  {
+   "fieldname": "section_grand_total",
+   "fieldtype": "Section Break",
+   "label": "Grand Total Payable"
+  },
+  {
+   "fieldname": "gst_rate",
+   "fieldtype": "Percent",
+   "label": "GST Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tds_rate",
+   "fieldtype": "Percent",
+   "label": "TDS Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "registration_charges_total",
+   "fieldtype": "Currency",
+   "label": "Registration Charges Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_deposits_total",
+   "fieldtype": "Currency",
+   "label": "Other Deposits Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "gst_total",
+   "fieldtype": "Currency",
+   "label": "GST Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total_payable",
+   "fieldtype": "Currency",
+   "label": "Grand Total Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor_rise_rate",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Floor Rise Rate",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Cost Sheet",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-01 17:15:20.987897",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Cost Sheet",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

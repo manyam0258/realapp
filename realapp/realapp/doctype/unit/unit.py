@@ -1,96 +1,88 @@
-# Copyright (c) 2025, surendhranath and contributors
+# Copyright (c) 2025
 # For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import flt
 
 class Unit(Document):
     def validate(self):
-        """ On validate, populate dynamic calculated fields """
+        self.set_floor_number()
         self.apply_defaults()
         self.calculate_dynamic_fields()
 
+    def set_floor_number(self):
+        """Auto fetch floor_number from Floor if not set (Floor.floor)."""
+        if self.floor and not self.floor_number:
+            self.floor_number = frappe.db.get_value("floor", self.floor, "floor") or 0
+
     def apply_defaults(self):
-        """ If Unit field is missing, fetch from Realapp Settings """
+        """Unit overrides > Settings > 0"""
         settings = frappe.get_single("Realapp Settings")
 
-        def get_value(field):
-            return self.get(field) or settings.get(field) or 0
+        def pick(fieldname):
+            return self.get(fieldname) if self.get(fieldname) not in (None, "") else settings.get(fieldname) or 0
 
-        # Apply defaults if not set
-        self.basic_price_per_sft = get_value("base_price_per_sft")
-        self.facing_premium_charges = get_value("facing_premium_charges")
-        self.corner_premium_charges = get_value("corner_premium_charges")
-        self.car_parking_amount = get_value("car_parking_amount")
-        self.amenities_charges_per_sft = get_value("amenities_charges_per_sft")
-        self.infra_charges_per_sft = get_value("infra_charges_per_sft")
-        self.documentation_charges = get_value("documentation_charges")
+        self.basic_price_per_sft        = pick("base_price_per_sft")
+        self.floor_rise_rate            = pick("floor_rise_rate")
+        self.facing_premium_charges     = pick("facing_premium_charges")
+        self.corner_premium_charges     = pick("corner_premium_charges")
+        self.car_parking_amount         = pick("car_parking_amount")
 
-        # Store GST/TDS for reference
-        self.gst_rate = settings.gst_rate or 5
-        self.tds_rate = settings.tds_rate or 1
+        # also bring per-sft infra/amenities for info amounts
+        self.amenities_charges_per_sft  = pick("amenities_charges_per_sft")
+        self.infra_charges_per_sft      = pick("infra_charges_per_sft")
 
-        # Base floor rise rate (used for calculation only)
-        self.floor_rise_rate = settings.floor_rise_rate or 20
+        # tax rates for display / js preview
+        self.gst_rate = settings.gst_rate
+        self.tds_rate = settings.tds_rate
 
     def calculate_dynamic_fields(self):
-        """ Compute all derived values """
-        salable_area = self.area_in_sft or 0
-        base_price = (self.basic_price_per_sft or 0) * salable_area
-        infra_amt = (self.infra_charges_per_sft or 0) * salable_area
-        amenities_amt = (self.amenities_charges_per_sft or 0) * salable_area
+        area          = flt(self.salable_area or 0)
+        base_rate     = flt(self.basic_price_per_sft or 0)
+        rise_rate     = flt(self.floor_rise_rate or 0)
+        facing_rate   = flt(self.facing_premium_charges or 0)
+        corner_rate   = flt(self.corner_premium_charges or 0)
+        car_parking   = flt(self.car_parking_amount or 0)
 
-        self.amenities_charges_amt = amenities_amt
-        self.infra_charges_amt = infra_amt
+        # informational amounts (not included in Full/AOS per your Excel)
+        amen_rate     = flt(self.amenities_charges_per_sft or 0)
+        infra_rate    = flt(self.infra_charges_per_sft or 0)
 
-        # 🔹 Floor Rise Calculation
-        floor_number = 0
-        if self.floor:
-            floor_number = frappe.db.get_value("Floor", self.floor, "floor_number") or 0
+        gst_rate      = flt(self.gst_rate or 5)
+        tds_rate      = flt(self.tds_rate or 1)
 
-        if self.is_floor_rise_applicable and floor_number >= 5:
-            multiplier = floor_number - 4
-            effective_rate = multiplier * self.floor_rise_rate
-            self.effective_floor_rise_rate = effective_rate
-            self.floor_rise_charges = effective_rate * salable_area
-        else:
-            self.effective_floor_rise_rate = 0
-            self.floor_rise_charges = 0
+        # If no area, zero out everything
+        if area <= 0:
+            self.amenities_charges_amt = 0
+            self.infra_charges_amt = 0
+            self.full_unit_value = 0
+            self.value_excluding_bp = 0
+            self.aos_value = 0
+            self.aos_value_gst = 0
+            self.tds_amount = 0
+            self.net_payable = 0
+            self.effective_rate_per_sft = 0
+            return
 
-        # Full value = base + add-ons
-        full_value = (
-            base_price
-            + infra_amt
-            + amenities_amt
-            + (self.floor_rise_charges or 0)
-            + (self.facing_premium_charges or 0)
-            + (self.corner_premium_charges or 0)
-            + (self.car_parking_amount or 0)
-            + (self.documentation_charges or 0)
-        )
-        self.full_unit_value = full_value
+        # Calculate informational amounts
+        self.amenities_charges_amt = flt(amen_rate * area, 2)
+        self.infra_charges_amt     = flt(infra_rate * area, 2)
 
-        # Value excluding base price (just add-ons)
-        self.value_excluding_bp = (
-            infra_amt
-            + amenities_amt
-            + (self.floor_rise_charges or 0)
-            + (self.facing_premium_charges or 0)
-            + (self.corner_premium_charges or 0)
-            + (self.car_parking_amount or 0)
-            + (self.documentation_charges or 0)
-        )
+        # ---- Excel rules you shared ----
+        # Full Unit Value = area * (base + rise + facing + corner) + car parking
+        self.full_unit_value = flt(area * (base_rate + rise_rate + facing_rate + corner_rate) + car_parking, 2)
 
-        # Agreement of Sale (AOS) value
-        self.aos_value = full_value
+        # Value Excluding Base Price = area * (rise + facing + corner) + car parking
+        self.value_excluding_bp = flt(area * (rise_rate + facing_rate + corner_rate) + car_parking, 2)
 
-        # AOS + GST
-        gst_rate = self.gst_rate or 5
-        self.aos_value_gst_5 = full_value * (1 + gst_rate / 100)
+        # AOS Value = (base_rate * area) + value_excluding_bp
+        self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
 
-        # TDS
-        tds_rate = self.tds_rate or 1
-        self.tds_1 = full_value * (tds_rate / 100)
+        # GST and TDS on AOS
+        self.aos_value_gst = flt(self.aos_value * (1 + gst_rate / 100), 2)
+        self.tds_amount    = flt(self.aos_value * (tds_rate / 100), 2)
 
-        # Net payable
-        self.net_payable = self.aos_value_gst_5 - self.tds_1
+        # Net payable and effective per sft
+        self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)
+        self.effective_rate_per_sft = flt(self.net_payable / area, 2)

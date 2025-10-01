@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-01 14:18:38.233110",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "scheme_code",
+  "milestone",
+  "percentage",
+  "particulars",
+  "milestone_date",
+  "amount",
+  "gst_amount",
+  "tds_amount",
+  "net_payable"
+ ],
+ "fields": [
+  {
+   "fieldname": "scheme_code",
+   "fieldtype": "Select",
+   "label": "Scheme Code",
+   "options": "\nC-1\nC-2\nC-3\nC-4\nC-5\nC-6\nC-7\nC-8\nC-9\nC-10\nC-11\nC-12",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "milestone",
+   "fieldtype": "Data",
+   "label": "Milestone",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Percent",
+   "label": "Percentage",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "particulars",
+   "fieldtype": "Select",
+   "label": "Particulars",
+   "options": "\nBooking Specific\nTower Specific\nUnit Specific",
+   "in_list_view": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "milestone_date",
+   "fieldtype": "Date",
+   "label": "Milestone Date",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "in_list_view": 1,
+   "read_only": 1,
+   "description": "Calculated = Agreement Value × Percentage"
+  },
+  {
+   "fieldname": "gst_amount",
+   "fieldtype": "Currency",
+   "label": "GST Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tds_amount",
+   "fieldtype": "Currency",
+   "label": "TDS Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_payable",
+   "fieldtype": "Currency",
+   "label": "Net Payable",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 20,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-01 14:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Cost Sheet Payment Schedule",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "scheme_code",
+ "sort_order": "ASC",
+ "states": []
+}

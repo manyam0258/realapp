@@ -9,37 +9,44 @@
  "field_order": [
   "floor_name",
   "block",
+  "tower_name",
   "column_break_jnne",
-  "floor",
-  "tower_name"
+  "floor_number"
  ],
  "fields": [
   {
    "fieldname": "floor_name",
    "fieldtype": "Data",
    "label": "Floor Name",
-   "unique": 1
+   "unique": 1,
+   "in_list_view": 1,
+   "reqd": 1
   },
   {
    "fieldname": "block",
    "fieldtype": "Link",
    "label": "Block",
-   "options": "Block"
+   "options": "Block",
+   "in_list_view": 1
+  },
+  {
+   "fetch_from": "block.tower_name",
+   "fieldname": "tower_name",
+   "fieldtype": "Data",
+   "label": "Tower Name",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_jnne",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "floor",
+   "fieldname": "floor_number",
    "fieldtype": "Int",
-   "label": "Floor"
-  },
-  {
-   "fetch_from": "block.tower_name",
-   "fieldname": "tower_name",
-   "fieldtype": "Read Only",
-   "label": "Tower Name"
+   "label": "Floor Number",
+   "reqd": 1,
+   "in_list_view": 1,
+   "description": "Numeric floor reference (e.g., 1 for First Floor, 12 for Twelfth Floor)."
   }
  ],
  "grid_page_length": 50,
@@ -50,7 +57,7 @@
    "link_fieldname": "floor"
   }
  ],
- "modified": "2025-09-26 15:37:31.275073",
+ "modified": "2025-10-02 12:30:00.000000",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Floor",

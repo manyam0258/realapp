@@ -17,7 +17,14 @@
   "documentation_charges",
   "section_break_taxes",
   "gst_rate",
-  "tds_rate"
+  "tds_rate",
+  "section_break_before_reg",
+  "maintenance_rate_per_sft",
+  "maintenance_gst_rate",
+  "move_in_charges",
+  "corpus_fund_rate_per_sft",
+  "refundable_caution_deposit",
+  "default_registration_charges"
  ],
  "fields": [
   {
@@ -85,13 +92,50 @@
    "fieldname": "floor_rise_rate",
    "fieldtype": "Currency",
    "label": "Floor Rise Rate"
+  },
+  {
+   "fieldname": "section_break_before_reg",
+   "fieldtype": "Section Break",
+   "label": "Before Registration Defaults"
+  },
+  {
+   "fieldname": "maintenance_rate_per_sft",
+   "fieldtype": "Currency",
+   "label": "Maintenance Rate (per sft)"
+  },
+  {
+   "default": "18",
+   "fieldname": "maintenance_gst_rate",
+   "fieldtype": "Percent",
+   "label": "Maintenance GST Rate"
+  },
+  {
+   "fieldname": "move_in_charges",
+   "fieldtype": "Currency",
+   "label": "Move-in Charges"
+  },
+  {
+   "fieldname": "corpus_fund_rate_per_sft",
+   "fieldtype": "Currency",
+   "label": "Corpus Fund Rate (per sft)"
+  },
+  {
+   "fieldname": "refundable_caution_deposit",
+   "fieldtype": "Currency",
+   "label": "Refundable Caution Deposit"
+  },
+  {
+   "fieldname": "default_registration_charges",
+   "fieldtype": "Currency",
+   "label": "Default Registration Charges",
+   "description": "Registration after receipt of 100% payment (subject to prevailing rules/laws, including mutation)."
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-30 11:41:11.780425",
+ "modified": "2025-10-01 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp Settings",
