@@ -10,11 +10,23 @@ class Unit(Document):
         self.set_floor_number()
         self.apply_defaults()
         self.calculate_dynamic_fields()
-
+    
     def set_floor_number(self):
         """Auto fetch floor_number from Floor if not set (Floor.floor)."""
         if self.floor and not self.floor_number:
             self.floor_number = frappe.db.get_value("floor", self.floor, "floor") or 0
+    
+    def set_hierarchy(self):
+        """Auto-fill Block, Project, Floor Number from Floor"""
+        if self.floor:
+            floor_doc = frappe.get_doc("floor", self.floor)
+            if floor_doc.block:
+                self.block = floor_doc.block
+                block_doc = frappe.get_doc("Block", floor_doc.block)
+                if block_doc.project:
+                    self.project = block_doc.project
+            if floor_doc.floor:
+                self.floor_number = floor_doc.floor
 
     def apply_defaults(self):
         """Unit overrides > Settings > 0"""
@@ -75,9 +87,12 @@ class Unit(Document):
 
         # Value Excluding Base Price = area * (rise + facing + corner) + car parking
         self.value_excluding_bp = flt(area * (rise_rate + facing_rate + corner_rate) + car_parking, 2)
-
         # AOS Value = (base_rate * area) + value_excluding_bp
         self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
+
+        # GST on AOS (use Realapp Settings if available, default 5%)
+        gst_rate = frappe.db.get_single_value("Realapp Settings", "gst_rate")
+        self.aos_gst = (self.aos_value * gst_rate) / 100
 
         # GST and TDS on AOS
         self.aos_value_gst = flt(self.aos_value * (1 + gst_rate / 100), 2)

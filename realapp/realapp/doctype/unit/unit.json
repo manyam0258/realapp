@@ -1,27 +1,45 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:unit_name",
- "creation": "2025-10-02 12:00:00.000000",
+ "creation": "2025-10-02 12:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_basic_info",
   "unit_name",
+  "flat_number",
   "project",
   "block",
   "floor",
   "floor_number",
+  "flat_type",
+  "facing",
+  "share",
+  "column_break_hfcj",
+  "salable_area",
   "carpet_area",
   "balcony_area",
   "utility_area",
-  "salable_area",
+  "outer_wall_area_sft",
+  "common_wall_area_sft",
+  "uds",
+  "mortgage",
+  "car_parkings",
+  "boundaries_section",
+  "east",
+  "west",
+  "column_break_rghs",
+  "north",
+  "south",
   "section_pricing",
   "basic_price_per_sft",
   "floor_rise_rate",
   "is_floor_rise_applicable",
   "facing_premium_charges",
   "corner_premium_charges",
+  "column_break_jjas",
   "car_parking_amount",
   "amenities_charges_per_sft",
   "infra_charges_per_sft",
@@ -32,11 +50,13 @@
   "floor_rise_charges_amt",
   "full_unit_value",
   "value_excluding_bp",
+  "column_break_qria",
   "aos_value",
   "aos_value_gst",
   "tds_amount",
   "net_payable",
-  "effective_rate_per_sft"
+  "effective_rate_per_sft",
+  "aos_gst"
  ],
  "fields": [
   {
@@ -47,33 +67,34 @@
   {
    "fieldname": "unit_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Unit Name",
    "reqd": 1,
-   "unique": 1,
-   "in_list_view": 1
+   "unique": 1
   },
   {
    "fieldname": "project",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Project",
-   "options": "Project",
-   "in_list_view": 1
+   "options": "Project"
   },
   {
    "fieldname": "block",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Block",
-   "options": "Block",
-   "in_list_view": 1
+   "options": "Block"
   },
   {
    "fieldname": "floor",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Floor",
-   "options": "Floor",
-   "in_list_view": 1
+   "options": "Floor"
   },
   {
+   "fetch_from": "floor.floor_number",
    "fieldname": "floor_number",
    "fieldtype": "Int",
    "label": "Floor Number"
@@ -115,6 +136,7 @@
    "label": "Floor Rise Rate"
   },
   {
+   "default": "0",
    "fieldname": "is_floor_rise_applicable",
    "fieldtype": "Check",
    "label": "Is Floor Rise Applicable"
@@ -155,42 +177,56 @@
    "label": "Computed Values"
   },
   {
+   "description": "Infra Charges * Salable Area",
    "fieldname": "infra_charges_amt",
    "fieldtype": "Currency",
    "label": "Infra Charges Amount",
    "read_only": 1
   },
   {
+   "description": "Amenities Charges * Salable Area",
    "fieldname": "amenities_charges_amt",
    "fieldtype": "Currency",
    "label": "Amenities Charges Amount",
    "read_only": 1
   },
   {
+   "description": "Floor Rise Rate * Salable Area",
    "fieldname": "floor_rise_charges_amt",
    "fieldtype": "Currency",
    "label": "Floor Rise Charges Amount",
    "read_only": 1
   },
   {
+   "description": "Salable Area * (Basic Price + Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount",
    "fieldname": "full_unit_value",
    "fieldtype": "Currency",
    "label": "Full Unit Value",
    "read_only": 1
   },
   {
+   "description": "Salable Area * (Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount",
    "fieldname": "value_excluding_bp",
    "fieldtype": "Currency",
    "label": "Value Excluding Base Price",
    "read_only": 1
   },
   {
+   "description": "(Basic Price * Salable Area) + Value Excluding Base Price",
    "fieldname": "aos_value",
    "fieldtype": "Currency",
    "label": "Agreement of Sale (AOS) Value",
    "read_only": 1
   },
   {
+   "description": "5% GST on AOS Value",
+   "fieldname": "aos_gst",
+   "fieldtype": "Currency",
+   "label": "GST on AOS",
+   "read_only": 1
+  },
+  {
+   "description": "5% GST on AOS Value",
    "fieldname": "aos_value_gst",
    "fieldtype": "Currency",
    "label": "AOS + GST",
@@ -213,15 +249,110 @@
    "fieldtype": "Currency",
    "label": "Effective Rate (per sft)",
    "read_only": 1
+  },
+  {
+   "fieldname": "flat_number",
+   "fieldtype": "Data",
+   "label": "Flat Number"
+  },
+  {
+   "fieldname": "column_break_hfcj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jjas",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qria",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "outer_wall_area_sft",
+   "fieldtype": "Float",
+   "label": "Outer Wall Area (sft)"
+  },
+  {
+   "fieldname": "common_wall_area_sft",
+   "fieldtype": "Float",
+   "label": "Common Wall Area (sft)"
+  },
+  {
+   "fieldname": "uds",
+   "fieldtype": "Float",
+   "label": "UDS"
+  },
+  {
+   "fieldname": "boundaries_section",
+   "fieldtype": "Section Break",
+   "label": "Boundaries"
+  },
+  {
+   "fieldname": "east",
+   "fieldtype": "Select",
+   "label": "East",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "west",
+   "fieldtype": "Select",
+   "label": "West",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "column_break_rghs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "north",
+   "fieldtype": "Select",
+   "label": "North",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "south",
+   "fieldtype": "Select",
+   "label": "South",
+   "options": "\nCorridor\nOpen To Sky"
+  },
+  {
+   "fieldname": "flat_type",
+   "fieldtype": "Select",
+   "label": "Flat Type",
+   "options": "\n3 BHK\n4 BHK"
+  },
+  {
+   "fieldname": "facing",
+   "fieldtype": "Select",
+   "label": "Facing",
+   "options": "\nEast\nNorth\nWest"
+  },
+  {
+   "fieldname": "mortgage",
+   "fieldtype": "Select",
+   "label": "Mortgage",
+   "options": "\nDef.Pymt(Mortgage)\nGHMC(Mortgage)\nNala(Mortgage)"
+  },
+  {
+   "fieldname": "share",
+   "fieldtype": "Select",
+   "label": "Share",
+   "options": "\nAshok Raju\nLava Chary\nRama Raju\nTridasa Realty Ventures Pvt Ltd\nVanaja Housing Pvt.Ltd.\nVara Lakshmi"
+  },
+  {
+   "fieldname": "car_parkings",
+   "fieldtype": "Int",
+   "label": "Car Parkings"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-02 12:00:00.000000",
+ "modified": "2025-10-03 22:15:21.305162",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

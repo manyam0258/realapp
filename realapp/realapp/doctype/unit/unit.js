@@ -2,7 +2,26 @@
 
 frappe.ui.form.on('Unit', {
   refresh(frm) {
-    frm.set_intro('Amenities & Infra amounts are shown for info; Full/AOS follow Excel rules.');
+    frm.set_intro('Select Floor → Block & Project auto-filled. Pricing auto-calculates based on settings.');
+  },
+
+  floor: function(frm) {
+    if (frm.doc.floor) {
+      frappe.db.get_doc('Floor', frm.doc.floor).then(floor => {
+        if (floor.block) {
+          frm.set_value('block', floor.block);
+
+          frappe.db.get_doc('Block', floor.block).then(block => {
+            if (block.project) {
+              frm.set_value('project', block.project);
+            }
+          });
+        }
+        if (floor.floor) {
+          frm.set_value('floor_number', floor.floor);
+        }
+      });
+    }
   },
 
   salable_area: recalc,
@@ -40,9 +59,11 @@ function recalc(frm) {
     frm.set_value({
       amenities_charges_amt: 0,
       infra_charges_amt: 0,
+      floor_rise_charges_amt: 0,
       full_unit_value: 0,
       value_excluding_bp: 0,
       aos_value: 0,
+      aos_gst: 0,
       aos_value_gst: 0,
       tds_amount: 0,
       net_payable: 0,
@@ -51,25 +72,32 @@ function recalc(frm) {
     return;
   }
 
-  // Informational amounts
+  // Info charges
   const amen_amt  = amen_rate * area;
   const infra_amt = infra_rate * area;
+  const floor_rise_amt = rise_rate * area;
   frm.set_value("amenities_charges_amt", amen_amt);
   frm.set_value("infra_charges_amt", infra_amt);
+  frm.set_value("floor_rise_charges_amt", floor_rise_amt);
 
-  // Excel rules:
-  const full_value = area * (base_rate + rise_rate + facing_rate + corner_rate) + car_park;
+  // Excel rules
+  const full_value = area * (base_rate + rise_rate + facing_rate + corner_rate) + car_park + amen_amt + infra_amt;
   frm.set_value("full_unit_value", full_value);
 
-  const ex_bp = area * (rise_rate + facing_rate + corner_rate) + car_park;
+  const ex_bp = area * (rise_rate + facing_rate + corner_rate) + car_park + amen_amt + infra_amt;
   frm.set_value("value_excluding_bp", ex_bp);
 
   const aos = (base_rate * area) + ex_bp;
   frm.set_value("aos_value", aos);
 
-  const aos_with_gst = aos * (1 + gst_rate / 100);
-  const tds = aos * (tds_rate / 100);
+  // GST separate
+  const aos_gst = aos * (gst_rate / 100);
+  frm.set_value("aos_gst", aos_gst);
+
+  const aos_with_gst = aos + aos_gst;
   frm.set_value("aos_value_gst", aos_with_gst);
+
+  const tds = aos * (tds_rate / 100);
   frm.set_value("tds_amount", tds);
 
   const net = aos_with_gst - tds;
