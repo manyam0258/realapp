@@ -90,6 +90,7 @@
    "options": "party_type"
   },
   {
+   "fetch_from": "block.project",
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
@@ -97,6 +98,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "unit.block",
    "fieldname": "block",
    "fieldtype": "Link",
    "label": "Block",
@@ -111,6 +113,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "unit.floor_number",
    "fieldname": "floor_no",
    "fieldtype": "Int",
    "hidden": 1,
@@ -118,47 +121,56 @@
    "read_only": 1
   },
   {
+   "fetch_from": "unit.basic_price_per_sft",
    "fieldname": "basic_price_per_sft",
    "fieldtype": "Currency",
    "label": "Basic Price per Sft"
   },
   {
+   "fetch_from": "unit.amenities_charges_per_sft",
    "fieldname": "amenities_charges_per_sft",
    "fieldtype": "Currency",
    "label": "Amenities Charges (per sft)"
   },
   {
+   "fetch_from": "unit.infra_charges_per_sft",
    "fieldname": "infra_charges_per_sft",
    "fieldtype": "Currency",
    "label": "Infra Charges (per sft)"
   },
   {
+   "fetch_from": "unit.carpet_area",
    "fieldname": "carpet_area",
    "fieldtype": "Float",
    "label": "Carpet Area"
   },
   {
+   "fetch_from": "unit.salable_area",
    "fieldname": "builtup_area",
    "fieldtype": "Float",
    "label": "Built-up Area"
   },
   {
+   "fetch_from": "unit.balcony_area",
    "fieldname": "balcony_area",
    "fieldtype": "Float",
    "label": "Balcony Area"
   },
   {
+   "fetch_from": "unit.uds",
    "fieldname": "uds",
    "fieldtype": "Float",
    "label": "UDS"
   },
   {
+   "fetch_from": "unit.facing",
    "fieldname": "facing",
    "fieldtype": "Select",
    "label": "Facing",
    "options": "\nEast\nWest\nNorth\nSouth"
   },
   {
+   "fetch_from": "unit.corner_preference",
    "fieldname": "corner_preference",
    "fieldtype": "Select",
    "label": "Corner Preference",
@@ -355,7 +367,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-01 17:15:20.987897",
+ "modified": "2025-10-04 23:42:50.009940",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet",

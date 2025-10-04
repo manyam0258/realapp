@@ -39,6 +39,7 @@
   "is_floor_rise_applicable",
   "facing_premium_charges",
   "corner_premium_charges",
+  "corner_preference",
   "column_break_jjas",
   "car_parking_amount",
   "amenities_charges_per_sft",
@@ -343,12 +344,18 @@
    "in_list_view": 1,
    "label": "Floor Name",
    "options": "Floor"
+  },
+  {
+   "fieldname": "corner_preference",
+   "fieldtype": "Select",
+   "label": "Corner Preference",
+   "options": "\nYes\nNo"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-04 22:14:30.431585",
+ "modified": "2025-10-04 23:21:01.597631",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",
