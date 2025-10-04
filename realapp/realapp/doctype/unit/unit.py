@@ -7,49 +7,55 @@ from frappe.utils import flt
 
 class Unit(Document):
     def validate(self):
-        self.set_floor_number()
+        # Ensure hierarchy & defaults before calculations
+        self.set_hierarchy()
         self.apply_defaults()
         self.calculate_dynamic_fields()
     
-    def set_floor_number(self):
-        """Auto fetch floor_number from Floor if not set (Floor.floor)."""
-        if self.floor and not self.floor_number:
-            self.floor_number = frappe.db.get_value("floor", self.floor, "floor") or 0
-    
     def set_hierarchy(self):
         """Auto-fill Block, Project, Floor Number from Floor"""
-        if self.floor:
-            floor_doc = frappe.get_doc("floor", self.floor)
+        if self.floor_name:
+            floor_doc = frappe.get_doc("Floor", self.floor_name)   # user selected floor_name (Link)
+
+            # Block from Floor
             if floor_doc.block:
                 self.block = floor_doc.block
                 block_doc = frappe.get_doc("Block", floor_doc.block)
                 if block_doc.project:
                     self.project = block_doc.project
-            if floor_doc.floor:
-                self.floor_number = floor_doc.floor
+
+            # Floor Number (Int) from Floor
+            if hasattr(floor_doc, "floor_number") and floor_doc.floor_number is not None:
+                self.floor_number = floor_doc.floor_number
+            else:
+                self.floor_number = 0
 
     def apply_defaults(self):
-        """Unit overrides > Settings > 0"""
+        """Fill defaults from Realapp Settings only if field is empty (not 0)"""
         settings = frappe.get_single("Realapp Settings")
 
-        def pick(fieldname):
-            return self.get(fieldname) if self.get(fieldname) not in (None, "") else settings.get(fieldname) or 0
+        mapping = {
+            "base_price_per_sft": "basic_price_per_sft",
+            "floor_rise_rate": "floor_rise_rate",
+            "facing_premium_charges": "facing_premium_charges",
+            "corner_premium_charges": "corner_premium_charges",
+            "car_parking_amount": "car_parking_amount",
+            "amenities_charges_per_sft": "amenities_charges_per_sft",
+            "infra_charges_per_sft": "infra_charges_per_sft",
+        }
 
-        self.basic_price_per_sft        = pick("base_price_per_sft")
-        self.floor_rise_rate            = pick("floor_rise_rate")
-        self.facing_premium_charges     = pick("facing_premium_charges")
-        self.corner_premium_charges     = pick("corner_premium_charges")
-        self.car_parking_amount         = pick("car_parking_amount")
+        for settings_field, unit_field in mapping.items():
+            current_val = self.get(unit_field)
+            # only override if field is empty, not when it's explicitly 0
+            if current_val in (None, ""):
+                self.set(unit_field, settings.get(settings_field) or 0)
 
-        # also bring per-sft infra/amenities for info amounts
-        self.amenities_charges_per_sft  = pick("amenities_charges_per_sft")
-        self.infra_charges_per_sft      = pick("infra_charges_per_sft")
-
-        # tax rates for display / js preview
+        # tax rates always synced from settings
         self.gst_rate = settings.gst_rate
         self.tds_rate = settings.tds_rate
 
     def calculate_dynamic_fields(self):
+        """Compute amounts based on Excel rules"""
         area          = flt(self.salable_area or 0)
         base_rate     = flt(self.basic_price_per_sft or 0)
         rise_rate     = flt(self.floor_rise_rate or 0)
@@ -57,46 +63,56 @@ class Unit(Document):
         corner_rate   = flt(self.corner_premium_charges or 0)
         car_parking   = flt(self.car_parking_amount or 0)
 
-        # informational amounts (not included in Full/AOS per your Excel)
+        # informational amounts
         amen_rate     = flt(self.amenities_charges_per_sft or 0)
         infra_rate    = flt(self.infra_charges_per_sft or 0)
 
         gst_rate      = flt(self.gst_rate or 5)
         tds_rate      = flt(self.tds_rate or 1)
 
-        # If no area, zero out everything
         if area <= 0:
             self.amenities_charges_amt = 0
             self.infra_charges_amt = 0
+            self.floor_rise_charges_amt = 0
             self.full_unit_value = 0
             self.value_excluding_bp = 0
             self.aos_value = 0
+            self.aos_gst = 0
             self.aos_value_gst = 0
             self.tds_amount = 0
             self.net_payable = 0
             self.effective_rate_per_sft = 0
             return
 
-        # Calculate informational amounts
-        self.amenities_charges_amt = flt(amen_rate * area, 2)
-        self.infra_charges_amt     = flt(infra_rate * area, 2)
+        # ---- Informational amounts ----
+        self.amenities_charges_amt   = flt(amen_rate * area, 2)
+        self.infra_charges_amt       = flt(infra_rate * area, 2)
+        self.floor_rise_charges_amt  = flt(rise_rate * area, 2)
 
-        # ---- Excel rules you shared ----
-        # Full Unit Value = area * (base + rise + facing + corner) + car parking
-        self.full_unit_value = flt(area * (base_rate + rise_rate + facing_rate + corner_rate) + car_parking, 2)
+        # ---- Excel rules ----
+        # Full Unit Value
+        self.full_unit_value = flt(
+            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking,
+            2
+        )
 
-        # Value Excluding Base Price = area * (rise + facing + corner) + car parking
-        self.value_excluding_bp = flt(area * (rise_rate + facing_rate + corner_rate) + car_parking, 2)
-        # AOS Value = (base_rate * area) + value_excluding_bp
+        # Value Excluding Base Price
+        self.value_excluding_bp = flt(
+            (area * (rise_rate + facing_rate + corner_rate)) + car_parking,
+            2
+        )
+
+        # AOS Value
         self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
 
-        # GST on AOS (use Realapp Settings if available, default 5%)
-        gst_rate = frappe.db.get_single_value("Realapp Settings", "gst_rate")
-        self.aos_gst = (self.aos_value * gst_rate) / 100
+        # GST on AOS
+        self.aos_gst = flt((self.aos_value * gst_rate) / 100, 2)
 
-        # GST and TDS on AOS
-        self.aos_value_gst = flt(self.aos_value * (1 + gst_rate / 100), 2)
-        self.tds_amount    = flt(self.aos_value * (tds_rate / 100), 2)
+        # AOS + GST
+        self.aos_value_gst = flt(self.aos_value + self.aos_gst, 2)
+
+        # TDS
+        self.tds_amount = flt(self.aos_value * (tds_rate / 100), 2)
 
         # Net payable and effective per sft
         self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)

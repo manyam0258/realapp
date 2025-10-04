@@ -12,7 +12,7 @@
   "flat_number",
   "project",
   "block",
-  "floor",
+  "floor_name",
   "floor_number",
   "flat_type",
   "facing",
@@ -85,13 +85,6 @@
    "in_list_view": 1,
    "label": "Block",
    "options": "Block"
-  },
-  {
-   "fieldname": "floor",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Floor",
-   "options": "Floor"
   },
   {
    "fetch_from": "floor.floor_number",
@@ -343,12 +336,19 @@
    "fieldname": "car_parkings",
    "fieldtype": "Int",
    "label": "Car Parkings"
+  },
+  {
+   "fieldname": "floor_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Floor Name",
+   "options": "Floor"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-03 22:15:21.305162",
+ "modified": "2025-10-04 22:14:30.431585",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",
