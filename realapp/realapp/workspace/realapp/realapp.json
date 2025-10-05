@@ -66,7 +66,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Transactions",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -94,6 +94,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Booking Order",
+   "link_count": 0,
+   "link_to": "Booking Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Realapp Settings",
    "link_count": 0,
    "link_to": "Realapp Settings",
@@ -102,7 +112,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-10-05 15:31:47.878308",
+ "modified": "2025-10-05 22:35:49.991117",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",

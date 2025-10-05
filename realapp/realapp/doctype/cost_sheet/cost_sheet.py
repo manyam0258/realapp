@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
+from frappe.model.mapper import get_mapped_doc
 
 
 class CostSheet(Document):
@@ -31,15 +32,16 @@ class CostSheet(Document):
         self.salable_area = u.salable_area
         self.value_excluding_bp = u.value_excluding_bp
 
+        # Context we reuse later
         self._unit_ctx = frappe._dict(
             base=u.basic_price_per_sft,
             ex_bp=u.value_excluding_bp,
             full_unit_value=u.full_unit_value,
-            status=u.status
+            status=u.status,
         )
 
     def _apply_type_rules(self):
-        """Standard → lock base to Unit; Negotiated → allow custom base."""
+        """Standard → lock base to Unit; Negotiated → allow custom base (fallback to Unit if empty)."""
         if self.cost_sheet_type == "Standard":
             self.basic_price_per_sft = self._unit_ctx.base or 0.0
         elif not self.basic_price_per_sft:
@@ -51,7 +53,7 @@ class CostSheet(Document):
             frappe.throw(f"Unit {self.unit} is {self._unit_ctx.status} and cannot be sold.")
 
     def _ensure_payment_schedule_rows(self):
-        """Populate payment schedule with scheme + dates if empty."""
+        """Populate payment schedule with template rows and tower milestone dates if empty."""
         if self.payment_scheme_template and not (self.payment_schedule or []):
             rows = get_payment_scheme_rows(self.payment_scheme_template, self.block)
             for r in rows:
@@ -66,7 +68,7 @@ class CostSheet(Document):
     # -------- calculations --------
 
     def _compute_header_values(self):
-        """Recompute AOS, GST, TDS, Net Payable etc."""
+        """Recompute AOS, GST, TDS, Net Payable, Effective rate; then spread into child rows."""
         area = flt(self.salable_area)
         base = flt(self.basic_price_per_sft)
         ex_bp = flt(self.value_excluding_bp)
@@ -86,20 +88,26 @@ class CostSheet(Document):
         gst_rate = flt(settings.gst_rate or 5)
         tds_rate = flt(settings.tds_rate or 1)
 
+        # Full Unit Value mirrors Unit’s formula; fall back to (base*area + ex_bp)
         self.full_unit_value = flt(self._unit_ctx.full_unit_value or (base * area + ex_bp), 2)
+
+        # AOS (Agreement of Sale) core
         self.aos_value = flt(base * area + ex_bp, 2)
 
+        # Taxes
         self.aos_gst = flt(self.aos_value * gst_rate / 100.0, 2)
         self.aos_value_gst = flt(self.aos_value + self.aos_gst, 2)
         self.tds_amount = flt(self.aos_value * tds_rate / 100.0, 2)
 
+        # Net & Effective
         self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)
         self.effective_rate_per_sft = flt(self.net_payable / area, 2)
 
+        # Spread into schedule rows
         self._spread_schedule_amounts(self.aos_value, gst_rate, tds_rate)
 
     def _spread_schedule_amounts(self, aos_value: float, gst_rate: float = 5, tds_rate: float = 1):
-        """Distribute AOS across schedule rows and compute GST, TDS, Net."""
+        """Distribute AOS across schedule rows and compute row GST, TDS, Net."""
         for d in self.get("payment_schedule", []):
             d.amount = flt(aos_value * flt(d.percentage) / 100.0, 2)
             d.gst_amount = flt(d.amount * gst_rate / 100.0, 2)
@@ -107,7 +115,7 @@ class CostSheet(Document):
             d.net_payable = flt(d.amount + d.gst_amount - d.tds_amount, 2)
 
     def _compute_before_registration(self):
-        """Charges before registration."""
+        """Compute read-only Before Registration charges from Settings."""
         s = frappe.get_single("Realapp Settings")
         area = flt(self.salable_area)
 
@@ -140,16 +148,20 @@ class CostSheet(Document):
 
 @frappe.whitelist()
 def get_payment_scheme_rows(template: str, block: str = None):
-    """Fetch Payment Scheme rows and merge with Tower Milestone dates from Block."""
+    """
+    Fetch Payment Scheme rows from Payment Scheme Template and
+    merge in Tower Milestone dates (from Block → Tower Milestone) by scheme_code.
+    """
     if not template:
         return []
 
     doc = frappe.get_doc("Payment Scheme Template", template)
 
+    # scheme_code → milestone_date from Block
     milestone_dates = {}
     if block:
-        block_doc = frappe.get_doc("Block", block)
-        for t in block_doc.get("tower_milestones") or []:
+        blk = frappe.get_doc("Block", block)
+        for t in blk.get("tower_milestones") or []:
             if t.scheme_code:
                 milestone_dates[t.scheme_code] = t.milestone_date
 
@@ -160,14 +172,14 @@ def get_payment_scheme_rows(template: str, block: str = None):
             "milestone": d.milestone,
             "particulars": d.particulars,
             "percentage": d.percentage,
-            "milestone_date": milestone_dates.get(d.scheme_code)
+            "milestone_date": milestone_dates.get(d.scheme_code),
         })
     return out
 
 
 @frappe.whitelist()
 def compute_header_values(base_price_per_sft: float, salable_area: float, value_excluding_bp: float):
-    """Server-side truth for AOS/GST/TDS/Net."""
+    """Stateless server calc for header (AOS/GST/TDS/Net/Eff)."""
     base = flt(base_price_per_sft)
     area = flt(salable_area)
     ex_bp = flt(value_excluding_bp)
@@ -195,13 +207,13 @@ def compute_header_values(base_price_per_sft: float, salable_area: float, value_
         aos_value_gst=aos_with_gst,
         tds_amount=tds,
         net_payable=net,
-        effective_rate_per_sft=flt(net / area, 2)
+        effective_rate_per_sft=flt(net / area, 2),
     )
 
 
 @frappe.whitelist()
 def compute_before_registration(salable_area: float):
-    """Stateless compute of 'Before Registration' charges."""
+    """Stateless compute of 'Before Registration' charges (for client refresh)."""
     s = frappe.get_single("Realapp Settings")
     area = flt(salable_area)
 
@@ -225,5 +237,77 @@ def compute_before_registration(salable_area: float):
         move_in_charges=move_in,
         refundable_caution_deposit=rcd,
         registration_charges=regn,
-        before_registration_total=total
+        before_registration_total=total,
     )
+
+
+# ---------------- Booking Order map (Create button) ----------------
+
+@frappe.whitelist()
+def make_booking_order(source_name, target_doc=None):
+    """Create Booking Order from Cost Sheet and auto-link back."""
+
+    def postprocess(source, target):
+        # Link back both ways
+        target.cost_sheet = source.name
+
+        # party info
+        target.party_type = source.party_type
+        target.party = source.party
+
+        # unit snapshot
+        target.unit = source.unit
+        target.project = source.project
+        target.block = source.block
+        target.floor_number = source.floor_number
+        target.salable_area = source.salable_area
+        target.basic_price_per_sft = source.basic_price_per_sft
+
+        # money
+        target.aos_value = source.aos_value
+        target.aos_gst = source.aos_gst
+        target.aos_value_gst = source.aos_value_gst
+        target.net_payable = source.net_payable
+        target.grand_total_payable = source.grand_total_payable
+
+        # scheme
+        target.payment_scheme_template = source.payment_scheme_template
+
+        # copy schedule rows
+        for d in source.get("payment_schedule") or []:
+            target.append("payment_schedule", {
+                "scheme_code": d.scheme_code,
+                "milestone": d.milestone,
+                "particulars": d.particulars,
+                "percentage": d.percentage,
+                "milestone_date": d.milestone_date,
+                "amount": d.amount,
+                "gst_amount": d.gst_amount,
+                "tds_amount": d.tds_amount,
+                "net_payable": d.net_payable,
+            })
+
+        # --- 🔹 NEW: update Cost Sheet with this Booking Order ---
+        frappe.db.set_value("Cost Sheet", source.name, "booking_order", target.name)
+
+    return get_mapped_doc(
+    "Cost Sheet",
+    source_name,
+    {
+        "Cost Sheet": {
+            "doctype": "Booking Order",
+            "field_map": {
+                "name": "cost_sheet"
+            },
+            "field_no_map": [
+                "naming_series"   # <-- prevent copying Cost Sheet series
+            ],
+        }
+    },
+    target_doc,
+    postprocess,
+)
+    # ✅ After creation, set Booking Order link back on Cost Sheet
+    frappe.db.set_value("Cost Sheet", source_name, "booking_order", booking_order.name)
+
+    return booking_order

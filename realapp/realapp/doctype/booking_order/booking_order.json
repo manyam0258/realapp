@@ -1,0 +1,266 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-10-05 20:40:17.518846",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "booking_date",
+  "party_type",
+  "party",
+  "column_break_party",
+  "contact_person",
+  "mobile_no",
+  "email_id",
+  "section_unit_details",
+  "unit",
+  "project",
+  "block",
+  "floor_number",
+  "salable_area",
+  "basic_price_per_sft",
+  "aos_value",
+  "aos_gst",
+  "aos_value_gst",
+  "net_payable",
+  "section_payment",
+  "cost_sheet",
+  "payment_scheme_template",
+  "payment_schedule",
+  "section_terms",
+  "special_conditions",
+  "column_break_totals",
+  "grand_total_payable",
+  "advance_paid",
+  "balance_payable",
+  "section_meta",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "BOOK-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Data",
+   "label": "Series",
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking_date",
+   "fieldtype": "Date",
+   "label": "Booking Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "label": "Party Type",
+   "options": "\nLead\nOpportunity\nCustomer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_party",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Data",
+   "label": "Contact Person"
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "section_unit_details",
+   "fieldtype": "Section Break",
+   "label": "Unit Details"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Unit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Data",
+   "label": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Data",
+   "label": "Block",
+   "read_only": 1
+  },
+  {
+   "fieldname": "floor_number",
+   "fieldtype": "Int",
+   "label": "Floor Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "salable_area",
+   "fieldtype": "Float",
+   "label": "Salable Area (sft)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "basic_price_per_sft",
+   "fieldtype": "Currency",
+   "label": "Basic Price (per sft)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aos_value",
+   "fieldtype": "Currency",
+   "label": "AOS Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aos_gst",
+   "fieldtype": "Currency",
+   "label": "GST on AOS",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aos_value_gst",
+   "fieldtype": "Currency",
+   "label": "AOS + GST",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_payable",
+   "fieldtype": "Currency",
+   "label": "Net Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_payment",
+   "fieldtype": "Section Break",
+   "label": "Payment Plan"
+  },
+  {
+   "fieldname": "cost_sheet",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Sheet",
+   "options": "Cost Sheet",
+   "reqd": 1
+  },
+  {
+   "fieldname": "payment_scheme_template",
+   "fieldtype": "Link",
+   "label": "Payment Scheme Template",
+   "options": "Payment Scheme Template",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_schedule",
+   "fieldtype": "Table",
+   "label": "Payment Schedule",
+   "options": "Cost Sheet Payment Schedule",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_terms",
+   "fieldtype": "Section Break",
+   "label": "Terms & Conditions"
+  },
+  {
+   "fieldname": "special_conditions",
+   "fieldtype": "Text",
+   "label": "Special Conditions"
+  },
+  {
+   "fieldname": "column_break_totals",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grand_total_payable",
+   "fieldtype": "Currency",
+   "label": "Grand Total Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "advance_paid",
+   "fieldtype": "Currency",
+   "label": "Advance Paid"
+  },
+  {
+   "fieldname": "balance_payable",
+   "fieldtype": "Currency",
+   "label": "Balance Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_meta",
+   "fieldtype": "Section Break",
+   "label": "Meta"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Booking Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 20,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [
+  {
+   "link_doctype": "Cost Sheet",
+   "link_fieldname": "booking_order"
+  },
+  {
+   "link_doctype": "Unit",
+   "link_fieldname": "unit_name"
+  }
+ ],
+ "modified": "2025-10-05 22:18:25.262097",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Booking Order",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

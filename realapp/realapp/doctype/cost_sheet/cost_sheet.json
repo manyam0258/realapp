@@ -40,7 +40,9 @@
   "registration_charges",
   "before_registration_total",
   "section_summary",
-  "grand_total_payable"
+  "grand_total_payable",
+  "section_booking",
+  "booking_order"
  ],
  "fields": [
   {
@@ -256,12 +258,33 @@
    "fieldname": "type",
    "fieldtype": "Read Only",
    "label": "Type"
+  },
+  {
+   "fieldname": "section_booking",
+   "fieldtype": "Section Break",
+   "label": "Booking"
+  },
+  {
+   "fieldname": "booking_order",
+   "fieldtype": "Link",
+   "label": "Booking Order",
+   "options": "Booking Order",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-10-05 15:51:33.117597",
+ "links": [
+   {
+     "link_doctype": "Booking Order",
+     "link_fieldname": "cost_sheet"
+   },
+   {
+     "link_doctype": "Unit",
+     "link_fieldname": "unit_name"
+   }
+ ],
+ "modified": "2025-10-06 12:00:00",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet",

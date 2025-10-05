@@ -3,6 +3,13 @@
 frappe.ui.form.on('Unit', {
   refresh(frm) {
     frm.set_intro('Select Floor Name → Block, Project, and Floor Number auto-filled. Pricing auto-calculates.');
+
+    // Show Create Cost Sheet button (only if doc is saved and not cancelled)
+    if (!frm.is_new() && frm.doc.docstatus < 2) {
+      frm.add_custom_button(__('Cost Sheet'), () => {
+        create_cost_sheet(frm);
+      }, __('Create'));
+    }
   },
 
   // Trigger when Floor Name is selected
@@ -37,6 +44,8 @@ frappe.ui.form.on('Unit', {
   gst_rate: recalc,
   tds_rate: recalc
 });
+
+// ---------- helpers ----------
 
 function nz(v) {
   // Numeric safe conversion
@@ -109,4 +118,13 @@ function recalc(frm) {
   const net = aos_with_gst - tds;
   frm.set_value("net_payable", net);
   frm.set_value("effective_rate_per_sft", area ? net / area : 0);
+}
+
+// ---------- Create Cost Sheet button ----------
+
+function create_cost_sheet(frm) {
+  frappe.model.open_mapped_doc({
+    method: "realapp.realapp.doctype.unit.unit.make_cost_sheet",
+    frm: frm
+  });
 }

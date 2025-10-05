@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
+from frappe.model.mapper import get_mapped_doc
+
 
 class Unit(Document):
     def validate(self):
@@ -22,23 +24,18 @@ class Unit(Document):
     def set_hierarchy(self):
         """Auto-fill Block, Project, Floor Number from Floor"""
         if self.floor_name:
-            floor_doc = frappe.get_doc("Floor", self.floor_name)   # user selected floor_name (Link)
+            floor_doc = frappe.get_doc("Floor", self.floor_name)
 
-            # Block from Floor
             if floor_doc.block:
                 self.block = floor_doc.block
                 block_doc = frappe.get_doc("Block", floor_doc.block)
                 if block_doc.project:
                     self.project = block_doc.project
 
-            # Floor Number (Int) from Floor
-            if hasattr(floor_doc, "floor_number") and floor_doc.floor_number is not None:
-                self.floor_number = floor_doc.floor_number
-            else:
-                self.floor_number = 0
+            self.floor_number = getattr(floor_doc, "floor_number", 0) or 0
 
     def apply_defaults(self):
-        """Fill defaults from Realapp Settings only if field is empty (not 0)"""
+        """Fill defaults from Realapp Settings only if field is empty"""
         settings = frappe.get_single("Realapp Settings")
 
         mapping = {
@@ -52,12 +49,10 @@ class Unit(Document):
         }
 
         for settings_field, unit_field in mapping.items():
-            current_val = self.get(unit_field)
-            # only override if field is empty, not when it's explicitly 0
-            if current_val in (None, ""):
+            if self.get(unit_field) in (None, ""):
                 self.set(unit_field, settings.get(settings_field) or 0)
 
-        # tax rates always synced from settings
+        # Always sync tax rates
         self.gst_rate = settings.gst_rate
         self.tds_rate = settings.tds_rate
 
@@ -66,19 +61,18 @@ class Unit(Document):
     # ------------------------------
     def calculate_dynamic_fields(self):
         """Compute amounts based on Excel rules"""
-        area          = flt(self.salable_area or 0)
-        base_rate     = flt(self.basic_price_per_sft or 0)
-        rise_rate     = flt(self.floor_rise_rate or 0)
-        facing_rate   = flt(self.facing_premium_charges or 0)
-        corner_rate   = flt(self.corner_premium_charges or 0)
-        car_parking   = flt(self.car_parking_amount or 0)
+        area        = flt(self.salable_area or 0)
+        base_rate   = flt(self.basic_price_per_sft or 0)
+        rise_rate   = flt(self.floor_rise_rate or 0)
+        facing_rate = flt(self.facing_premium_charges or 0)
+        corner_rate = flt(self.corner_premium_charges or 0)
+        car_parking = flt(self.car_parking_amount or 0)
 
-        # informational amounts
-        amen_rate     = flt(self.amenities_charges_per_sft or 0)
-        infra_rate    = flt(self.infra_charges_per_sft or 0)
+        amen_rate   = flt(self.amenities_charges_per_sft or 0)
+        infra_rate  = flt(self.infra_charges_per_sft or 0)
 
-        gst_rate      = flt(self.gst_rate or 5)
-        tds_rate      = flt(self.tds_rate or 1)
+        gst_rate    = flt(self.gst_rate or 5)
+        tds_rate    = flt(self.tds_rate or 1)
 
         if area <= 0:
             self.amenities_charges_amt = 0
@@ -94,37 +88,22 @@ class Unit(Document):
             self.effective_rate_per_sft = 0
             return
 
-        # ---- Informational amounts ----
-        self.amenities_charges_amt   = flt(amen_rate * area, 2)
-        self.infra_charges_amt       = flt(infra_rate * area, 2)
-        self.floor_rise_charges_amt  = flt(rise_rate * area, 2)
+        self.amenities_charges_amt = flt(amen_rate * area, 2)
+        self.infra_charges_amt = flt(infra_rate * area, 2)
+        self.floor_rise_charges_amt = flt(rise_rate * area, 2)
 
-        # ---- Excel rules ----
-        # Full Unit Value
         self.full_unit_value = flt(
-            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking,
-            2
+            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking, 2
         )
-
-        # Value Excluding Base Price
         self.value_excluding_bp = flt(
-            (area * (rise_rate + facing_rate + corner_rate)) + car_parking,
-            2
+            (area * (rise_rate + facing_rate + corner_rate)) + car_parking, 2
         )
-
-        # AOS Value
         self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
 
-        # GST on AOS
         self.aos_gst = flt((self.aos_value * gst_rate) / 100, 2)
-
-        # AOS + GST
         self.aos_value_gst = flt(self.aos_value + self.aos_gst, 2)
-
-        # TDS
         self.tds_amount = flt(self.aos_value * (tds_rate / 100), 2)
 
-        # Net payable and effective per sft
         self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)
         self.effective_rate_per_sft = flt(self.net_payable / area, 2)
 
@@ -132,31 +111,68 @@ class Unit(Document):
     # Status Lifecycle
     # ------------------------------
     def mark_as_booked(self):
-        """Mark the unit as Booked (via Booking Order)."""
         if self.status in ["Booked", "Sold"]:
-            frappe.throw(f"Unit {self.name} is already {self.status} and cannot be booked.")
+            frappe.throw(f"Unit {self.name} is already {self.status}.")
         if self.status == "Blocked":
-            frappe.throw(f"Unit {self.name} is currently Blocked and cannot be booked.")
+            frappe.throw(f"Unit {self.name} is Blocked and cannot be booked.")
         self.status = "Booked"
         self.save()
 
     def mark_as_blocked(self):
-        """Manually block a unit for specific reasons."""
         if self.status in ["Booked", "Sold"]:
-            frappe.throw(f"Unit {self.name} is already {self.status} and cannot be blocked.")
+            frappe.throw(f"Unit {self.name} is already {self.status}.")
         self.status = "Blocked"
         self.save()
 
     def mark_as_available(self):
-        """Reset unit back to Available (if cancellation happens)."""
         if self.status == "Sold":
-            frappe.throw(f"Unit {self.name} is already Sold and cannot be made Available.")
+            frappe.throw(f"Unit {self.name} is already Sold.")
         self.status = "Available"
         self.save()
 
     def mark_as_sold(self):
-        """Finalize a unit as Sold (after registration/payment)."""
         if self.status != "Booked":
-            frappe.throw(f"Unit {self.name} must be Booked before it can be marked as Sold.")
+            frappe.throw(f"Unit {self.name} must be Booked before Sold.")
         self.status = "Sold"
         self.save()
+
+
+# ------------------------------
+# Whitelisted: Create Cost Sheet from Unit
+# ------------------------------
+@frappe.whitelist()
+def make_cost_sheet(source_name, target_doc=None):
+    """Map Unit → Cost Sheet (used by Create button)."""
+
+    def postprocess(source, target):
+        # Link back to Unit
+        target.unit = source.name
+        target.project = source.project
+        target.block = source.block
+        target.floor_number = source.floor_number
+        target.salable_area = source.salable_area
+
+        # Copy pricing & computed fields
+        target.basic_price_per_sft = source.basic_price_per_sft
+        target.value_excluding_bp = source.value_excluding_bp
+        target.full_unit_value = source.full_unit_value
+        target.aos_value = source.aos_value
+        target.aos_gst = source.aos_gst
+        target.aos_value_gst = source.aos_value_gst
+        target.tds_amount = source.tds_amount
+        target.net_payable = source.net_payable
+        target.effective_rate_per_sft = source.effective_rate_per_sft
+
+    return get_mapped_doc(
+        "Unit",
+        source_name,
+        {
+            "Unit": {
+                "doctype": "Cost Sheet",
+                "field_map": {"name": "unit"},
+                "field_no_map": ["naming_series"],  # Ensure Cost Sheet uses its own series
+            }
+        },
+        target_doc,
+        postprocess,
+    )

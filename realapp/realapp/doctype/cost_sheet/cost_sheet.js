@@ -3,11 +3,21 @@
 
 frappe.ui.form.on('Cost Sheet', {
   setup(frm) {
-    frm.set_query('payment_scheme_template', () => ({}));
+    // Only show active templates
+    frm.set_query('payment_scheme_template', () => ({
+      filters: { is_active: 1 }
+    }));
   },
 
   refresh(frm) {
     toggle_basic_price_editability(frm);
+
+    // Show "Create Booking Order" button only when doc exists & not cancelled
+    if (!frm.is_new() && frm.doc.docstatus < 2) {
+      frm.add_custom_button(__('Booking Order'), () => {
+        create_booking_order(frm);
+      }, __('Create'));
+    }
   },
 
   cost_sheet_type(frm) {
@@ -40,7 +50,7 @@ frappe.ui.form.on('Cost Sheet', {
     if (frm.doc.payment_scheme_template) {
       frappe.call({
         method: "realapp.realapp.doctype.cost_sheet.cost_sheet.get_payment_scheme_rows",
-        args: { 
+        args: {
           template: frm.doc.payment_scheme_template,
           block: frm.doc.block
         },
@@ -56,7 +66,7 @@ frappe.ui.form.on('Cost Sheet', {
               frappe.model.set_value(child.doctype, child.name, "milestone_date", row.milestone_date);
             });
             frm.refresh_field("payment_schedule");
-            recalc_schedule_amounts(frm);
+            recalc_schedule_amounts(frm); // immediately compute amounts
           }
         }
       });
@@ -153,8 +163,11 @@ function recalc_header_from_base(frm) {
 
 function recalc_schedule_amounts(frm) {
   const aos = flt(frm.doc.aos_value);
-  const gst_rate = 5; // server truth, but safe fallback
-  const tds_rate = 1;
+
+  // Infer GST/TDS % from header values (avoid hardcoding)
+  const gst_rate = (aos > 0) ? (flt(frm.doc.aos_gst) / aos) * 100.0 : 5.0;
+  const tds_rate = (aos > 0) ? (flt(frm.doc.tds_amount) / aos) * 100.0 : 1.0;
+
   (frm.doc.payment_schedule || []).forEach(r => {
     r.amount = flt(aos * flt(r.percentage) / 100.0);
     r.gst_amount = flt(r.amount * gst_rate / 100.0);
@@ -185,5 +198,14 @@ function recalc_before_registration_and_grand_total(frm) {
   });
 }
 
+// --- Booking Order button action ---
+function create_booking_order(frm) {
+  frappe.model.open_mapped_doc({
+    method: "realapp.realapp.doctype.cost_sheet.cost_sheet.make_booking_order",
+    frm: frm
+  });
+}
+
+// Tiny helpers
 function flt(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
 function cint(v) { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }
