@@ -8,8 +8,8 @@
  "field_order": [
   "scheme_code",
   "milestone",
-  "percentage",
-  "particulars"
+  "particulars",
+  "percentage"
  ],
  "fields": [
   {
@@ -18,21 +18,16 @@
    "label": "Scheme Code",
    "options": "\nC-1\nC-2\nC-3\nC-4\nC-5\nC-6\nC-7\nC-8\nC-9\nC-10\nC-11\nC-12",
    "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "description": "Unique code for milestone (C-1..C-12) used to match with Tower Milestones and Cost Sheet"
   },
   {
    "fieldname": "milestone",
    "fieldtype": "Data",
    "label": "Milestone",
    "reqd": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "percentage",
-   "fieldtype": "Percent",
-   "label": "Percentage",
-   "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "description": "Name/description of milestone (e.g., Booking Advance, 1st Slab, Handover)"
   },
   {
    "fieldname": "particulars",
@@ -40,14 +35,23 @@
    "label": "Particulars",
    "options": "\nBooking Specific\nTower Specific\nUnit Specific",
    "reqd": 1,
-   "in_list_view": 1
+   "in_list_view": 1,
+   "description": "Defines applicability of this milestone: Booking, Tower, or Unit"
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Percent",
+   "label": "Percentage",
+   "reqd": 1,
+   "in_list_view": 1,
+   "description": "Percentage of AOS Value for this milestone"
   }
  ],
  "grid_page_length": 12,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-01 11:00:00.000000",
+ "modified": "2025-10-05 12:30:00.000000",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Payment Scheme Detail",

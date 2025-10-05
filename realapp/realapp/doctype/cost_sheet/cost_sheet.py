@@ -5,13 +5,13 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
 
-ROW_DTYPE = "Cost Sheet Payment Schedule"
 
 class CostSheet(Document):
     def validate(self):
         self._pull_unit_snapshot()
         self._apply_type_rules()
-        self._ensure_payment_scheme_rows()
+        self._check_unit_availability()
+        self._ensure_payment_schedule_rows()
         self._compute_header_values()
         self._compute_before_registration()
         self._compute_grand_total()
@@ -24,46 +24,49 @@ class CostSheet(Document):
 
         u = frappe.get_doc("Unit", self.unit)
 
-        # Always mirror these identifiers from Unit
+        # Always mirror identifiers from Unit
         self.project = u.project
         self.block = u.block
         self.floor_number = u.floor_number
         self.salable_area = u.salable_area
-
-        # This value (excl base) is the anchor for Negotiated math
         self.value_excluding_bp = u.value_excluding_bp
 
-        # Keep a tiny context for later use
         self._unit_ctx = frappe._dict(
             base=u.basic_price_per_sft,
             ex_bp=u.value_excluding_bp,
-            full_unit_value=u.full_unit_value
+            full_unit_value=u.full_unit_value,
+            status=u.status
         )
 
     def _apply_type_rules(self):
-        """Standard -> lock base to Unit; Negotiated -> keep user's base."""
+        """Standard → lock base to Unit; Negotiated → allow custom base."""
         if self.cost_sheet_type == "Standard":
             self.basic_price_per_sft = self._unit_ctx.base or 0.0
         elif not self.basic_price_per_sft:
-            # Negotiated but empty -> fall back to Unit to avoid zeroing
             self.basic_price_per_sft = self._unit_ctx.base or 0.0
 
-    def _ensure_payment_scheme_rows(self):
-        """If a template is chosen and no rows exist, populate once."""
+    def _check_unit_availability(self):
+        """Only allow Cost Sheet for Available units."""
+        if self._unit_ctx.status in ("Booked", "Blocked", "Sold"):
+            frappe.throw(f"Unit {self.unit} is {self._unit_ctx.status} and cannot be sold.")
+
+    def _ensure_payment_schedule_rows(self):
+        """Populate payment schedule with scheme + dates if empty."""
         if self.payment_scheme_template and not (self.payment_schedule or []):
-            rows = get_payment_scheme_rows(self.payment_scheme_template)
+            rows = get_payment_scheme_rows(self.payment_scheme_template, self.block)
             for r in rows:
                 self.append("payment_schedule", {
-                    "scheme_code": r.scheme_code,
-                    "milestone": r.milestone,
-                    "particulars": r.particulars,
-                    "percentage": r.percentage,
+                    "scheme_code": r.get("scheme_code"),
+                    "milestone": r.get("milestone"),
+                    "particulars": r.get("particulars"),
+                    "percentage": r.get("percentage"),
+                    "milestone_date": r.get("milestone_date"),
                 })
 
     # -------- calculations --------
 
     def _compute_header_values(self):
-        """Recompute AOS, taxes & net based on base + ex_bp + settings."""
+        """Recompute AOS, GST, TDS, Net Payable etc."""
         area = flt(self.salable_area)
         base = flt(self.basic_price_per_sft)
         ex_bp = flt(self.value_excluding_bp)
@@ -79,38 +82,32 @@ class CostSheet(Document):
             self._spread_schedule_amounts(0)
             return
 
-        # Settings are the single source for tax rates
         settings = frappe.get_single("Realapp Settings")
         gst_rate = flt(settings.gst_rate or 5)
         tds_rate = flt(settings.tds_rate or 1)
 
-        # Full Unit Value (info) mirrors Unit rule (no amenities/infra):
-        # area * (base + rise + facing + corner) + car_park
-        # We only have the Unit's computed one safely, so recompute from Unit ctx when available.
-        # If not available, fall back to AOS + ex_bp approximation.
         self.full_unit_value = flt(self._unit_ctx.full_unit_value or (base * area + ex_bp), 2)
-
-        # AOS core
         self.aos_value = flt(base * area + ex_bp, 2)
 
-        # Taxes
         self.aos_gst = flt(self.aos_value * gst_rate / 100.0, 2)
         self.aos_value_gst = flt(self.aos_value + self.aos_gst, 2)
         self.tds_amount = flt(self.aos_value * tds_rate / 100.0, 2)
 
-        # Net & effective
         self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)
         self.effective_rate_per_sft = flt(self.net_payable / area, 2)
 
-        # Spread amounts on schedule
-        self._spread_schedule_amounts(self.aos_value)
+        self._spread_schedule_amounts(self.aos_value, gst_rate, tds_rate)
 
-    def _spread_schedule_amounts(self, aos_value: float):
+    def _spread_schedule_amounts(self, aos_value: float, gst_rate: float = 5, tds_rate: float = 1):
+        """Distribute AOS across schedule rows and compute GST, TDS, Net."""
         for d in self.get("payment_schedule", []):
             d.amount = flt(aos_value * flt(d.percentage) / 100.0, 2)
+            d.gst_amount = flt(d.amount * gst_rate / 100.0, 2)
+            d.tds_amount = flt(d.amount * tds_rate / 100.0, 2)
+            d.net_payable = flt(d.amount + d.gst_amount - d.tds_amount, 2)
 
     def _compute_before_registration(self):
-        """Compute read-only 'Before Registration' section from Settings."""
+        """Charges before registration."""
         s = frappe.get_single("Realapp Settings")
         area = flt(self.salable_area)
 
@@ -138,30 +135,39 @@ class CostSheet(Document):
     def _compute_grand_total(self):
         self.grand_total_payable = flt(self.aos_value_gst) + flt(self.before_registration_total or 0.0)
 
-# ---------------- Whitelisted helpers for JS ----------------
+
+# ---------------- Whitelisted helpers ----------------
 
 @frappe.whitelist()
-def get_payment_scheme_rows(template: str):
-    """Fetch rows from Payment Scheme Template and return them for Cost Sheet."""
+def get_payment_scheme_rows(template: str, block: str = None):
+    """Fetch Payment Scheme rows and merge with Tower Milestone dates from Block."""
     if not template:
         return []
 
     doc = frappe.get_doc("Payment Scheme Template", template)
 
+    milestone_dates = {}
+    if block:
+        block_doc = frappe.get_doc("Block", block)
+        for t in block_doc.get("tower_milestones") or []:
+            if t.scheme_code:
+                milestone_dates[t.scheme_code] = t.milestone_date
+
     out = []
-    for d in doc.get("payment_scheme_detail") or []:  # 👈 correct child table fieldname
+    for d in doc.get("payment_scheme_details") or []:
         out.append({
             "scheme_code": d.scheme_code,
             "milestone": d.milestone,
             "particulars": d.particulars,
-            "percentage": d.percentage
+            "percentage": d.percentage,
+            "milestone_date": milestone_dates.get(d.scheme_code)
         })
     return out
 
 
 @frappe.whitelist()
 def compute_header_values(base_price_per_sft: float, salable_area: float, value_excluding_bp: float):
-    """Server source-of-truth for header math using settings GST/TDS."""
+    """Server-side truth for AOS/GST/TDS/Net."""
     base = flt(base_price_per_sft)
     area = flt(salable_area)
     ex_bp = flt(value_excluding_bp)
@@ -183,8 +189,6 @@ def compute_header_values(base_price_per_sft: float, salable_area: float, value_
     net = flt(aos_with_gst - tds, 2)
 
     return frappe._dict(
-        # We can’t recompute Full Unit Value precisely on server without Unit’s rate breakdown;
-        # return AOS as a safe placeholder; form will still show Unit’s stored FU value after pull.
         full_unit_value=flt(base * area + ex_bp, 2),
         aos_value=aos,
         aos_gst=aos_gst,
@@ -194,9 +198,10 @@ def compute_header_values(base_price_per_sft: float, salable_area: float, value_
         effective_rate_per_sft=flt(net / area, 2)
     )
 
+
 @frappe.whitelist()
 def compute_before_registration(salable_area: float):
-    """Stateless compute of 'Before Registration' using Settings."""
+    """Stateless compute of 'Before Registration' charges."""
     s = frappe.get_single("Realapp Settings")
     area = flt(salable_area)
 

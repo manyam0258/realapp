@@ -3,7 +3,6 @@
 
 frappe.ui.form.on('Cost Sheet', {
   setup(frm) {
-    // Recalculate amounts in child when % changes
     frm.set_query('payment_scheme_template', () => ({}));
   },
 
@@ -15,8 +14,7 @@ frappe.ui.form.on('Cost Sheet', {
     toggle_basic_price_editability(frm);
     if (frm.doc.unit) {
       pull_unit_numbers(frm).then(() => {
-        recalc_header_from_base(frm);   // ensure AOS etc. reflect type
-        recalc_schedule_amounts(frm);
+        recalc_header_from_base(frm);
         recalc_before_registration_and_grand_total(frm);
       });
     }
@@ -25,20 +23,16 @@ frappe.ui.form.on('Cost Sheet', {
   unit(frm) {
     if (!frm.doc.unit) return;
     pull_unit_numbers(frm).then(() => {
-      // For Standard type, lock base to Unit.basic_price_per_sft
       if (frm.doc.cost_sheet_type === 'Standard') {
         frm.set_value('basic_price_per_sft', frm.__unit_ctx.base_rate || 0);
       }
       recalc_header_from_base(frm);
-      recalc_schedule_amounts(frm);
       recalc_before_registration_and_grand_total(frm);
     });
   },
 
   basic_price_per_sft(frm) {
-    // Only meaningful for Negotiated type
     recalc_header_from_base(frm);
-    recalc_schedule_amounts(frm);
     recalc_before_registration_and_grand_total(frm);
   },
 
@@ -46,30 +40,32 @@ frappe.ui.form.on('Cost Sheet', {
     if (frm.doc.payment_scheme_template) {
       frappe.call({
         method: "realapp.realapp.doctype.cost_sheet.cost_sheet.get_payment_scheme_rows",
-        args: { template: frm.doc.payment_scheme_template },
+        args: { 
+          template: frm.doc.payment_scheme_template,
+          block: frm.doc.block
+        },
         callback(r) {
           if (r.message) {
-            frm.clear_table("cost_sheet_payment_schedule");  // 👈 Cost Sheet child table
+            frm.clear_table("payment_schedule");
             r.message.forEach(row => {
-              let child = frm.add_child("cost_sheet_payment_schedule");
+              let child = frm.add_child("payment_schedule");
               frappe.model.set_value(child.doctype, child.name, "scheme_code", row.scheme_code);
               frappe.model.set_value(child.doctype, child.name, "milestone", row.milestone);
               frappe.model.set_value(child.doctype, child.name, "particulars", row.particulars);
               frappe.model.set_value(child.doctype, child.name, "percentage", row.percentage);
+              frappe.model.set_value(child.doctype, child.name, "milestone_date", row.milestone_date);
             });
-            frm.refresh_field("cost_sheet_payment_schedule");
+            frm.refresh_field("payment_schedule");
+            recalc_schedule_amounts(frm);
           }
         }
       });
     }
   },
 
-  // When user edits % in rows, recompute row amount + totals
   payment_schedule_percentage(frm, cdt, cdn) {
     recalc_schedule_amounts(frm);
   },
-
-  // Safety: if user edits template rows manually, always recompute
   payment_schedule_add(frm) { recalc_schedule_amounts(frm); },
   payment_schedule_remove(frm) { recalc_schedule_amounts(frm); },
 });
@@ -82,16 +78,12 @@ function toggle_basic_price_editability(frm) {
   frm.refresh_field('basic_price_per_sft');
 }
 
-/**
- * Pull current Unit values into the Cost Sheet.
- * Saves a small context object on the form so Negotiated math is easy.
- */
 function pull_unit_numbers(frm) {
   return frappe.db.get_doc('Unit', frm.doc.unit).then(u => {
     frm.__unit_ctx = {
       area: flt(u.salable_area),
       base_rate: flt(u.basic_price_per_sft),
-      ex_bp: flt(u.value_excluding_bp),             // (rise + facing + corner)*area + car park
+      ex_bp: flt(u.value_excluding_bp),
       aos_value: flt(u.aos_value),
       aos_gst: flt(u.aos_gst),
       aos_value_gst: flt(u.aos_value_gst),
@@ -110,7 +102,6 @@ function pull_unit_numbers(frm) {
       salable_area: frm.__unit_ctx.area
     });
 
-    // For Standard type mirror Unit numbers; for Negotiated we'll recompute below
     if (frm.doc.cost_sheet_type === 'Standard') {
       frm.set_value({
         basic_price_per_sft: frm.__unit_ctx.base_rate,
@@ -124,7 +115,6 @@ function pull_unit_numbers(frm) {
         effective_rate_per_sft: frm.__unit_ctx.eff_rate
       });
     } else {
-      // Negotiated – keep ex_bp from Unit, recompute header numbers from current base
       frm.set_value('value_excluding_bp', frm.__unit_ctx.ex_bp);
     }
   });
@@ -132,7 +122,7 @@ function pull_unit_numbers(frm) {
 
 function recalc_header_from_base(frm) {
   const area  = flt(frm.doc.salable_area);
-  const ex_bp = flt(frm.doc.value_excluding_bp);         // from Unit
+  const ex_bp = flt(frm.doc.value_excluding_bp);
   const base  = flt(frm.doc.basic_price_per_sft);
 
   if (area <= 0) {
@@ -143,14 +133,13 @@ function recalc_header_from_base(frm) {
     return;
   }
 
-  // Ask server for GST/TDS (single source of truth) and computed header
   frappe.call({
     method: 'realapp.realapp.doctype.cost_sheet.cost_sheet.compute_header_values',
     args: { base_price_per_sft: base, salable_area: area, value_excluding_bp: ex_bp }
   }).then(r => {
     const v = (r && r.message) || {};
     frm.set_value({
-      full_unit_value: v.full_unit_value,              // recomputed like Unit (info)
+      full_unit_value: v.full_unit_value,
       aos_value: v.aos_value,
       aos_gst: v.aos_gst,
       aos_value_gst: v.aos_value_gst,
@@ -158,19 +147,24 @@ function recalc_header_from_base(frm) {
       net_payable: v.net_payable,
       effective_rate_per_sft: v.effective_rate_per_sft,
     });
+    recalc_schedule_amounts(frm);
   });
 }
 
 function recalc_schedule_amounts(frm) {
   const aos = flt(frm.doc.aos_value);
+  const gst_rate = 5; // server truth, but safe fallback
+  const tds_rate = 1;
   (frm.doc.payment_schedule || []).forEach(r => {
     r.amount = flt(aos * flt(r.percentage) / 100.0);
+    r.gst_amount = flt(r.amount * gst_rate / 100.0);
+    r.tds_amount = flt(r.amount * tds_rate / 100.0);
+    r.net_payable = flt(r.amount + r.gst_amount - r.tds_amount);
   });
   frm.refresh_field('payment_schedule');
 }
 
 function recalc_before_registration_and_grand_total(frm) {
-  // Compute (read-only) before-registration items from settings on server to avoid drift
   frappe.call({
     method: 'realapp.realapp.doctype.cost_sheet.cost_sheet.compute_before_registration',
     args: { salable_area: flt(frm.doc.salable_area) }
@@ -191,6 +185,5 @@ function recalc_before_registration_and_grand_total(frm) {
   });
 }
 
-// tiny numeric helpers
 function flt(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
 function cint(v) { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

@@ -8,9 +8,9 @@
  "field_order": [
   "scheme_code",
   "milestone",
-  "percentage",
   "particulars",
   "milestone_date",
+  "percentage",
   "amount",
   "gst_amount",
   "tds_amount",
@@ -23,21 +23,17 @@
    "label": "Scheme Code",
    "options": "\nC-1\nC-2\nC-3\nC-4\nC-5\nC-6\nC-7\nC-8\nC-9\nC-10\nC-11\nC-12",
    "in_list_view": 1,
-   "reqd": 1
+   "reqd": 1,
+   "description": "Unique code that links to Payment Scheme Template"
   },
   {
    "fieldname": "milestone",
    "fieldtype": "Data",
    "label": "Milestone",
    "in_list_view": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "percentage",
-   "fieldtype": "Percent",
-   "label": "Percentage",
-   "in_list_view": 1,
-   "reqd": 1
+   "reqd": 1,
+   "read_only": 1,
+   "description": "Name of the milestone pulled from Payment Scheme Template"
   },
   {
    "fieldname": "particulars",
@@ -45,13 +41,23 @@
    "label": "Particulars",
    "options": "\nBooking Specific\nTower Specific\nUnit Specific",
    "in_list_view": 1,
-   "reqd": 1
+   "reqd": 1,
+   "description": "Defines whether the milestone applies to Booking, Tower, or Unit"
   },
   {
    "fieldname": "milestone_date",
    "fieldtype": "Date",
    "label": "Milestone Date",
-   "in_list_view": 1
+   "in_list_view": 1,
+   "description": "Date of milestone; auto-pulled from Block Tower Milestones (editable if needed)"
+  },
+  {
+   "fieldname": "percentage",
+   "fieldtype": "Percent",
+   "label": "Percentage",
+   "in_list_view": 1,
+   "reqd": 1,
+   "description": "Percentage of AOS value allocated for this milestone"
   },
   {
    "fieldname": "amount",
@@ -59,32 +65,35 @@
    "label": "Amount",
    "in_list_view": 1,
    "read_only": 1,
-   "description": "Calculated = Agreement Value × Percentage"
+   "description": "Calculated as AOS × Percentage"
   },
   {
    "fieldname": "gst_amount",
    "fieldtype": "Currency",
    "label": "GST Amount",
-   "read_only": 1
+   "read_only": 1,
+   "description": "GST computed on milestone amount"
   },
   {
    "fieldname": "tds_amount",
    "fieldtype": "Currency",
    "label": "TDS Amount",
-   "read_only": 1
+   "read_only": 1,
+   "description": "TDS computed on milestone amount"
   },
   {
    "fieldname": "net_payable",
    "fieldtype": "Currency",
    "label": "Net Payable",
-   "read_only": 1
+   "read_only": 1,
+   "description": "Net = Amount + GST − TDS"
   }
  ],
  "grid_page_length": 20,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-01 14:30:00.000000",
+ "modified": "2025-10-05 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet Payment Schedule",

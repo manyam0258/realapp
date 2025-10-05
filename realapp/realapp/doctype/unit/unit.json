@@ -17,6 +17,7 @@
   "flat_type",
   "facing",
   "share",
+  "status",
   "column_break_hfcj",
   "salable_area",
   "carpet_area",
@@ -350,12 +351,18 @@
    "fieldtype": "Select",
    "label": "Corner Preference",
    "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nAvailable\nBlocked\nBooked\nSold"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-04 23:21:01.597631",
+ "modified": "2025-10-05 13:05:34.737609",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",

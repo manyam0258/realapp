@@ -167,7 +167,8 @@
    "fieldname": "payment_scheme_template",
    "fieldtype": "Link",
    "label": "Payment Scheme Template",
-   "options": "Payment Scheme Template"
+   "options": "Payment Scheme Template",
+   "description": "Select scheme to auto-populate schedule"
   },
   {
    "fieldname": "payment_schedule",
@@ -237,7 +238,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-04 22:00:00",
+ "modified": "2025-10-04 22:30:00",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet",

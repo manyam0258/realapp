@@ -11,7 +11,14 @@ class Unit(Document):
         self.set_hierarchy()
         self.apply_defaults()
         self.calculate_dynamic_fields()
-    
+
+        # Ensure status always has a valid default
+        if not self.status:
+            self.status = "Available"
+
+    # ------------------------------
+    # Hierarchy / Defaults
+    # ------------------------------
     def set_hierarchy(self):
         """Auto-fill Block, Project, Floor Number from Floor"""
         if self.floor_name:
@@ -54,6 +61,9 @@ class Unit(Document):
         self.gst_rate = settings.gst_rate
         self.tds_rate = settings.tds_rate
 
+    # ------------------------------
+    # Calculations
+    # ------------------------------
     def calculate_dynamic_fields(self):
         """Compute amounts based on Excel rules"""
         area          = flt(self.salable_area or 0)
@@ -117,3 +127,36 @@ class Unit(Document):
         # Net payable and effective per sft
         self.net_payable = flt(self.aos_value_gst - self.tds_amount, 2)
         self.effective_rate_per_sft = flt(self.net_payable / area, 2)
+
+    # ------------------------------
+    # Status Lifecycle
+    # ------------------------------
+    def mark_as_booked(self):
+        """Mark the unit as Booked (via Booking Order)."""
+        if self.status in ["Booked", "Sold"]:
+            frappe.throw(f"Unit {self.name} is already {self.status} and cannot be booked.")
+        if self.status == "Blocked":
+            frappe.throw(f"Unit {self.name} is currently Blocked and cannot be booked.")
+        self.status = "Booked"
+        self.save()
+
+    def mark_as_blocked(self):
+        """Manually block a unit for specific reasons."""
+        if self.status in ["Booked", "Sold"]:
+            frappe.throw(f"Unit {self.name} is already {self.status} and cannot be blocked.")
+        self.status = "Blocked"
+        self.save()
+
+    def mark_as_available(self):
+        """Reset unit back to Available (if cancellation happens)."""
+        if self.status == "Sold":
+            frappe.throw(f"Unit {self.name} is already Sold and cannot be made Available.")
+        self.status = "Available"
+        self.save()
+
+    def mark_as_sold(self):
+        """Finalize a unit as Sold (after registration/payment)."""
+        if self.status != "Booked":
+            frappe.throw(f"Unit {self.name} must be Booked before it can be marked as Sold.")
+        self.status = "Sold"
+        self.save()
