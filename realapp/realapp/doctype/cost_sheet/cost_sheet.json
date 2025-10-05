@@ -17,6 +17,9 @@
   "floor_number",
   "salable_area",
   "basic_price_per_sft",
+  "facing",
+  "type",
+  "column_break_pxtp",
   "full_unit_value",
   "value_excluding_bp",
   "aos_value",
@@ -41,15 +44,17 @@
  ],
  "fields": [
   {
+   "default": "COST-.YYYY.-",
    "fieldname": "naming_series",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Series",
-   "reqd": 1,
-   "default": "COST-.YYYY.-"
+   "reqd": 1
   },
   {
    "fieldname": "cost_sheet_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Cost Sheet Type",
    "options": "\nStandard\nNegotiated",
    "reqd": 1
@@ -57,6 +62,7 @@
   {
    "fieldname": "party_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Party Type",
    "options": "\nLead\nOpportunity\nCustomer",
    "reqd": 1
@@ -64,6 +70,7 @@
   {
    "fieldname": "party",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
    "label": "Party",
    "options": "party_type",
    "reqd": 1
@@ -105,10 +112,10 @@
    "read_only": 1
   },
   {
+   "description": "Editable only in Negotiated type",
    "fieldname": "basic_price_per_sft",
    "fieldtype": "Currency",
-   "label": "Basic Price (per sft)",
-   "description": "Editable only in Negotiated type"
+   "label": "Basic Price (per sft)"
   },
   {
    "fieldname": "full_unit_value",
@@ -164,11 +171,11 @@
    "label": "Payment Schedule"
   },
   {
+   "description": "Select scheme to auto-populate schedule",
    "fieldname": "payment_scheme_template",
    "fieldtype": "Link",
    "label": "Payment Scheme Template",
-   "options": "Payment Scheme Template",
-   "description": "Select scheme to auto-populate schedule"
+   "options": "Payment Scheme Template"
   },
   {
    "fieldname": "payment_schedule",
@@ -233,15 +240,32 @@
    "fieldtype": "Currency",
    "label": "Grand Total Payable",
    "read_only": 1
+  },
+  {
+   "fetch_from": "unit.facing",
+   "fieldname": "facing",
+   "fieldtype": "Read Only",
+   "label": "Facing"
+  },
+  {
+   "fieldname": "column_break_pxtp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "unit.flat_type",
+   "fieldname": "type",
+   "fieldtype": "Read Only",
+   "label": "Type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-04 22:30:00",
+ "modified": "2025-10-05 15:51:33.117597",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
