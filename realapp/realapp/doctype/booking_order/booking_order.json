@@ -175,7 +175,7 @@
    "fieldname": "payment_schedule",
    "fieldtype": "Table",
    "label": "Payment Schedule",
-   "options": "Cost Sheet Payment Schedule",
+   "options": "Booking Order Payment Schedule",
    "read_only": 1
   },
   {
@@ -238,7 +238,7 @@
    "link_fieldname": "unit_name"
   }
  ],
- "modified": "2025-10-05 22:18:25.262097",
+ "modified": "2025-10-06 17:12:16.407548",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Booking Order",

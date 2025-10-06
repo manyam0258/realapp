@@ -61,12 +61,15 @@ frappe.ui.form.on('Cost Sheet', {
               let child = frm.add_child("payment_schedule");
               frappe.model.set_value(child.doctype, child.name, "scheme_code", row.scheme_code);
               frappe.model.set_value(child.doctype, child.name, "milestone", row.milestone);
+              frappe.model.set_value(child.doctype, child.name, "milestone_item", row.milestone_item); // ✅ fixed
               frappe.model.set_value(child.doctype, child.name, "particulars", row.particulars);
               frappe.model.set_value(child.doctype, child.name, "percentage", row.percentage);
               frappe.model.set_value(child.doctype, child.name, "milestone_date", row.milestone_date);
             });
             frm.refresh_field("payment_schedule");
             recalc_schedule_amounts(frm); // immediately compute amounts
+
+            frappe.show_alert({message: __("Payment Schedule loaded from Template"), indicator: 'green'});
           }
         }
       });

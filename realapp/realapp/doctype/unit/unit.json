@@ -365,9 +365,13 @@
   {
    "link_doctype": "Cost Sheet",
    "link_fieldname": "unit"
+  },
+  {
+   "link_doctype": "Booking Order",
+   "link_fieldname": "unit"
   }
  ],
- "modified": "2025-10-05 22:45:11.007371",
+ "modified": "2025-10-06 17:14:17.384801",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",

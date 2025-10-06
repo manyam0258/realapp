@@ -56,6 +56,7 @@ class BookingOrder(Document):
             self.append("payment_schedule", {
                 "scheme_code": row.scheme_code,
                 "milestone": row.milestone,
+                "milestone_item": row.milestone_item,
                 "particulars": row.particulars,
                 "percentage": row.percentage,
                 "milestone_date": row.milestone_date,

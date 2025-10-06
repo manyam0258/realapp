@@ -60,6 +60,7 @@ class CostSheet(Document):
                 self.append("payment_schedule", {
                     "scheme_code": r.get("scheme_code"),
                     "milestone": r.get("milestone"),
+                    "milestone_item": r.get("milestone_item"),
                     "particulars": r.get("particulars"),
                     "percentage": r.get("percentage"),
                     "milestone_date": r.get("milestone_date"),
@@ -170,6 +171,7 @@ def get_payment_scheme_rows(template: str, block: str = None):
         out.append({
             "scheme_code": d.scheme_code,
             "milestone": d.milestone,
+            "milestone_item": d.milestone_item,
             "particulars": d.particulars,
             "percentage": d.percentage,
             "milestone_date": milestone_dates.get(d.scheme_code),
@@ -239,8 +241,6 @@ def compute_before_registration(salable_area: float):
         registration_charges=regn,
         before_registration_total=total,
     )
-
-
 # ---------------- Booking Order map (Create button) ----------------
 
 @frappe.whitelist()
@@ -273,11 +273,15 @@ def make_booking_order(source_name, target_doc=None):
         # scheme
         target.payment_scheme_template = source.payment_scheme_template
 
-        # copy schedule rows
+        # clear child table first to avoid duplicates
+        target.set("payment_schedule", [])
+
+        # copy schedule rows manually (so we control fields like milestone_item)
         for d in source.get("payment_schedule") or []:
             target.append("payment_schedule", {
                 "scheme_code": d.scheme_code,
                 "milestone": d.milestone,
+                "milestone_item": getattr(d, "milestone_item", None),
                 "particulars": d.particulars,
                 "percentage": d.percentage,
                 "milestone_date": d.milestone_date,
@@ -287,27 +291,24 @@ def make_booking_order(source_name, target_doc=None):
                 "net_payable": d.net_payable,
             })
 
-        # --- 🔹 NEW: update Cost Sheet with this Booking Order ---
+        # update Cost Sheet with Booking Order link
         frappe.db.set_value("Cost Sheet", source.name, "booking_order", target.name)
 
     return get_mapped_doc(
-    "Cost Sheet",
-    source_name,
-    {
-        "Cost Sheet": {
-            "doctype": "Booking Order",
-            "field_map": {
-                "name": "cost_sheet"
+        "Cost Sheet",
+        source_name,
+        {
+            "Cost Sheet": {
+                "doctype": "Booking Order",
+                "field_map": {"name": "cost_sheet"},
+                "field_no_map": ["naming_series"],  # prevent copying Cost Sheet series
             },
-            "field_no_map": [
-                "naming_series"   # <-- prevent copying Cost Sheet series
-            ],
-        }
-    },
-    target_doc,
-    postprocess,
-)
-    # ✅ After creation, set Booking Order link back on Cost Sheet
-    frappe.db.set_value("Cost Sheet", source_name, "booking_order", booking_order.name)
-
-    return booking_order
+            # 🔹 explicitly stop automatic mapping of child table
+            "Cost Sheet Payment Schedule": {
+                "doctype": "Booking Order Payment Schedule",
+                "field_no_map": ["*"]
+            }
+        },
+        target_doc,
+        postprocess,
+    )
