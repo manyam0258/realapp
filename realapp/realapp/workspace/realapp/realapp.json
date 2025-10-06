@@ -1,6 +1,15 @@
 {
- "charts": [],
- "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Tower Wise",
+   "label": "Tower Wise Units"
+  },
+  {
+   "chart_name": "Unit Types",
+   "label": "Unit Types"
+  }
+ ],
+ "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"GOIXGPNyMZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tower Wise Units\",\"col\":6}},{\"id\":\"PyRlKWA05n\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Unit Types\",\"col\":6}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}}]",
  "creation": "2025-10-05 15:28:28.850428",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,55 +22,6 @@
  "is_hidden": 0,
  "label": "Realapp",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Masters",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Unit",
-   "link_count": 0,
-   "link_to": "Unit",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Floor",
-   "link_count": 0,
-   "link_to": "Floor",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Block",
-   "link_count": 0,
-   "link_to": "Block",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Project",
-   "link_count": 0,
-   "link_to": "Project",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -110,9 +70,58 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Unit",
+   "link_count": 0,
+   "link_to": "Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Floor",
+   "link_count": 0,
+   "link_to": "Floor",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Block",
+   "link_count": 0,
+   "link_to": "Block",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Project",
+   "link_count": 0,
+   "link_to": "Project",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-10-05 22:35:49.991117",
+ "modified": "2025-10-06 13:21:43.638824",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",
