@@ -13,6 +13,10 @@ frappe.ui.form.on('Booking Order', {
   },
 
   refresh(frm) {
+    // Child table should be editable only in draft
+    frm.set_df_property("payment_schedule", "read_only", frm.doc.docstatus === 1);
+    frm.refresh_field("payment_schedule");
+
     // Add Create Sales Invoice button only after submission
     if (!frm.is_new() && frm.doc.docstatus === 1) {
       frm.add_custom_button(__('Sales Invoice'), () => {
@@ -105,15 +109,18 @@ function open_milestone_dialog(frm) {
         fieldname: 'milestones',
         label: 'Milestones',
         cannot_add_rows: true,
+        cannot_delete_rows: true,
+        hide_row_index: true,
         in_place_edit: false,
         data: (frm.doc.payment_schedule || []).map(r => {
           return {
-            name: r.name,                // 🔹 add row identifier
+            name: r.name,
             scheme_code: r.scheme_code,
             milestone: r.milestone,
             milestone_item: r.milestone_item,
             amount: r.amount,
-            milestone_date: r.milestone_date
+            milestone_date: r.milestone_date,
+            selected: 0   // checkbox default
           };
         }),
         get_data: function() { return this.data; },
@@ -130,7 +137,7 @@ function open_milestone_dialog(frm) {
     primary_action(values) {
       let selected_rows = (values.milestones || [])
         .filter(r => r.selected)
-        .map(r => r.name);   // now works
+        .map(r => r.name);
 
       if (!selected_rows.length) {
         frappe.msgprint(__('Please select at least one milestone.'));
@@ -144,15 +151,32 @@ function open_milestone_dialog(frm) {
           selected_rows: JSON.stringify(selected_rows)
         },
         callback(r) {
-          if (r.message) {
-            frappe.model.sync(r.message);
-            frappe.set_route('Form', r.message.doctype, r.message.name);
+          if (!r.message) return;
+
+          if (Array.isArray(r.message) && r.message.length > 1) {
+            // multiple invoices mode
+            let links = r.message.map(inv =>
+              `<a href="/app/${inv.doctype}/${inv.name}" target="_blank">${inv.name}</a>`
+            ).join("<br>");
+            frappe.msgprint(`Created ${r.message.length} Sales Invoices:<br>${links}`);
+          } else {
+            // single invoice mode
+            let inv = Array.isArray(r.message) ? r.message[0] : r.message;
+            frappe.model.sync(inv);
+            frappe.set_route('Form', inv.doctype, inv.name);
           }
         }
       });
 
       d.hide();
     }
+  });
+
+  // Add a "Select All" convenience button
+  d.set_secondary_action_label('Select All');
+  d.set_secondary_action(() => {
+    d.fields_dict.milestones.df.data.forEach(r => r.selected = 1);
+    d.fields_dict.milestones.grid.refresh();
   });
 
   d.show();

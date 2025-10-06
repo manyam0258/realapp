@@ -8,6 +8,7 @@
  "field_order": [
   "naming_series",
   "booking_date",
+  "company",
   "party_type",
   "party",
   "column_break_party",
@@ -52,6 +53,14 @@
    "label": "Booking Date",
    "reqd": 1
   },
+  {
+  "fieldname": "company",
+  "fieldtype": "Link",
+  "label": "Company",
+  "options": "Company",
+  "reqd": 1,
+  "in_list_view": 1
+ },
   {
    "fieldname": "party_type",
    "fieldtype": "Select",
@@ -229,15 +238,11 @@
  "is_submittable": 1,
  "links": [
   {
-   "link_doctype": "Cost Sheet",
+   "link_doctype": "Sales Invoice",
    "link_fieldname": "booking_order"
-  },
-  {
-   "link_doctype": "Unit",
-   "link_fieldname": "unit_name"
   }
  ],
- "modified": "2025-10-06 17:12:16.407548",
+ "modified": "2025-10-06 22:38:37.120404",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Booking Order",
