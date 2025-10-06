@@ -175,8 +175,7 @@
    "fieldname": "payment_schedule",
    "fieldtype": "Table",
    "label": "Payment Schedule",
-   "options": "Booking Order Payment Schedule",
-   "read_only": 1
+   "options": "Booking Order Payment Schedule"
   },
   {
    "fieldname": "section_terms",

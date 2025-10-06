@@ -1,4 +1,4 @@
-// Copyright (c) 2025, surendhranath and contributors
+// Copyright (c) 2025, surendhranath
 // For license information, please see license.txt
 
 frappe.ui.form.on('Booking Order', {
@@ -12,9 +12,17 @@ frappe.ui.form.on('Booking Order', {
     });
   },
 
+  refresh(frm) {
+    // Add Create Sales Invoice button only after submission
+    if (!frm.is_new() && frm.doc.docstatus === 1) {
+      frm.add_custom_button(__('Sales Invoice'), () => {
+        open_milestone_dialog(frm);
+      }, __('Create'));
+    }
+  },
+
   unit(frm) {
     if (frm.doc.unit && frm.doc.cost_sheet) {
-      // Reload cost sheet snapshot
       pull_cost_sheet_snapshot(frm);
     }
   },
@@ -63,6 +71,7 @@ function pull_cost_sheet_snapshot(frm) {
         let child = frm.add_child("payment_schedule");
         frappe.model.set_value(child.doctype, child.name, "scheme_code", row.scheme_code);
         frappe.model.set_value(child.doctype, child.name, "milestone", row.milestone);
+        frappe.model.set_value(child.doctype, child.name, "milestone_item", row.milestone_item);
         frappe.model.set_value(child.doctype, child.name, "particulars", row.particulars);
         frappe.model.set_value(child.doctype, child.name, "percentage", row.percentage);
         frappe.model.set_value(child.doctype, child.name, "milestone_date", row.milestone_date);
@@ -85,3 +94,66 @@ function compute_balance(frm) {
 }
 
 function flt(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
+
+// ----------------- Milestone → Invoice Dialog -----------------
+function open_milestone_dialog(frm) {
+  let d = new frappe.ui.Dialog({
+    title: 'Select Milestones for Sales Invoice',
+    fields: [
+      {
+        fieldtype: 'Table',
+        fieldname: 'milestones',
+        label: 'Milestones',
+        cannot_add_rows: true,
+        in_place_edit: false,
+        data: (frm.doc.payment_schedule || []).map(r => {
+          return {
+            name: r.name,                // 🔹 add row identifier
+            scheme_code: r.scheme_code,
+            milestone: r.milestone,
+            milestone_item: r.milestone_item,
+            amount: r.amount,
+            milestone_date: r.milestone_date
+          };
+        }),
+        get_data: function() { return this.data; },
+        fields: [
+          { fieldtype: 'Check', fieldname: 'selected', label: '✓', in_list_view: 1, width: '5%' },
+          { fieldtype: 'Data', fieldname: 'milestone', label: 'Milestone', in_list_view: 1, read_only: 1, width: '25%' },
+          { fieldtype: 'Link', fieldname: 'milestone_item', label: 'Item', options: 'Item', in_list_view: 1, read_only: 1, width: '20%' },
+          { fieldtype: 'Currency', fieldname: 'amount', label: 'Amount', in_list_view: 1, read_only: 1, width: '15%' },
+          { fieldtype: 'Date', fieldname: 'milestone_date', label: 'Due Date', in_list_view: 1, read_only: 1, width: '15%' }
+        ]
+      }
+    ],
+    primary_action_label: 'Create Sales Invoice',
+    primary_action(values) {
+      let selected_rows = (values.milestones || [])
+        .filter(r => r.selected)
+        .map(r => r.name);   // now works
+
+      if (!selected_rows.length) {
+        frappe.msgprint(__('Please select at least one milestone.'));
+        return;
+      }
+
+      frappe.call({
+        method: "realapp.realapp.doctype.booking_order.booking_order.make_sales_invoice",
+        args: {
+          source_name: frm.doc.name,
+          selected_rows: JSON.stringify(selected_rows)
+        },
+        callback(r) {
+          if (r.message) {
+            frappe.model.sync(r.message);
+            frappe.set_route('Form', r.message.doctype, r.message.name);
+          }
+        }
+      });
+
+      d.hide();
+    }
+  });
+
+  d.show();
+}

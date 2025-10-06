@@ -1,0 +1,59 @@
+[
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice-booking_order",
+    "dt": "Sales Invoice",
+    "fieldname": "booking_order",
+    "label": "Booking Order",
+    "fieldtype": "Link",
+    "options": "Booking Order",
+    "insert_after": "customer",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice-unit",
+    "dt": "Sales Invoice",
+    "fieldname": "realapp_unit",
+    "label": "Unit",
+    "fieldtype": "Link",
+    "options": "Unit",
+    "insert_after": "booking_order"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice-realapp_project",
+    "dt": "Sales Invoice",
+    "fieldname": "realapp_project",
+    "label": "Realapp Project",
+    "fieldtype": "Data",
+    "insert_after": "realapp_unit"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice-realapp_block",
+    "dt": "Sales Invoice",
+    "fieldname": "realapp_block",
+    "label": "Realapp Block",
+    "fieldtype": "Data",
+    "insert_after": "realapp_project"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice-floor_number",
+    "dt": "Sales Invoice",
+    "fieldname": "realapp_floor_number",
+    "label": "Floor Number",
+    "fieldtype": "Int",
+    "insert_after": "realapp_block"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Sales Invoice Item-milestone_code",
+    "dt": "Sales Invoice Item",
+    "fieldname": "milestone_code",
+    "label": "Milestone Code",
+    "fieldtype": "Data",
+    "insert_after": "item_code"
+  }
+]
