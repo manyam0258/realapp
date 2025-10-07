@@ -4,7 +4,6 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import flt
-from frappe.model.mapper import get_mapped_doc
 
 
 class BookingOrder(Document):
@@ -169,6 +168,10 @@ def _build_single_sales_invoice(bo, row, save=False):
     si.realapp_block = bo.block
     si.realapp_floor_number = bo.floor_number
 
+    # Set due_date at parent level if milestone_date exists
+    if row.milestone_date:
+        si.due_date = row.milestone_date
+
     # Add item
     si.append("items", {
         "item_code": row.milestone_item,
@@ -180,7 +183,6 @@ def _build_single_sales_invoice(bo, row, save=False):
         "amount": row.amount,
         "income_account": defaults.get("income_account"),
         "cost_center": defaults.get("cost_center"),
-        "due_date": row.milestone_date,
         "project": bo.project,
     })
 
