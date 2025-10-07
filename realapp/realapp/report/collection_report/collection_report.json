@@ -1,0 +1,86 @@
+{
+ "add_total_row": 1,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2025-10-07 13:00:52.675016",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "mandatory": 0,
+   "options": "Company",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "mandatory": 0,
+   "options": "Project",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Data",
+   "label": "Block",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "unit_name",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "mandatory": 0,
+   "options": "Customer",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "milestone",
+   "fieldtype": "Data",
+   "label": "Milestone",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "milestone_item",
+   "fieldtype": "Link",
+   "label": "Milestone Item",
+   "mandatory": 0,
+   "options": "Item",
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2025-10-07 17:12:04.006035",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Collection Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\r\n  bo.name AS \"Booking Order:Link/Booking Order:150\",\r\n  bo.party AS \"Customer:Link/Customer:150\",\r\n  bo.project AS \"Project:Link/Project:120\",\r\n  bo.block AS \"Block:Data:100\",\r\n  bo.unit AS \"Unit:Link/Unit:120\",\r\n  ps.scheme_code AS \"Scheme Code:Data:100\",\r\n  ps.milestone AS \"Milestone:Data:150\",\r\n  ps.milestone_item AS \"Milestone Item:Link/Item:120\",\r\n  ps.milestone_date AS \"Milestone Date:Date:100\",\r\n  ps.amount AS \"Demand Amount:Currency:120\",\r\n  IFNULL(SUM(DISTINCT si_item.amount), 0) AS \"Invoiced Amount:Currency:120\",\r\n  IFNULL(SUM(DISTINCT pe_ref.allocated_amount), 0) AS \"Collected Amount:Currency:120\",\r\n  ps.amount - IFNULL(SUM(DISTINCT pe_ref.allocated_amount), 0) AS \"Outstanding:Currency:120\",\r\n  CASE\r\n    WHEN SUM(DISTINCT si_item.amount) = 0 THEN \"Pending\"\r\n    WHEN SUM(DISTINCT si_item.amount) > 0 AND SUM(DISTINCT pe_ref.allocated_amount) = 0 THEN \"Invoiced\"\r\n    WHEN ps.amount > SUM(DISTINCT pe_ref.allocated_amount) THEN \"Partially Paid\"\r\n    ELSE \"Fully Paid\"\r\n  END AS \"Status:Data:120\"\r\nFROM\r\n  `tabBooking Order` bo\r\nJOIN\r\n  `tabBooking Order Payment Schedule` ps ON ps.parent = bo.name\r\nLEFT JOIN\r\n  `tabSales Invoice Item` si_item \r\n    ON si_item.booking_order = bo.name\r\n    AND si_item.item_code = ps.milestone_item\r\nLEFT JOIN\r\n  `tabSales Invoice` si \r\n    ON si.name = si_item.parent AND si.docstatus = 1\r\nLEFT JOIN\r\n  `tabPayment Entry Reference` pe_ref \r\n    ON pe_ref.reference_name = si.name AND pe_ref.docstatus = 1\r\nWHERE\r\n  bo.docstatus = 1\r\n  {% if company %} AND bo.company = %(company)s {% endif %}\r\n  {% if project %} AND bo.project = %(project)s {% endif %}\r\n  {% if block %} AND bo.block = %(block)s {% endif %}\r\nGROUP BY\r\n  bo.name, ps.name\r\nORDER BY\r\n  ps.milestone_date, bo.name\r\n",
+ "ref_doctype": "Booking Order",
+ "report_name": "Collection Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Accounts Manager"
+  }
+ ],
+ "timeout": 0
+}
