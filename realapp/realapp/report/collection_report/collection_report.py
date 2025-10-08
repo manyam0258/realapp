@@ -78,9 +78,9 @@ def get_data(filters):
             si.name AS invoice_no,
             si.posting_date,
             si.due_date,
-            si.grand_total AS invoice_amount,
+            si.rounded_total AS invoice_amount,
             IFNULL(SUM(per.allocated_amount), 0) AS paid_amount,
-            (si.grand_total - IFNULL(SUM(per.allocated_amount), 0)) AS outstanding,
+            (si.rounded_total - IFNULL(SUM(per.allocated_amount), 0)) AS outstanding,
             MAX(pe.posting_date) AS last_payment_date
         FROM
             `tabSales Invoice` si
