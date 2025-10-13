@@ -52,6 +52,11 @@ class Unit(Document):
             if self.get(unit_field) in (None, ""):
                 self.set(unit_field, settings.get(settings_field) or 0)
 
+        # --- NEW ---
+        # Default documentation charges from Realapp Settings if empty
+        if not self.documentation_charges:
+            self.documentation_charges = flt(settings.get("default_documentation_charges") or 0)
+
         # Always sync tax rates
         self.gst_rate = settings.gst_rate
         self.tds_rate = settings.tds_rate
@@ -67,6 +72,7 @@ class Unit(Document):
         facing_rate = flt(self.facing_premium_charges or 0)
         corner_rate = flt(self.corner_premium_charges or 0)
         car_parking = flt(self.car_parking_amount or 0)
+        doc_charges = flt(self.documentation_charges or 0)  # --- NEW ---
 
         amen_rate   = flt(self.amenities_charges_per_sft or 0)
         infra_rate  = flt(self.infra_charges_per_sft or 0)
@@ -86,18 +92,24 @@ class Unit(Document):
             self.tds_amount = 0
             self.net_payable = 0
             self.effective_rate_per_sft = 0
+            self.unit_base_amount = 0
             return
 
         self.amenities_charges_amt = flt(amen_rate * area, 2)
         self.infra_charges_amt = flt(infra_rate * area, 2)
         self.floor_rise_charges_amt = flt(rise_rate * area, 2)
 
+        # --- NEW ---
+        self.unit_base_amount = flt(area * base_rate, 2)
+
+        # Include documentation charges in total computation
         self.full_unit_value = flt(
-            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking, 2
+            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking + doc_charges, 2
         )
         self.value_excluding_bp = flt(
-            (area * (rise_rate + facing_rate + corner_rate)) + car_parking, 2
+            (area * (rise_rate + facing_rate + corner_rate)) + car_parking + doc_charges, 2
         )
+
         self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
 
         self.aos_gst = flt((self.aos_value * gst_rate) / 100, 2)
@@ -170,7 +182,7 @@ def make_cost_sheet(source_name, target_doc=None):
             "Unit": {
                 "doctype": "Cost Sheet",
                 "field_map": {"name": "unit"},
-                "field_no_map": ["naming_series"],  # Ensure Cost Sheet uses its own series
+                "field_no_map": ["naming_series"],
             }
         },
         target_doc,

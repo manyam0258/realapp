@@ -46,6 +46,7 @@
   "amenities_charges_per_sft",
   "infra_charges_per_sft",
   "documentation_charges",
+  "unit_base_amount",
   "section_computed",
   "infra_charges_amt",
   "amenities_charges_amt",
@@ -167,6 +168,13 @@
    "label": "Documentation Charges"
   },
   {
+   "fieldname": "unit_base_amount",
+   "fieldtype": "Currency",
+   "label": "Unit Base Amount",
+   "description": "Basic Price * Salable Area",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_computed",
    "fieldtype": "Section Break",
    "label": "Computed Values"
@@ -193,14 +201,14 @@
    "read_only": 1
   },
   {
-   "description": "Salable Area * (Basic Price + Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount",
+   "description": "Salable Area * (Basic Price + Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount + Documentation Charges",
    "fieldname": "full_unit_value",
    "fieldtype": "Currency",
    "label": "Full Unit Value",
    "read_only": 1
   },
   {
-   "description": "Salable Area * (Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount",
+   "description": "Salable Area * (Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount + Documentation Charges",
    "fieldname": "value_excluding_bp",
    "fieldtype": "Currency",
    "label": "Value Excluding Base Price",
@@ -371,7 +379,7 @@
    "link_fieldname": "unit"
   }
  ],
- "modified": "2025-10-06 17:14:17.384801",
+ "modified": "2025-10-13 18:30:00",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",

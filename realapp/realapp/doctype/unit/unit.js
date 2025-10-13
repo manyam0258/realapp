@@ -39,6 +39,7 @@ frappe.ui.form.on('Unit', {
   facing_premium_charges: recalc,
   corner_premium_charges: recalc,
   car_parking_amount: recalc,
+  documentation_charges: recalc, // NEW
   amenities_charges_per_sft: recalc,
   infra_charges_per_sft: recalc,
   gst_rate: recalc,
@@ -48,7 +49,6 @@ frappe.ui.form.on('Unit', {
 // ---------- helpers ----------
 
 function nz(v) {
-  // Numeric safe conversion
   const n = parseFloat(v);
   return isNaN(n) ? 0 : n;
 }
@@ -60,6 +60,7 @@ function recalc(frm) {
   const facing_rate = nz(frm.doc.facing_premium_charges);
   const corner_rate = nz(frm.doc.corner_premium_charges);
   const car_park    = nz(frm.doc.car_parking_amount);
+  const doc_charges = nz(frm.doc.documentation_charges); // NEW
 
   const amen_rate   = nz(frm.doc.amenities_charges_per_sft);
   const infra_rate  = nz(frm.doc.infra_charges_per_sft);
@@ -79,12 +80,12 @@ function recalc(frm) {
       aos_value_gst: 0,
       tds_amount: 0,
       net_payable: 0,
-      effective_rate_per_sft: 0
+      effective_rate_per_sft: 0,
+      unit_base_amount: 0
     });
     return;
   }
 
-  // ---- Informational charges ----
   const amen_amt  = amen_rate * area;
   const infra_amt = infra_rate * area;
   const floor_rise_amt = rise_rate * area;
@@ -93,28 +94,28 @@ function recalc(frm) {
   frm.set_value("infra_charges_amt", infra_amt);
   frm.set_value("floor_rise_charges_amt", floor_rise_amt);
 
-  // ---- Excel rules ----
-  const full_value = (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_park;
+  // NEW
+  const unit_base = area * base_rate;
+  frm.set_value("unit_base_amount", unit_base);
+
+  const full_value = (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_park + doc_charges;
   frm.set_value("full_unit_value", full_value);
 
-  const ex_bp = (area * (rise_rate + facing_rate + corner_rate)) + car_park;
+  const ex_bp = (area * (rise_rate + facing_rate + corner_rate)) + car_park + doc_charges;
   frm.set_value("value_excluding_bp", ex_bp);
 
   const aos = (base_rate * area) + ex_bp;
   frm.set_value("aos_value", aos);
 
-  // GST separate
   const aos_gst = aos * (gst_rate / 100);
   frm.set_value("aos_gst", aos_gst);
 
   const aos_with_gst = aos + aos_gst;
   frm.set_value("aos_value_gst", aos_with_gst);
 
-  // TDS
   const tds = aos * (tds_rate / 100);
   frm.set_value("tds_amount", tds);
 
-  // Net payable & effective rate
   const net = aos_with_gst - tds;
   frm.set_value("net_payable", net);
   frm.set_value("effective_rate_per_sft", area ? net / area : 0);
