@@ -104,10 +104,10 @@ class Unit(Document):
 
         # Include documentation charges in total computation
         self.full_unit_value = flt(
-            (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_parking + doc_charges, 2
+            (area * (base_rate + rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + doc_charges, 2
         )
         self.value_excluding_bp = flt(
-            (area * (rise_rate + facing_rate + corner_rate)) + car_parking + doc_charges, 2
+            (area * (rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + car_parking + doc_charges, 2
         )
 
         self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)

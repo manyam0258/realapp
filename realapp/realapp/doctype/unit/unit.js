@@ -98,10 +98,10 @@ function recalc(frm) {
   const unit_base = area * base_rate;
   frm.set_value("unit_base_amount", unit_base);
 
-  const full_value = (area * (base_rate + rise_rate + facing_rate + corner_rate)) + car_park + doc_charges;
+  const full_value = (area * (base_rate + rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + doc_charges;
   frm.set_value("full_unit_value", full_value);
 
-  const ex_bp = (area * (rise_rate + facing_rate + corner_rate)) + car_park + doc_charges;
+  const ex_bp = (area * (rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + car_park + doc_charges;
   frm.set_value("value_excluding_bp", ex_bp);
 
   const aos = (base_rate * area) + ex_bp;

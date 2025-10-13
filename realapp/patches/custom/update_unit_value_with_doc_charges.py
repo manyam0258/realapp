@@ -59,13 +59,13 @@ def execute():
         unit_base = flt(area * base_rate, 2)
 
         full_unit_value = flt(
-            (area * (base_rate + rise_rate + facing_rate + corner_rate))
-            + car_park + doc_charge,
+            (area * (base_rate + rise_rate + facing_rate + corner_rate + amen_rate + infra_rate))
+            + doc_charge,
             2
         )
 
         value_excluding_bp = flt(
-            (area * (rise_rate + facing_rate + corner_rate))
+            (area * (rise_rate + facing_rate + corner_rate + amen_rate + infra_rate))
             + car_park + doc_charge,
             2
         )
