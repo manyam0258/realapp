@@ -60,8 +60,8 @@
   "aos_value_gst",
   "tds_amount",
   "net_payable",
-  "effective_rate_per_sft",
-  "aos_gst"
+  "aos_gst",
+  "effective_rate_per_sft"
  ],
  "fields": [
   {
@@ -224,7 +224,7 @@
    "read_only": 1
   },
   {
-   "description": "Salable Area * (Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount + Documentation Charges",
+   "description": "Salable Area * (Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Documentation Charges",
    "fieldname": "value_excluding_bp",
    "fieldtype": "Currency",
    "label": "Value Excluding Base Price",
@@ -395,7 +395,7 @@
    "link_fieldname": "unit"
   }
  ],
- "modified": "2025-10-14 11:42:23.260704",
+ "modified": "2025-10-14 11:45:08.117044",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",
