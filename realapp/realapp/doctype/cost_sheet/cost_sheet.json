@@ -34,9 +34,13 @@
   "section_before_registration",
   "maintenance_charges",
   "maintenance_gst",
+  "maintenance_amount",
   "corpus_fund",
   "refundable_caution_deposit",
+  "column_break_ekus",
   "move_in_charges",
+  "move_in_gst",
+  "move_in_amount",
   "registration_charges",
   "before_registration_total",
   "section_summary",
@@ -221,6 +225,18 @@
    "read_only": 1
   },
   {
+   "fieldname": "move_in_gst",
+   "fieldtype": "Currency",
+   "label": "Move-in GST",
+   "read_only": 1
+  },
+  {
+   "fieldname": "move_in_amount",
+   "fieldtype": "Currency",
+   "label": "Move-in Amount",
+   "read_only": 1
+  },
+  {
    "fieldname": "registration_charges",
    "fieldtype": "Currency",
    "label": "Registration Charges",
@@ -270,21 +286,31 @@
    "label": "Booking Order",
    "options": "Booking Order",
    "read_only": 1
+  },
+  {
+   "fieldname": "maintenance_amount",
+   "fieldtype": "Currency",
+   "label": "Maintenance Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ekus",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [
-   {
-     "link_doctype": "Booking Order",
-     "link_fieldname": "cost_sheet"
-   },
-   {
-     "link_doctype": "Unit",
-     "link_fieldname": "unit_name"
-   }
+  {
+   "link_doctype": "Booking Order",
+   "link_fieldname": "cost_sheet"
+  },
+  {
+   "link_doctype": "Unit",
+   "link_fieldname": "unit_name"
+  }
  ],
- "modified": "2025-10-06 12:00:00",
+ "modified": "2025-10-14 13:24:17.657189",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Cost Sheet",

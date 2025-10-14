@@ -116,34 +116,48 @@ class CostSheet(Document):
             d.net_payable = flt(d.amount + d.gst_amount - d.tds_amount, 2)
 
     def _compute_before_registration(self):
-        """Compute read-only Before Registration charges from Settings."""
+        """Compute Before Registration charges (Maintenance, Move-in, etc.)"""
         s = frappe.get_single("Realapp Settings")
         area = flt(self.salable_area)
 
         maint_rate = flt(s.maintenance_rate_per_sft)
         maint_gst_rate = flt(s.maintenance_gst_rate or 18)
         corpus_rate = flt(s.corpus_fund_rate_per_sft)
-        move_in = flt(s.move_in_charges)
+        move_in_base = flt(s.move_in_charges)
+        move_in_gst_rate = flt(s.move_in_gst_rate or 18)
         rcd = flt(s.refundable_caution_deposit)
         regn = flt(s.default_registration_charges)
 
+        # Maintenance
         maintenance_charges = flt(maint_rate * area, 2)
         maintenance_gst = flt(maintenance_charges * maint_gst_rate / 100.0, 2)
+        maintenance_amount = flt(maintenance_charges + maintenance_gst, 2)
+
+        # Corpus fund
         corpus_fund = flt(corpus_rate * area, 2)
 
-        total = flt(maintenance_charges + maintenance_gst + corpus_fund + move_in + rcd + regn, 2)
+        # Move-in
+        move_in_gst = flt(move_in_base * move_in_gst_rate / 100.0, 2)
+        move_in_amount = flt(move_in_base + move_in_gst, 2)
+
+        # Total before registration
+        total = flt(maintenance_amount + corpus_fund + rcd + move_in_amount + regn, 2)
 
         self.maintenance_charges = maintenance_charges
         self.maintenance_gst = maintenance_gst
+        # optional if you want to surface maintenance_amount field on doctype
+        self.maintenance_amount = maintenance_amount
         self.corpus_fund = corpus_fund
-        self.move_in_charges = move_in
         self.refundable_caution_deposit = rcd
+        self.move_in_charges = move_in_base
+        self.move_in_gst = move_in_gst
+        self.move_in_amount = move_in_amount
         self.registration_charges = regn
         self.before_registration_total = total
 
     def _compute_grand_total(self):
-        self.grand_total_payable = flt(self.aos_value_gst) + flt(self.before_registration_total or 0.0)
-
+        """Compute the final grand total payable amount."""
+        self.grand_total_payable = flt(self.aos_value_gst or 0) + flt(self.before_registration_total or 0)
 
 # ---------------- Whitelisted helpers ----------------
 
@@ -212,7 +226,6 @@ def compute_header_values(base_price_per_sft: float, salable_area: float, value_
         effective_rate_per_sft=flt(net / area, 2),
     )
 
-
 @frappe.whitelist()
 def compute_before_registration(salable_area: float):
     """Stateless compute of 'Before Registration' charges (for client refresh)."""
@@ -222,25 +235,39 @@ def compute_before_registration(salable_area: float):
     maint_rate = flt(s.maintenance_rate_per_sft)
     maint_gst_rate = flt(s.maintenance_gst_rate or 18)
     corpus_rate = flt(s.corpus_fund_rate_per_sft)
-    move_in = flt(s.move_in_charges)
+    move_in_base = flt(s.move_in_charges)
+    move_in_gst_rate = flt(s.move_in_gst_rate or 18)
     rcd = flt(s.refundable_caution_deposit)
     regn = flt(s.default_registration_charges)
 
+    # Maintenance
     maintenance_charges = flt(maint_rate * area, 2)
     maintenance_gst = flt(maintenance_charges * maint_gst_rate / 100.0, 2)
+    maintenance_amount = flt(maintenance_charges + maintenance_gst, 2)
+
+    # Corpus fund
     corpus_fund = flt(corpus_rate * area, 2)
 
-    total = flt(maintenance_charges + maintenance_gst + corpus_fund + move_in + rcd + regn, 2)
+    # Move-in
+    move_in_gst = flt(move_in_base * move_in_gst_rate / 100.0, 2)
+    move_in_amount = flt(move_in_base + move_in_gst, 2)
+
+    # Total before registration
+    total = flt(maintenance_amount + corpus_fund + rcd + move_in_amount + regn, 2)
 
     return frappe._dict(
         maintenance_charges=maintenance_charges,
         maintenance_gst=maintenance_gst,
+        maintenance_amount=maintenance_amount,
         corpus_fund=corpus_fund,
-        move_in_charges=move_in,
         refundable_caution_deposit=rcd,
+        move_in_charges=move_in_base,
+        move_in_gst=move_in_gst,
+        move_in_amount=move_in_amount,
         registration_charges=regn,
         before_registration_total=total,
     )
+
 # ---------------- Booking Order map (Create button) ----------------
 
 @frappe.whitelist()

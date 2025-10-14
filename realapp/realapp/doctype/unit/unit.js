@@ -109,7 +109,7 @@ function recalc(frm) {
   const ex_bp = (area * (rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + doc_charges;
   frm.set_value("value_excluding_bp", ex_bp);
 
-  const aos = (base_rate * area) + ex_bp;
+  const aos = (base_rate * area) + ex_bp + car_park;
   frm.set_value("aos_value", aos);
 
   const aos_gst = aos * (gst_rate / 100);

@@ -9,7 +9,7 @@
    "label": "Unit Types"
   }
  ],
- "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"GOIXGPNyMZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tower Wise Units\",\"col\":6}},{\"id\":\"PyRlKWA05n\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Unit Types\",\"col\":6}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}}]",
+ "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"GOIXGPNyMZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tower Wise Units\",\"col\":6}},{\"id\":\"PyRlKWA05n\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Unit Types\",\"col\":6}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}},{\"id\":\"BCi7LdbCrg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2025-10-05 15:28:28.850428",
  "custom_blocks": [],
  "docstatus": 0,
@@ -119,9 +119,28 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Collection Report",
+   "link_count": 0,
+   "link_to": "Collection Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2025-10-06 13:21:43.638824",
+ "modified": "2025-10-14 14:14:01.689908",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",

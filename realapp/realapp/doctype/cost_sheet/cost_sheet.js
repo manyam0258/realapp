@@ -186,12 +186,16 @@ function recalc_before_registration_and_grand_total(frm) {
     args: { salable_area: flt(frm.doc.salable_area) }
   }).then(r => {
     const b = (r && r.message) || {};
+
     frm.set_value({
       maintenance_charges: b.maintenance_charges,
       maintenance_gst: b.maintenance_gst,
+      maintenance_amount: b.maintenance_amount,
       corpus_fund: b.corpus_fund,
       refundable_caution_deposit: b.refundable_caution_deposit,
       move_in_charges: b.move_in_charges,
+      move_in_gst: b.move_in_gst,
+      move_in_amount: b.move_in_amount,
       registration_charges: b.registration_charges,
       before_registration_total: b.before_registration_total
     });

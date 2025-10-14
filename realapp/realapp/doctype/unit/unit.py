@@ -113,7 +113,7 @@ class Unit(Document):
             (area * (rise_rate + facing_rate + corner_rate + amen_rate + infra_rate)) + doc_charges, 2
         )
 
-        self.aos_value = flt((base_rate * area) + self.value_excluding_bp, 2)
+        self.aos_value = flt((base_rate * area) + self.value_excluding_bp + self.car_parking_amount, 2)
 
         self.aos_gst = flt((self.aos_value * gst_rate) / 100, 2)
         self.aos_value_gst = flt(self.aos_value + self.aos_gst, 2)

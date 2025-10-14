@@ -231,7 +231,7 @@
    "read_only": 1
   },
   {
-   "description": "(Basic Price * Salable Area) + Value Excluding Base Price",
+   "description": "Full Unit Value + Car Parking Amount",
    "fieldname": "aos_value",
    "fieldtype": "Currency",
    "label": "Agreement of Sale (AOS) Value",

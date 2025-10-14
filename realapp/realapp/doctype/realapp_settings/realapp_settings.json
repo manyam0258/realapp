@@ -115,6 +115,12 @@
    "label": "Move-in Charges"
   },
   {
+  "default": "18",
+  "fieldname": "move_in_gst_rate",
+  "fieldtype": "Percent",
+  "label": "Move-in GST Rate"
+  },
+  {
    "fieldname": "corpus_fund_rate_per_sft",
    "fieldtype": "Currency",
    "label": "Corpus Fund Rate (per sft)"
