@@ -98,6 +98,9 @@ class Unit(Document):
         self.amenities_charges_amt = flt(amen_rate * area, 2)
         self.infra_charges_amt = flt(infra_rate * area, 2)
         self.floor_rise_charges_amt = flt(rise_rate * area, 2)
+        self.facing_premium_amount = flt(facing_rate * area, 2)
+        self.corner_premium_amount = flt(corner_rate * area, 2)
+
 
         # --- NEW ---
         self.unit_base_amount = flt(area * base_rate, 2)

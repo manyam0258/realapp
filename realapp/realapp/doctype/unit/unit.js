@@ -89,10 +89,15 @@ function recalc(frm) {
   const amen_amt  = amen_rate * area;
   const infra_amt = infra_rate * area;
   const floor_rise_amt = rise_rate * area;
+  const facing_amt = facing_rate * area;
+  const corner_amt = corner_rate * area;
+
 
   frm.set_value("amenities_charges_amt", amen_amt);
   frm.set_value("infra_charges_amt", infra_amt);
   frm.set_value("floor_rise_charges_amt", floor_rise_amt);
+  frm.set_value("facing_premium_amount", facing_amt);
+  frm.set_value("corner_premium_amount", corner_amt);
 
   // NEW
   const unit_base = area * base_rate;

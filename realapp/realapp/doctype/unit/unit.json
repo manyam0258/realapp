@@ -46,15 +46,17 @@
   "amenities_charges_per_sft",
   "infra_charges_per_sft",
   "documentation_charges",
-  "unit_base_amount",
   "section_computed",
   "infra_charges_amt",
   "amenities_charges_amt",
   "floor_rise_charges_amt",
-  "full_unit_value",
+  "corner_premium_amount",
+  "facing_premium_amount",
+  "unit_base_amount",
   "value_excluding_bp",
   "column_break_qria",
   "aos_value",
+  "full_unit_value",
   "aos_value_gst",
   "tds_amount",
   "net_payable",
@@ -168,10 +170,10 @@
    "label": "Documentation Charges"
   },
   {
+   "description": "Basic Price * Salable Area",
    "fieldname": "unit_base_amount",
    "fieldtype": "Currency",
    "label": "Unit Base Amount",
-   "description": "Basic Price * Salable Area",
    "read_only": 1
   },
   {
@@ -201,7 +203,21 @@
    "read_only": 1
   },
   {
-   "description": "Salable Area * (Basic Price + Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Car Parking Amount + Documentation Charges",
+   "description": "Facing Premium Charges * Salable Area",
+   "fieldname": "facing_premium_amount",
+   "fieldtype": "Currency",
+   "label": "Facing Premium Amount",
+   "read_only": 1
+  },
+  {
+   "description": "Corner Premium Charges * Salable Area",
+   "fieldname": "corner_premium_amount",
+   "fieldtype": "Currency",
+   "label": "Corner Premium Amount",
+   "read_only": 1
+  },
+  {
+   "description": "Salable Area * (Basic Price + Floor Rise Rate + Facing Premium Charges + Corner Premium Charges) + Documentation Charges",
    "fieldname": "full_unit_value",
    "fieldtype": "Currency",
    "label": "Full Unit Value",
@@ -379,7 +395,7 @@
    "link_fieldname": "unit"
   }
  ],
- "modified": "2025-10-13 18:30:00",
+ "modified": "2025-10-14 11:42:23.260704",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Unit",

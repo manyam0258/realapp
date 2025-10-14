@@ -7,4 +7,6 @@
 realapp.patches.custom.add_unit_base_amount_field
 realapp.patches.custom.backfill_unit_base_amount_values
 realapp.patches.custom.update_unit_value_with_doc_charges
+realapp.patches.custom.add_facing_and_corner_amount_fields
+realapp.patches.custom.backfill_facing_and_corner_premium_values
 
