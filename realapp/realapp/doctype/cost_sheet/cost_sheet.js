@@ -3,21 +3,24 @@
 
 frappe.ui.form.on('Cost Sheet', {
   setup(frm) {
-    // Only show active templates
-    frm.set_query('payment_scheme_template', () => ({
-      filters: { is_active: 1 }
-    }));
+    frm.set_query('payment_scheme_template', () => ({ filters: { is_active: 1 } }));
   },
 
   refresh(frm) {
     toggle_basic_price_editability(frm);
 
-    // Show "Create Booking Order" button only when doc exists & not cancelled
+    // Show Create Booking Order button
     if (!frm.is_new() && frm.doc.docstatus < 2) {
       frm.add_custom_button(__('Booking Order'), () => {
         create_booking_order(frm);
       }, __('Create'));
     }
+
+    // Add manual Recalculate button
+    frm.add_custom_button(__('Recalculate All'), () => {
+      recalc_header_from_base(frm);
+      recalc_before_registration_and_grand_total(frm);
+    }, __('Actions'));
   },
 
   cost_sheet_type(frm) {
@@ -42,52 +45,49 @@ frappe.ui.form.on('Cost Sheet', {
   },
 
   basic_price_per_sft(frm) {
-    recalc_header_from_base(frm);
-    recalc_before_registration_and_grand_total(frm);
-  },
-
-  payment_scheme_template(frm) {
-    if (frm.doc.payment_scheme_template) {
-      frappe.call({
-        method: "realapp.realapp.doctype.cost_sheet.cost_sheet.get_payment_scheme_rows",
-        args: {
-          template: frm.doc.payment_scheme_template,
-          block: frm.doc.block
-        },
-        callback(r) {
-          if (r.message) {
-            frm.clear_table("payment_schedule");
-            r.message.forEach(row => {
-              let child = frm.add_child("payment_schedule");
-              frappe.model.set_value(child.doctype, child.name, "scheme_code", row.scheme_code);
-              frappe.model.set_value(child.doctype, child.name, "milestone", row.milestone);
-              frappe.model.set_value(child.doctype, child.name, "milestone_item", row.milestone_item); // ✅ fixed
-              frappe.model.set_value(child.doctype, child.name, "particulars", row.particulars);
-              frappe.model.set_value(child.doctype, child.name, "percentage", row.percentage);
-              frappe.model.set_value(child.doctype, child.name, "milestone_date", row.milestone_date);
-            });
-            frm.refresh_field("payment_schedule");
-            recalc_schedule_amounts(frm); // immediately compute amounts
-
-            frappe.show_alert({message: __("Payment Schedule loaded from Template"), indicator: 'green'});
-          }
-        }
-      });
+    if (frm.doc.cost_sheet_type === 'Negotiated') {
+      recalc_header_from_base(frm);
+      recalc_before_registration_and_grand_total(frm);
     }
   },
 
-  payment_schedule_percentage(frm, cdt, cdn) {
-    recalc_schedule_amounts(frm);
+  payment_scheme_template(frm) {
+    if (!frm.doc.payment_scheme_template) return;
+    frappe.call({
+      method: "realapp.realapp.doctype.cost_sheet.cost_sheet.get_payment_scheme_rows",
+      args: { template: frm.doc.payment_scheme_template, block: frm.doc.block },
+      callback(r) {
+        if (r.message) {
+          frm.clear_table("payment_schedule");
+          r.message.forEach(row => {
+            frm.add_child("payment_schedule", {
+              scheme_code: row.scheme_code,
+              milestone: row.milestone,
+              milestone_item: row.milestone_item,
+              particulars: row.particulars,
+              percentage: row.percentage,
+              milestone_date: row.milestone_date
+            });
+          });
+          frm.refresh_field("payment_schedule");
+          recalc_schedule_amounts(frm);
+          frappe.show_alert({ message: __("Payment Schedule loaded"), indicator: 'green' });
+        }
+      }
+    });
   },
+
+  payment_schedule_percentage(frm, cdt, cdn) { recalc_schedule_amounts(frm); },
   payment_schedule_add(frm) { recalc_schedule_amounts(frm); },
   payment_schedule_remove(frm) { recalc_schedule_amounts(frm); },
 });
 
-// ---------- helpers ----------
-
+// ------------------------------------------------------------------------
+// Helpers
+// ------------------------------------------------------------------------
 function toggle_basic_price_editability(frm) {
-  const negotiated = frm.doc.cost_sheet_type === 'Negotiated';
-  frm.set_df_property('basic_price_per_sft', 'read_only', !negotiated);
+  const editable = frm.doc.cost_sheet_type === 'Negotiated';
+  frm.set_df_property('basic_price_per_sft', 'read_only', !editable);
   frm.refresh_field('basic_price_per_sft');
 }
 
@@ -103,33 +103,18 @@ function pull_unit_numbers(frm) {
       tds_amount: flt(u.tds_amount),
       net_payable: flt(u.net_payable),
       eff_rate: flt(u.effective_rate_per_sft),
-      project: u.project || '',
-      block: u.block || '',
-      floor_number: cint(u.floor_number)
+      project: u.project,
+      block: u.block,
+      floor_number: cint(u.floor_number),
+      car_parking_amount: flt(u.car_parking_amount)
     };
 
     frm.set_value({
-      project: frm.__unit_ctx.project,
-      block: frm.__unit_ctx.block,
-      floor_number: frm.__unit_ctx.floor_number,
-      salable_area: frm.__unit_ctx.area
+      project: u.project,
+      block: u.block,
+      floor_number: u.floor_number,
+      salable_area: u.salable_area
     });
-
-    if (frm.doc.cost_sheet_type === 'Standard') {
-      frm.set_value({
-        basic_price_per_sft: frm.__unit_ctx.base_rate,
-        full_unit_value: flt(u.full_unit_value),
-        value_excluding_bp: frm.__unit_ctx.ex_bp,
-        aos_value: frm.__unit_ctx.aos_value,
-        aos_gst: frm.__unit_ctx.aos_gst,
-        aos_value_gst: frm.__unit_ctx.aos_value_gst,
-        tds_amount: frm.__unit_ctx.tds_amount,
-        net_payable: frm.__unit_ctx.net_payable,
-        effective_rate_per_sft: frm.__unit_ctx.eff_rate
-      });
-    } else {
-      frm.set_value('value_excluding_bp', frm.__unit_ctx.ex_bp);
-    }
   });
 }
 
@@ -137,12 +122,15 @@ function recalc_header_from_base(frm) {
   const area  = flt(frm.doc.salable_area);
   const ex_bp = flt(frm.doc.value_excluding_bp);
   const base  = flt(frm.doc.basic_price_per_sft);
+  const car_parking = flt(frm.__unit_ctx ? frm.__unit_ctx.car_parking_amount : 0);
 
   if (area <= 0) {
     frm.set_value({
       aos_value: 0, aos_gst: 0, aos_value_gst: 0,
-      tds_amount: 0, net_payable: 0, effective_rate_per_sft: 0
+      tds_amount: 0, net_payable: 0, effective_rate_per_sft: 0,
+      full_unit_value: 0
     });
+    recalc_schedule_amounts(frm);
     return;
   }
 
