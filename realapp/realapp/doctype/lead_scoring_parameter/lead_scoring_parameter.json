@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:parameter_name",
+ "creation": "2025-10-29 18:12:14.769949",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_main",
+  "parameter_name",
+  "dimension",
+  "description",
+  "field_reference",
+  "column_break_vofb",
+  "match_type",
+  "default_weightage",
+  "max_score",
+  "example_expression"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_main",
+   "fieldtype": "Section Break",
+   "label": "Parameter Configuration"
+  },
+  {
+   "fieldname": "parameter_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "dimension",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dimension",
+   "options": "Lead Scoring Dimension",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "description": "Fieldname from Lead Doctype, e.g., employment_type, annual_income",
+   "fieldname": "field_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Lead Field Reference"
+  },
+  {
+   "default": "Exact",
+   "fieldname": "match_type",
+   "fieldtype": "Select",
+   "label": "Match Type",
+   "options": "\nExact\nRange\nContains\nGeoDistance\nExpression",
+   "reqd": 1
+  },
+  {
+   "default": "10",
+   "fieldname": "default_weightage",
+   "fieldtype": "Float",
+   "label": "Default Weightage",
+   "reqd": 1
+  },
+  {
+   "default": "25",
+   "fieldname": "max_score",
+   "fieldtype": "Float",
+   "label": "Maximum Score",
+   "reqd": 1
+  },
+  {
+   "description": "Optional Python logic for custom evaluation",
+   "fieldname": "example_expression",
+   "fieldtype": "Code",
+   "label": "Example Expression",
+   "options": "Python"
+  },
+  {
+   "fieldname": "column_break_vofb",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-29 19:08:32.902136",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Lead Scoring Parameter",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

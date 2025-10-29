@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:parameter",
+ "creation": "2025-10-30 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "field_order": [
+  "dimension",
+  "parameter",
+  "criteria",
+  "weightage",
+  "max_score",
+  "scoring_logic_type",
+  "expression",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "dimension",
+   "fieldtype": "Link",
+   "label": "Dimension",
+   "options": "Lead Scoring Dimension",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "label": "Parameter",
+   "options": "Lead Scoring Parameter",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Data",
+   "label": "Criteria / Expected Value",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Float",
+   "label": "Weightage (%)",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "max_score",
+   "fieldtype": "Float",
+   "label": "Maximum Score",
+   "default": "25",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "scoring_logic_type",
+   "fieldtype": "Select",
+   "label": "Scoring Logic Type",
+   "options": "\nMatch\nRange\nGeoDistance\nCustom",
+   "default": "Match",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "expression",
+   "fieldtype": "Code",
+   "label": "Custom Expression (Optional)",
+   "options": "Python",
+   "description": "Custom Python logic for advanced scoring (optional)"
+  },
+  {
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": "1",
+   "in_list_view": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-30 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Lead Scoring Template Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
