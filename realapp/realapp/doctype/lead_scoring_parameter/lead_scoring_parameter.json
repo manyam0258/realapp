@@ -12,11 +12,12 @@
   "dimension",
   "description",
   "field_reference",
-  "column_break_vofb",
-  "match_type",
+  "scoring_logic_type",
+  "criteria",
   "default_weightage",
   "max_score",
-  "example_expression"
+  "example_expression",
+  "active"
  ],
  "fields": [
   {
@@ -46,49 +47,57 @@
    "label": "Description"
   },
   {
-   "description": "Fieldname from Lead Doctype, e.g., employment_type, annual_income",
+   "description": "Fieldname from Lead Doctype, e.g., employment_type, annual_income, lead_latitude",
    "fieldname": "field_reference",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Lead Field Reference"
   },
   {
-   "default": "Exact",
-   "fieldname": "match_type",
+   "default": "Match",
+   "fieldname": "scoring_logic_type",
    "fieldtype": "Select",
-   "label": "Match Type",
-   "options": "\nExact\nRange\nContains\nGeoDistance\nExpression",
+   "label": "Scoring Logic Type",
+   "options": "Match\nRange\nContains\nGeoDistance\nCustom",
    "reqd": 1
   },
   {
-   "default": "10",
+   "fieldname": "criteria",
+   "fieldtype": "Data",
+   "label": "Default Criteria (optional)",
+   "description": "E.g. '30-50' for Range, 'Hyderabad' for Match, or radius for GeoDistance"
+  },
+  {
+   "default": 10,
    "fieldname": "default_weightage",
    "fieldtype": "Float",
-   "label": "Default Weightage",
+   "label": "Default Weightage (%)",
    "reqd": 1
   },
   {
-   "default": "25",
+   "default": 25,
    "fieldname": "max_score",
    "fieldtype": "Float",
    "label": "Maximum Score",
    "reqd": 1
   },
   {
-   "description": "Optional Python logic for custom evaluation",
+   "description": "Optional Python logic for custom evaluation which returns numeric score or boolean",
    "fieldname": "example_expression",
    "fieldtype": "Code",
    "label": "Example Expression",
    "options": "Python"
   },
   {
-   "fieldname": "column_break_vofb",
-   "fieldtype": "Column Break"
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-29 19:08:32.902136",
+ "modified": "2025-11-03 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Lead Scoring Parameter",
