@@ -1,5 +1,15 @@
 {
  "custom_fields": [
+ {
+   "dt": "Lead",
+   "fieldname": "custom_lead_type",
+   "label": "Custom Lead Type",
+   "fieldtype": "Select",
+   "options": "Direct\nReferral\nChannel Partner\nOther",
+   "insert_after": "lead_additional_tab",
+   "reqd": 0,
+   "name": "Lead-custom_lead_type"
+  },
   {
    "dt": "Lead",
    "fieldname": "lead_latitude",
