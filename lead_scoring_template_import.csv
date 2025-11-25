@@ -1,0 +1,23 @@
+Data Import Template,,,,,,,,,,,
+Table:,Lead Scoring Template,,,,,,,,,,,
+,,,,,,,,,,,
+Notes:,,,,,,,,,,,
+"Please do not change the template headings. When importing data, do not remove the heading rows.",,,,,,,,,,,
+Column 'ID' is used for updating existing records. Leave this blank if you're adding new records.,,,,,,,,,,,
+For child table 'Lead Scoring Parameters' - add rows with the same parent ID to link them together.,,,,,,,,,,,
+,,,,,,,,,,,
+ID,Template Name,Project,Status,Remarks,Details: Parameter,Details: Dimension,Details: Scoring Logic Type,Details: Criteria,Details: Weightage,Details: Max Score,Details: Custom Expression (Optional)
+,Template Name 1,PROJ-0001,Active,Sample template for residential project,Location,Demographic Fit,GeoDistance,10,10,25,
+,,,,,Employment Type,Demographic Fit,Contains,"IT, Business Owner, NRI",5,15,
+,,,,,Marital Status,Demographic Fit,Match,Married,5,10,
+,,,,,Age Range,Demographic Fit,Range,30-50,5,10,
+,,,,,Annual Income,Financial Fit,Range,2000000-10000000,10,20,
+,,,,,Budget Fit,Financial Fit,Custom,14000000,10,20,lead.annual_income >= project.avg_unit_price * 0.25
+,,,,,Loan Pre-approved,Financial Fit,Match,1,5,10,
+,,,,,Existing Property Owner,Financial Fit,Match,1,5,10,
+,,,,,Site Visit Scheduled,Behavioural / Engagement,Match,1,5,15,
+,,,,,Engagement Recency,Behavioural / Engagement,Range,0-7,15,10,
+,,,,,Buying Timeline,Intent / Timing,Range,0-3,10,25,
+,,,,,Decision Influencer,Intent / Timing,Custom,,5,10,"lead.decision_maker_type in ['Self', 'Spouse']"
+,,,,,Urgency Reason,Intent / Timing,Contains,"job relocation, lease expiry, investment",5,10,
+,,,,,Has Kids,Demographic Fit,Match,1,5,10,

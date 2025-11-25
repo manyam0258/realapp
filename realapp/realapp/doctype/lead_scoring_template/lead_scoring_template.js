@@ -16,8 +16,8 @@ frappe.ui.form.on('Lead Scoring Template', {
           args: { template_name: frm.doc.name },
           freeze: true,
           freeze_message: __("Populating parameters..."),
-          callback: function(r) {
-            if(!r.exc) {
+          callback: function (r) {
+            if (!r.exc) {
               frm.reload_doc();
               frappe.msgprint(__('Parameters populated.'));
             }
@@ -57,6 +57,7 @@ frappe.ui.form.on('Lead Scoring Template Detail', {
       frappe.model.set_value(cdt, cdn, 'criteria', param.criteria || '');
       frappe.model.set_value(cdt, cdn, 'max_score', param.max_score || 0);
       frappe.model.set_value(cdt, cdn, 'default_weightage', param.default_weightage || 0);
+      frappe.model.set_value(cdt, cdn, 'expression', param.example_expression || '');
       // only set weightage if empty or zero
       if (!row.weightage) {
         frappe.model.set_value(cdt, cdn, 'weightage', param.default_weightage || 0);
