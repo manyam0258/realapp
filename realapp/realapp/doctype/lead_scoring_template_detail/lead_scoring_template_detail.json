@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-11-03 12:47:31.517777",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "dimension",
+  "parameter",
+  "field_reference",
+  "scoring_logic_type",
+  "criteria",
+  "default_weightage",
+  "weightage",
+  "max_score",
+  "expression",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "dimension",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dimension",
+   "options": "Lead Scoring Dimension"
+  },
+  {
+   "fieldname": "parameter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parameter",
+   "options": "Lead Scoring Parameter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "field_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Field Reference (Lead)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scoring_logic_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Scoring Logic Type",
+   "options": "Match\nRange\nContains\nGeoDistance\nCustom"
+  },
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Criteria / Expected Value"
+  },
+  {
+   "fieldname": "default_weightage",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Default Weightage (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Weightage (%)",
+   "reqd": 1
+  },
+  {
+   "default": "25",
+   "fieldname": "max_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Maximum Score"
+  },
+  {
+   "description": "Custom Python logic for advanced scoring (optional)",
+   "fieldname": "expression",
+   "fieldtype": "Code",
+   "label": "Custom Expression (Optional)",
+   "options": "Python"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-03 14:16:13.735658",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Lead Scoring Template Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

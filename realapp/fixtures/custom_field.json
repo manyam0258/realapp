@@ -4273,5 +4273,192 @@
   "translatable": 0,
   "unique": 0,
   "width": null
- }
+ },
+{
+    "doctype": "Custom Field",
+    "name": "Project-latitude",
+    "dt": "Project",
+    "fieldname": "latitude",
+    "label": "Latitude",
+    "fieldtype": "Float",
+    "insert_after": "project_address",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Project-longitude",
+    "dt": "Project",
+    "fieldname": "longitude",
+    "label": "Longitude",
+    "fieldtype": "Float",
+    "insert_after": "latitude",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Project-target_radius_km",
+    "dt": "Project",
+    "fieldname": "target_radius_km",
+    "label": "Target Radius (km)",
+    "fieldtype": "Float",
+    "default": "10",
+    "insert_after": "longitude",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Project-preferred_age_min",
+    "dt": "Project",
+    "fieldname": "preferred_age_min",
+    "label": "Preferred Age Min",
+    "fieldtype": "Int",
+    "default": "30",
+    "insert_after": "target_radius_km",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Project-preferred_age_max",
+    "dt": "Project",
+    "fieldname": "preferred_age_max",
+    "label": "Preferred Age Max",
+    "fieldtype": "Int",
+    "default": "50",
+    "insert_after": "preferred_age_min",
+    "reqd": 0
+  },
+  {
+  "doctype": "Custom Field",
+  "name": "Project-project_area",
+  "dt": "Project",
+  "fieldname": "project_area",
+  "label": "Project Area",
+  "fieldtype": "Data",
+  "insert_after": "avg_unit_price",
+  "reqd": 0
+},
+  {
+    "doctype": "Custom Field",
+    "name": "Project-target_employment_types",
+    "dt": "Project",
+    "fieldname": "target_employment_types",
+    "label": "Target Employment Types",
+    "fieldtype": "MultiSelect",
+    "options": "IT\nBusiness Owner\nNRI\nOther",
+    "insert_after": "preferred_age_max",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Project-avg_unit_price",
+    "dt": "Project",
+    "fieldname": "avg_unit_price",
+    "label": "Average Unit Price",
+    "fieldtype": "Currency",
+    "insert_after": "target_employment_types",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-lead_latitude",
+    "dt": "Lead",
+    "fieldname": "lead_latitude",
+    "label": "Lead Latitude",
+    "fieldtype": "Float",
+    "insert_after": "address",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-lead_longitude",
+    "dt": "Lead",
+    "fieldname": "lead_longitude",
+    "label": "Lead Longitude",
+    "fieldtype": "Float",
+    "insert_after": "lead_latitude",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-lead_dob",
+    "dt": "Lead",
+    "fieldname": "lead_dob",
+    "label": "Lead DOB",
+    "fieldtype": "Date",
+    "insert_after": "lead_longitude",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-lead_age",
+    "dt": "Lead",
+    "fieldname": "lead_age",
+    "label": "Lead Age",
+    "fieldtype": "Int",
+    "insert_after": "lead_dob",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-employment_type",
+    "dt": "Lead",
+    "fieldname": "employment_type",
+    "label": "Employment Type",
+    "fieldtype": "Select",
+    "options": "IT\nBusiness Owner\nNRI\nOther",
+    "insert_after": "lead_age",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-marital_status",
+    "dt": "Lead",
+    "fieldname": "marital_status",
+    "label": "Marital Status",
+    "fieldtype": "Select",
+    "options": "Single\nMarried",
+    "insert_after": "employment_type",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-has_kids",
+    "dt": "Lead",
+    "fieldname": "has_kids",
+    "label": "Has Kids",
+    "fieldtype": "Check",
+    "insert_after": "marital_status",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-annual_income",
+    "dt": "Lead",
+    "fieldname": "annual_income",
+    "label": "Annual Income",
+    "fieldtype": "Currency",
+    "insert_after": "has_kids",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-loan_preapproved",
+    "dt": "Lead",
+    "fieldname": "loan_preapproved",
+    "label": "Loan Pre-approved",
+    "fieldtype": "Check",
+    "insert_after": "annual_income",
+    "reqd": 0
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "Lead-existing_property_owner",
+    "dt": "Lead",
+    "fieldname": "existing_property_owner",
+    "label": "Existing Property Owner",
+    "fieldtype": "Check",
+    "insert_after": "loan_preapproved",
+    "reqd": 0
+  }
+
 ]

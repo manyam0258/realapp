@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:parameter_name",
+ "creation": "2025-10-29 18:12:14.769949",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_main",
+  "parameter_name",
+  "dimension",
+  "description",
+  "field_reference",
+  "scoring_logic_type",
+  "criteria",
+  "default_weightage",
+  "max_score",
+  "example_expression",
+  "active"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_main",
+   "fieldtype": "Section Break",
+   "label": "Parameter Configuration"
+  },
+  {
+   "fieldname": "parameter_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "dimension",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Dimension",
+   "options": "Lead Scoring Dimension",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "description": "Fieldname from Lead Doctype, e.g., employment_type, annual_income, lead_latitude",
+   "fieldname": "field_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Lead Field Reference"
+  },
+  {
+   "default": "Match",
+   "fieldname": "scoring_logic_type",
+   "fieldtype": "Select",
+   "label": "Scoring Logic Type",
+   "options": "Match\nRange\nContains\nGeoDistance\nCustom",
+   "reqd": 1
+  },
+  {
+   "fieldname": "criteria",
+   "fieldtype": "Data",
+   "label": "Default Criteria (optional)",
+   "description": "E.g. '30-50' for Range, 'Hyderabad' for Match, or radius for GeoDistance"
+  },
+  {
+   "default": 10,
+   "fieldname": "default_weightage",
+   "fieldtype": "Float",
+   "label": "Default Weightage (%)",
+   "reqd": 1
+  },
+  {
+   "default": 25,
+   "fieldname": "max_score",
+   "fieldtype": "Float",
+   "label": "Maximum Score",
+   "reqd": 1
+  },
+  {
+   "description": "Optional Python logic for custom evaluation which returns numeric score or boolean",
+   "fieldname": "example_expression",
+   "fieldtype": "Code",
+   "label": "Example Expression",
+   "options": "Python"
+  },
+  {
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "default": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-03 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Lead Scoring Parameter",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

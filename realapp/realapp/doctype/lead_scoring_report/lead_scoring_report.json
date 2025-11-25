@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LREP-.#####",
+ "creation": "2025-11-03 11:52:46.276154",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "lead_scoring_template",
+  "lead",
+  "lead_name",
+  "total_score",
+  "category",
+  "section_scores",
+  "report_date",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "Project",
+   "reqd": 1
+  },
+  {
+   "fieldname": "lead_scoring_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Lead Scoring Template",
+   "options": "Lead Scoring Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Lead",
+   "options": "Lead",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Category (Hot/Warm/Cold)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_scores",
+   "fieldtype": "Code",
+   "label": "Section Scores (JSON)",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "report_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Report Date",
+   "read_only": 1
+  },
+  {
+   "default": "Generated",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Generated\nArchived"
+  },
+  {
+   "fetch_from": "lead.first_name",
+   "fieldname": "lead_name",
+   "fieldtype": "Read Only",
+   "label": "Lead Name"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-03 11:56:43.116751",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Lead Scoring Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

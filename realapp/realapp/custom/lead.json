@@ -1,0 +1,202 @@
+{
+ "custom_fields": [
+ {
+   "dt": "Lead",
+   "fieldname": "custom_lead_type",
+   "label": "Custom Lead Type",
+   "fieldtype": "Select",
+   "options": "Direct\nReferral\nChannel Partner\nOther",
+   "insert_after": "lead_additional_tab",
+   "reqd": 0,
+   "name": "Lead-custom_lead_type"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "lead_latitude",
+   "label": "Lead Latitude",
+   "fieldtype": "Float",
+   "insert_after": "lead_additional_tab",
+   "reqd": 0,
+   "name": "Lead-lead_latitude"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "lead_longitude",
+   "label": "Lead Longitude",
+   "fieldtype": "Float",
+   "insert_after": "lead_latitude",
+   "reqd": 0,
+   "name": "Lead-lead_longitude"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "lead_dob",
+   "label": "Lead DOB",
+   "fieldtype": "Date",
+   "insert_after": "lead_longitude",
+   "reqd": 0,
+   "name": "Lead-lead_dob"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "lead_age",
+   "label": "Lead Age",
+   "fieldtype": "Int",
+   "insert_after": "lead_dob",
+   "reqd": 0,
+   "name": "Lead-lead_age"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "employment_type",
+   "label": "Employment Type",
+   "fieldtype": "Select",
+   "options": "IT\nBusiness Owner\nNRI\nOther",
+   "insert_after": "lead_age",
+   "reqd": 0,
+   "name": "Lead-employment_type"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "existing_property_owner",
+   "label": "Existing Property Owner",
+   "fieldtype": "Check",
+   "insert_after": "employment_type",
+   "reqd": 0,
+   "name": "Lead-existing_property_owner"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "annual_income",
+   "label": "Annual Income",
+   "fieldtype": "Currency",
+   "insert_after": "existing_property_owner",
+   "reqd": 0,
+   "name": "Lead-annual_income"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "loan_preapproved",
+   "label": "Loan Pre-approved",
+   "fieldtype": "Check",
+   "insert_after": "annual_income",
+   "reqd": 0,
+   "name": "Lead-loan_preapproved"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "marital_status",
+   "label": "Marital Status",
+   "fieldtype": "Select",
+   "options": "Single\nMarried",
+   "insert_after": "loan_preapproved",
+   "reqd": 0,
+   "name": "Lead-marital_status"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "has_kids",
+   "label": "Has Kids",
+   "fieldtype": "Check",
+   "insert_after": "marital_status",
+   "reqd": 0,
+   "name": "Lead-has_kids"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "website_visits",
+   "label": "Website Visits",
+   "fieldtype": "Int",
+   "insert_after": "has_kids",
+   "reqd": 0,
+   "name": "Lead-website_visits"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "responded_to_call",
+   "label": "Responded to Call",
+   "fieldtype": "Check",
+   "insert_after": "website_visits",
+   "reqd": 0,
+   "name": "Lead-responded_to_call"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "site_visit_scheduled",
+   "label": "Site Visit Scheduled",
+   "fieldtype": "Check",
+   "insert_after": "responded_to_call",
+   "reqd": 0,
+   "name": "Lead-site_visit_scheduled"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "last_contact_days",
+   "label": "Days Since Last Contact",
+   "fieldtype": "Int",
+   "insert_after": "site_visit_scheduled",
+   "reqd": 0,
+   "name": "Lead-last_contact_days"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "ad_clicks",
+   "label": "Ad Clicks",
+   "fieldtype": "Int",
+   "insert_after": "last_contact_days",
+   "reqd": 0,
+   "name": "Lead-ad_clicks"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "attended_event",
+   "label": "Attended Event / Webinar",
+   "fieldtype": "Check",
+   "insert_after": "ad_clicks",
+   "reqd": 0,
+   "name": "Lead-attended_event"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "purchase_timeline",
+   "label": "Purchase Timeline (Months)",
+   "fieldtype": "Int",
+   "insert_after": "attended_event",
+   "reqd": 0,
+   "name": "Lead-purchase_timeline"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "decision_maker_type",
+   "label": "Decision Maker Type",
+   "fieldtype": "Select",
+   "options": "Self\nSpouse\nFamily",
+   "insert_after": "purchase_timeline",
+   "reqd": 0,
+   "name": "Lead-decision_maker_type"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "urgency_reason",
+   "label": "Urgency Reason",
+   "fieldtype": "Data",
+   "insert_after": "decision_maker_type",
+   "reqd": 0,
+   "name": "Lead-urgency_reason"
+  },
+  {
+   "dt": "Lead",
+   "fieldname": "follow_up_priority",
+   "label": "Follow-up Priority (Days)",
+   "fieldtype": "Int",
+   "insert_after": "urgency_reason",
+   "reqd": 0,
+   "name": "Lead-follow_up_priority"
+  }
+ ],
+ "custom_perms": [],
+ "doctype": "Lead",
+ "links": [],
+ "property_setters": [],
+ "sync_on_migrate": 1
+}
