@@ -32,17 +32,39 @@ frappe.ui.form.on('Lead Scoring Template', {
             method: "realapp.realapp.doctype.lead_scoring_engine.engine.generate_lead_scoring_report",
             args: { template_name: frm.doc.name },
             freeze: true,
-            freeze_message: __("Generating lead scoring reports..."),
+            freeze_message: __("Queueing lead scoring job..."),
             callback: (r) => {
               if (!r.exc) {
-                frappe.msgprint(__(r.message));
-                frappe.set_route('List', 'Lead Scoring Report');
+                frappe.msgprint({
+                  title: __('Job Queued'),
+                  indicator: 'blue',
+                  message: __(r.message)
+                });
               }
             }
           });
         }).addClass('btn-primary');
       }
     }
+
+    // Listen for realtime events
+    frappe.realtime.on('lead_scoring_complete', (data) => {
+      if (data.template === frm.doc.name) {
+        frappe.show_alert({
+          message: __('Lead Scoring Complete: {0}', [data.result]),
+          indicator: 'green'
+        }, 10);
+      }
+    });
+
+    frappe.realtime.on('lead_scoring_failed', (data) => {
+      if (data.template === frm.doc.name) {
+        frappe.show_alert({
+          message: __('Lead Scoring Failed: {0}', [data.error]),
+          indicator: 'red'
+        }, 10);
+      }
+    });
   }
 });
 

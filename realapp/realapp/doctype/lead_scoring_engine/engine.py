@@ -10,7 +10,7 @@ class LeadScoringEngine:
         self.param_cache = {}
         self.reports_created = 0
 
-    def generate_reports(self, batch_size=1000):
+    def generate_reports(self, batch_size=1000, publish_progress=False):
         """
         Generates lead scoring reports for all leads in batches.
         """
@@ -25,6 +25,15 @@ class LeadScoringEngine:
             
             self.process_batch(leads)
             frappe.db.commit() # Commit after each batch to avoid large transaction logs
+            
+            # Publish progress for background jobs
+            if publish_progress and total_leads > 0:
+                progress = ((start + len(leads)) / total_leads) * 100
+                frappe.publish_progress(
+                    percent=progress,
+                    title="Generating Lead Scoring Reports",
+                    description=f"Processed {start + len(leads)} of {total_leads} leads"
+                )
 
         return f"{self.reports_created} lead scoring reports generated successfully."
 
@@ -282,5 +291,86 @@ class LeadScoringEngine:
 
 @frappe.whitelist()
 def generate_lead_scoring_report(template_name):
+    """
+    Enqueue lead scoring report generation as a background job.
+    """
+    frappe.enqueue(
+        method="realapp.realapp.doctype.lead_scoring_engine.engine.generate_reports_background",
+        queue="long",
+        timeout=3600,
+        template_name=template_name,
+        job_name=f"Lead Scoring: {template_name}"
+    )
+    return f"Lead scoring report generation has been queued for template '{template_name}'. Check Lead Scoring Report list for results."
+
+def generate_reports_background(template_name):
+    """
+    Background job method to generate lead scoring reports.
+    """
+    try:
+        engine = LeadScoringEngine(template_name)
+        result = engine.generate_reports(publish_progress=True)
+        frappe.publish_realtime(
+            event="lead_scoring_complete",
+            message={"template": template_name, "result": result},
+            user=frappe.session.user
+        )
+        return result
+    except Exception as e:
+        frappe.log_error(f"Error generating lead scoring reports: {str(e)}", "Lead Scoring Background Job")
+        frappe.publish_realtime(
+            event="lead_scoring_failed",
+            message={"template": template_name, "error": str(e)},
+            user=frappe.session.user
+        )
+        raise
+
+@frappe.whitelist()
+def score_specific_leads(template_name, lead_names):
+    """
+    Score specific lead(s) with a given template.
+    Args:
+        template_name: Name of the Lead Scoring Template
+        lead_names: Single lead name (string) or list of lead names
+    Returns:
+        Dictionary with scoring results
+    """
+    # Handle single lead or list of leads
+    if isinstance(lead_names, str):
+        lead_names = [lead_names]
+    
     engine = LeadScoringEngine(template_name)
-    return engine.generate_reports()
+    
+    # Pre-calculate total possible score
+    total_possible_score = sum([flt(d.max_score or 0) for d in engine.template.details if d.active])
+    if not total_possible_score:
+        frappe.throw("Lead Scoring Template has no active parameters with max_score")
+    
+    results = []
+    for lead_name in lead_names:
+        lead_data = frappe.get_doc("Lead", lead_name)
+        lead = frappe._dict(lead_data.as_dict())
+        
+        # Delete existing report for this lead/template combination
+        frappe.db.delete("Lead Scoring Report", {
+            "lead": lead.name,
+            "lead_scoring_template": engine.template.name
+        })
+        
+        # Evaluate lead
+        report_data = engine.evaluate_lead(lead, total_possible_score)
+        
+        # Create new report
+        report = frappe.new_doc("Lead Scoring Report")
+        report.update(report_data)
+        report.insert(ignore_permissions=True)
+        
+        results.append({
+            "lead": lead.name,
+            "score": report_data["total_score"],
+            "category": report_data["category"],
+            "report_name": report.name
+        })
+    
+    frappe.db.commit()
+    return results
