@@ -108,13 +108,6 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 		change: () => render_dashboard()
 	});
 
-	page.status_filter = page.add_field({
-		fieldname: 'status',
-		label: 'Status',
-		fieldtype: 'Data',
-		change: () => render_dashboard()
-	});
-
 	page.add_inner_button('Refresh', () => render_dashboard());
 
 	// Main Content Wrapper
