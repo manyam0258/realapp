@@ -108,6 +108,15 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 		change: () => render_dashboard()
 	});
 
+	page.status_filter = page.add_field({
+		fieldname: 'status',
+		label: 'Status',
+		fieldtype: 'Select',
+		options: "\nAvailable\nBooked\nBlocked\nSold",
+		default: "",
+		change: () => render_dashboard()
+	});
+
 	page.add_inner_button('Refresh', () => render_dashboard());
 
 	// Main Content Wrapper
@@ -126,6 +135,9 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 
 		let floor_val = page.floor_filter.get_value();
 		if (floor_val) filters.floor_number = floor_val;
+
+		let status_val = page.status_filter.get_value();
+		if (status_val) filters.status = status_val;
 
 		let unit_val = page.unit_filter.get_value();
 		if (unit_val) filters.unit_name = ['like', `%${unit_val}%`];
