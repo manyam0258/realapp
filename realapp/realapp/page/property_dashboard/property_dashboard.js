@@ -7,19 +7,19 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 
 	// 1. Add Custom CSS for the "Beautiful" Dashboard Look
 	$(`<style>
-        .dashboard-canvas { padding: 15px; background: #f4f5f7; min-height: 80vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .dashboard-canvas { padding: 5px; background: #f4f7fbff; min-height: 80vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         
         /* Tower (Block) Card */
         .tower-card { 
-            background: #fff; 
+            background: #ffffffff; 
             border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 6px rgba(16, 81, 173, 0.05); 
             margin-bottom: 30px; 
             overflow: hidden; 
             border: 1px solid #e1e4e8;
         }
         .tower-header { 
-            background: linear-gradient(to right, #2c3e50, #4ca1af); 
+            background: linear-gradient(to right, #073995ff, #9d2b1aff); 
             color: white; 
             padding: 12px 20px; 
             font-size: 16px; 
@@ -104,6 +104,13 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 	page.unit_filter = page.add_field({
 		fieldname: 'unit_name',
 		label: 'Unit Name',
+		fieldtype: 'Data',
+		change: () => render_dashboard()
+	});
+
+	page.status_filter = page.add_field({
+		fieldname: 'status',
+		label: 'Status',
 		fieldtype: 'Data',
 		change: () => render_dashboard()
 	});
