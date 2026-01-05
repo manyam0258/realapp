@@ -190,15 +190,31 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 
 			// Iterate Blocks (Towers)
 			Object.keys(tree[proj]).sort().forEach(blk => {
+				// Calculate Status Counts for this Block
+				let statusCounts = { Available: 0, Booked: 0, Sold: 0, Blocked: 0 };
+				let totalUnits = 0;
+				let floors = tree[proj][blk];
+				let floor_nums = Object.keys(floors).map(Number).sort((a, b) => b - a);
+
+				floor_nums.forEach(f_num => {
+					floors[f_num].forEach(u => {
+						let s = u.status || 'Available';
+						if (statusCounts[s] !== undefined) statusCounts[s]++;
+						totalUnits++;
+					});
+				});
+
 				html += `<div class="tower-card">
                             <div class="tower-header">
                                 <span><i class="fa fa-building"></i> ${proj} - Block ${blk}</span>
-                                <span style="font-size:12px; opacity:0.8">Tower View</span>
+                                <span style="font-size:13px; font-weight: normal;">
+                                    <span class="badge badge-success" style="background-color: #28a745;">Avail: ${statusCounts.Available}</span>
+                                    <span class="badge badge-warning" style="background-color: #ffc107; color: #333;">Booked: ${statusCounts.Booked}</span>
+                                    <span class="badge badge-danger" style="background-color: #dc3545;">Sold: ${statusCounts.Sold}</span>
+                                    <span class="badge badge-secondary" style="background-color: #6c757d;">Blocked: ${statusCounts.Blocked}</span>
+                                    <span class="badge badge-light" style="color: #333;">Total: ${totalUnits}</span>
+                                </span>
                             </div>`;
-
-				// Iterate Floors (Descending Order for visual stacking)
-				let floors = tree[proj][blk];
-				let floor_nums = Object.keys(floors).map(Number).sort((a, b) => b - a);
 
 				floor_nums.forEach(f_num => {
 					html += `<div class="floor-row">
