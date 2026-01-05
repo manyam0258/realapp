@@ -19,7 +19,7 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
             border: 1px solid #e1e4e8;
         }
         .tower-header { 
-            background: linear-gradient(to right, #073995ff, #9d2b1aff); 
+            background: linear-gradient(to right, #274162, #e14d49); 
             color: white; 
             padding: 12px 20px; 
             font-size: 16px; 
