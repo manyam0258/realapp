@@ -31,7 +31,7 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
         .default-filters label { margin-right:20px; font-weight:500; }
     </style>`).appendTo(wrapper);
 
-	/* ---------------- Standard Filters ---------------- */
+	/* ---------------- Filters ---------------- */
 	page.project_filter = page.add_field({
 		fieldname: 'project',
 		label: 'Project',
@@ -60,10 +60,22 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 		change: render_dashboard
 	});
 
+	/* ✅ RESTORED: Status Filter */
+	page.status_filter = page.add_field({
+		fieldname: 'status',
+		label: 'Status',
+		fieldtype: 'Select',
+		options: "\nAvailable\nBooked\nBlocked\nSold",
+		change: render_dashboard
+	});
+
+	/* ✅ RESTORED: Refresh Button */
+	page.add_inner_button('Refresh', () => render_dashboard());
+
 	/* ---------------- Default Checkbox Filters ---------------- */
 	let inventory_filters = {
 		share: "Tridasa Realty Ventures Pvt Ltd",
-		mortgage: ["is", "not set"]   // ✅ FIXED LOGIC
+		mortgage: ["is", "not set"]
 	};
 
 	const checkbox_html = `
@@ -112,6 +124,9 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 
 		if (page.unit_filter.get_value())
 			filters.unit_name = ['like', `%${page.unit_filter.get_value()}%`];
+
+		if (page.status_filter.get_value())
+			filters.status = page.status_filter.get_value();
 
 		Object.assign(filters, inventory_filters);
 
