@@ -2,10 +2,21 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, add_days, date_diff
 
 class TenderCalendar(Document):
+	def autoname(self):
+		settings = frappe.get_single("Tender Settings")
+		if settings.naming_method == "Work Package":
+			if not self.work_package:
+				frappe.throw(_("Work Package name is required for naming"))
+			self.name = self.work_package
+		else:
+			from frappe.model.naming import make_autoname
+			self.name = make_autoname(self.naming_series)
+
 	def validate(self):
 		self.calculate_delay_and_impact()
 		self.handle_cascading()

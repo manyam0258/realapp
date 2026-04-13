@@ -9,6 +9,7 @@
  "field_order": [
   "enable_cascading",
   "default_mode",
+  "naming_method",
   "allow_override",
   "require_approval_for_cascade",
   "max_cascade_days"
@@ -25,6 +26,13 @@
    "fieldtype": "Select",
    "label": "Default Mode",
    "options": "Manual\nSuggestion\nAuto"
+  },
+  {
+   "default": "Naming Series",
+   "fieldname": "naming_method",
+   "fieldtype": "Select",
+   "label": "Tender ID Method",
+   "options": "Naming Series\nWork Package"
   },
   {
    "default": "0",
