@@ -289,13 +289,13 @@
    "fieldname": "order_type",
    "fieldtype": "Select",
    "label": "Order Type",
-   "options": "\nSERVICE\nPURCHASE"
+   "options": "\nSERVICE\nPURCHASE\nMATERIAL"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-04-13 15:30:08.367441",
+ "modified": "2026-04-27 14:24:56.976653",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender Calendar",
