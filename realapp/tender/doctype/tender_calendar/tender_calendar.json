@@ -12,6 +12,7 @@
   "work_package",
   "category",
   "sub_category",
+  "gantt_title",
   "section_break_project_context",
   "project_type",
   "status",
@@ -54,8 +55,9 @@
  "fields": [
   {
    "fieldname": "sl_no",
-   "fieldtype": "Data",
-   "label": "Serial No"
+   "fieldtype": "Int",
+   "label": "Serial No",
+   "read_only": 1
   },
   {
    "fieldname": "project",
@@ -83,6 +85,13 @@
    "fieldname": "sub_category",
    "fieldtype": "Data",
    "label": "Sub Category"
+  },
+  {
+   "fieldname": "gantt_title",
+   "fieldtype": "Data",
+   "label": "Gantt Title",
+   "read_only": 1,
+   "hidden": 1
   },
   {
    "fieldname": "section_break_project_context",
