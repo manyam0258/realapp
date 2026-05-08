@@ -17,9 +17,26 @@ class TenderCalendar(Document):
 			from frappe.model.naming import make_autoname
 			self.name = make_autoname(self.naming_series)
 
+	def before_insert(self):
+		if not self.sl_no:
+			max_sl_no = frappe.db.sql("""
+				SELECT MAX(sl_no) FROM `tabTender Calendar` 
+				WHERE project = %s
+			""", self.project)[0][0]
+			self.sl_no = (max_sl_no or 0) + 1
+
 	def validate(self):
 		self.calculate_delay_and_impact()
 		self.handle_cascading()
+		self.gantt_title = f"{self.sl_no or ''} - {self.category or ''} - {self.work_package or ''}".strip(" - ")
+
+	def on_trash(self):
+		if self.sl_no and self.project:
+			frappe.db.sql("""
+				UPDATE `tabTender Calendar`
+				SET sl_no = sl_no - 1
+				WHERE project = %s AND sl_no > %s
+			""", (self.project, self.sl_no))
 
 	def calculate_delay_and_impact(self):
 		"""Computes delay_days and impact_level based on target_date vs today or actuals."""

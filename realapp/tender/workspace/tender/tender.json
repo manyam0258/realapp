@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"BeDR_1j3tX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tender</span>\",\"col\":12}},{\"id\":\"NJmfflOjiu\",\"type\":\"card\",\"data\":{\"card_name\":\"Tender management\",\"col\":4}}]",
+ "content": "[{\"id\":\"BeDR_1j3tX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tender</span>\",\"col\":12}},{\"id\":\"NJmfflOjiu\",\"type\":\"card\",\"data\":{\"card_name\":\"Tender management\",\"col\":4}},{\"id\":\"qJTDaNsHEA\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2026-04-13 12:23:40.662855",
  "custom_blocks": [],
  "docstatus": 0,
@@ -61,9 +61,69 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "description": "Order",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 5,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "BOQ Status Report",
+   "link_count": 0,
+   "link_to": "BOQ Status Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Quotation Status Report",
+   "link_count": 0,
+   "link_to": "Quotation Status Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Order Status Report",
+   "link_count": 0,
+   "link_to": "Order Status Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Combined Tracker",
+   "link_count": 0,
+   "link_to": "Combined Tracker",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Master Tender Calendar",
+   "link_count": 0,
+   "link_to": "Master Tender Calendar",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-04-13 13:47:23.293412",
+ "modified": "2026-05-06 15:41:36.242604",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",

@@ -6,7 +6,7 @@ frappe.views.gantt["Tender Calendar"] = {
 		start: "boq_submission_date",
 		end: "target_date",
 		id: "name",
-		title: "work_package",
+		title: "gantt_title",
 		allDay: "all_day",
 		progress: "no_of_days", // Just using a field to represent some number
 	},
