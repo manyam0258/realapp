@@ -32,7 +32,7 @@ def get_columns():
         {"label": "Paid Amount", "fieldname": "paid_amount", "fieldtype": "Currency", "width": 120},
         {"label": "Outstanding", "fieldname": "outstanding", "fieldtype": "Currency", "width": 120},
         {"label": "Last Payment Date", "fieldname": "last_payment_date", "fieldtype": "Date", "width": 120},
-        {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 100},
+        {"label": "Status", "fieldname": "project_status", "fieldtype": "Data", "width": 100},
         {"label": "Last Remark", "fieldname": "last_remark", "fieldtype": "Small Text", "width": 200},
     ]
 
@@ -101,7 +101,7 @@ def get_data(filters):
 
     # 🔹 Enrich rows with Status + Last Remark
     for row in data:
-        row["status"] = get_status(row)
+        row["project_status"] = get_status(row)
         row["last_remark"] = get_last_remark(row["invoice_no"])
 
     return data
@@ -143,7 +143,7 @@ def get_summary(data):
     total_amount = sum(d.get("invoice_amount", 0) for d in data)
     total_paid = sum(d.get("paid_amount", 0) for d in data)
     total_outstanding = sum(d.get("outstanding", 0) for d in data)
-    overdue_amount = sum(d.get("outstanding", 0) for d in data if d.get("status") == "Overdue")
+    overdue_amount = sum(d.get("outstanding", 0) for d in data if d.get("project_status") == "Overdue")
 
     return [
         {"label": "Total Invoices", "value": total_invoices, "indicator": "Blue"},

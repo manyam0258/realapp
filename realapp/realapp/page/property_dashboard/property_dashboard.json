@@ -1,0 +1,14 @@
+{
+    "doctype": "Page",
+    "name": "property-dashboard",
+    "module": "Realapp",
+    "title": "Real Estate Inventory",
+    "page_name": "property-dashboard",
+    "standard": "No",
+    "system_page": 0,
+    "roles": [
+        {
+            "role": "System Manager"
+        }
+    ]
+}
