@@ -35,7 +35,7 @@ def populate_parameters(template_name):
     Keeps user overrides (weightage, active) for existing rows.
     """
     template = frappe.get_doc("Lead Scoring Template", template_name)
-    params = frappe.get_all("Lead Scoring Parameter", filters={"active": 1}, fields=["name", "field_reference", "scoring_logic_type", "criteria", "default_weightage", "max_score", "dimension"])
+    params = frappe.get_all("Lead Scoring Parameter", filters={"active": 1}, fields=["name", "field_reference", "scoring_logic_type", "criteria", "default_weightage", "max_score", "dimension", "example_expression"])
     existing = {d.parameter for d in template.details}
     for p in params:
         if p["name"] in existing:
@@ -49,6 +49,7 @@ def populate_parameters(template_name):
             "max_score": p.get("max_score") or 0,
             "default_weightage": p.get("default_weightage") or 0,
             "weightage": p.get("default_weightage") or 0,
+            "expression": p.get("example_expression") or "",
             "active": 1
         })
     template.save(ignore_permissions=True)
