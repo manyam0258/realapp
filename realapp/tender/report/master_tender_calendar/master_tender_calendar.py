@@ -20,7 +20,7 @@ def get_columns():
 		{"label": "Category", "fieldname": "category", "fieldtype": "Data", "width": 120},
 		{"label": "BOQ Target", "fieldname": "boq_submission_date", "fieldtype": "Date", "width": 120},
 		{"label": "Tender Issue", "fieldname": "tender_issue_date", "fieldtype": "Date", "width": 120},
-		{"label": "Order Status", "fieldname": "order_status", "fieldtype": "Data", "width": 120},
+		{"label": "Order Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
 		{"label": "Contract Value", "fieldname": "contract_value_lakhs", "fieldtype": "Currency", "width": 120}
 	]
 
@@ -37,7 +37,7 @@ def get_data(filters):
 			"DATE_FORMAT(target_date, '%%M %%Y') as month", 
 			"project", "work_package", "category", 
 			"boq_submission_date", "tender_issue_date", 
-			"order_status", "contract_value_lakhs", "target_date"
+			"status", "contract_value_lakhs", "target_date"
 		],
 		filters=query_filters,
 		order_by="target_date asc"

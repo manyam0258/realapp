@@ -20,10 +20,10 @@ class TenderCalendar(Document):
 	def before_insert(self):
 		if not self.sl_no:
 			max_sl_no = frappe.db.sql("""
-				SELECT MAX(sl_no) FROM `tabTender Calendar` 
+				SELECT MAX(FLOOR(sl_no)) FROM `tabTender Calendar` 
 				WHERE project = %s
 			""", self.project)[0][0]
-			self.sl_no = (max_sl_no or 0) + 1
+			self.sl_no = float((max_sl_no or 0) + 1)
 
 	def validate(self):
 		self.calculate_delay_and_impact()
@@ -32,11 +32,23 @@ class TenderCalendar(Document):
 
 	def on_trash(self):
 		if self.sl_no and self.project:
-			frappe.db.sql("""
-				UPDATE `tabTender Calendar`
-				SET sl_no = sl_no - 1
-				WHERE project = %s AND sl_no > %s
-			""", (self.project, self.sl_no))
+			if self.sl_no % 1 != 0:
+				# Sub-item deletion: shift siblings down
+				parent_sl_no = int(self.sl_no)
+				frappe.db.sql("""
+					UPDATE `tabTender Calendar`
+					SET sl_no = ROUND(sl_no - 0.1, 1)
+					WHERE project = %s 
+					AND sl_no > %s 
+					AND sl_no < %s
+				""", (self.project, self.sl_no, parent_sl_no + 1))
+			else:
+				# Master item deletion: shift all downstream masters and their subs
+				frappe.db.sql("""
+					UPDATE `tabTender Calendar`
+					SET sl_no = ROUND(sl_no - 1, 1)
+					WHERE project = %s AND sl_no > %s
+				""", (self.project, self.sl_no))
 
 	def calculate_delay_and_impact(self):
 		"""Computes delay_days and impact_level based on target_date vs today or actuals."""
@@ -113,7 +125,7 @@ def get_calendar_events(start, end, filters=None):
 	data = frappe.db.sql(f"""
 		SELECT 
 			name, work_package, pre_bid_date, tender_issue_date, 
-			approval_date, contract_date, mobilization_date, status
+			approval_date, contract_date, mobilization_date, project_status
 		FROM `tabTender Calendar`
 		WHERE (pre_bid_date BETWEEN '{start}' AND '{end}'
 			OR tender_issue_date BETWEEN '{start}' AND '{end}'
@@ -145,3 +157,41 @@ def get_calendar_events(start, end, filters=None):
 				})
 				
 	return events
+
+@frappe.whitelist()
+def generate_tower_tenders(docname):
+	master_doc = frappe.get_doc("Tender Calendar", docname)
+	
+	if master_doc.project_type != "Tower Wise":
+		frappe.throw(_("Can only generate sub-tenders for 'Tower Wise' projects."))
+	if master_doc.get("towers_generated"):
+		frappe.throw(_("Tower Tenders have already been generated for this record."))
+		
+	# Get blocks
+	blocks = frappe.get_all("Block", filters={"project": master_doc.project}, fields=["name", "tower_name", "block"])
+	if not blocks:
+		frappe.throw(_("No Blocks found for Project {0}").format(master_doc.project))
+		
+	for index, block in enumerate(blocks):
+		new_doc = frappe.copy_doc(master_doc)
+		# Keep the same sl_no as the parent but append .1, .2, etc.
+		new_sl_no = round(float(master_doc.sl_no) + ((index + 1) * 0.1), 1)
+		new_doc.sl_no = new_sl_no
+		
+		# Update work package and block reference
+		tower_suffix = block.tower_name or block.name
+		new_doc.work_package = f"{master_doc.work_package} - {tower_suffix}"
+		new_doc.block = block.name
+		new_doc.is_template = 0
+		new_doc.towers_generated = 0
+		
+		# Optionally switch to Project type to prevent endless generation
+		new_doc.project_type = "Project"
+		
+		new_doc.insert()
+		
+	# Mark the original as template and generated
+	master_doc.db_set("towers_generated", 1)
+	master_doc.db_set("is_template", 1)
+	
+	return True

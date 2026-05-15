@@ -21,7 +21,7 @@ def get_columns():
 		{"label": "Contract", "fieldname": "contract_date", "fieldtype": "Date", "width": 120},
 		{"label": "Mobilization", "fieldname": "mobilization_date", "fieldtype": "Date", "width": 120},
 		{"label": "Target Date", "fieldname": "target_date", "fieldtype": "Date", "width": 120},
-		{"label": "Order Status", "fieldname": "order_status", "fieldtype": "Data", "width": 120},
+		{"label": "Order Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
 		{"label": "Impact", "fieldname": "impact_level", "fieldtype": "Data", "width": 100}
 	]
 
@@ -39,7 +39,7 @@ def get_data(filters):
 			"project", "work_package", "category", "boq_status", 
 			"boq_submission_date", "boq_submitted_date", "tender_issue_date", 
 			"approval_date", "contract_date", "mobilization_date", 
-			"target_date", "order_status", "impact_level"
+			"target_date", "status", "impact_level"
 		],
 		filters=query_filters,
 		order_by="project, target_date asc"

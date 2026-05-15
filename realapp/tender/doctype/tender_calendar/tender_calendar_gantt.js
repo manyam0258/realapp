@@ -10,5 +10,5 @@ frappe.views.gantt["Tender Calendar"] = {
 		allDay: "all_day",
 		progress: "no_of_days", // Just using a field to represent some number
 	},
-	style_field: "order_status"
+	style_field: "status"
 };

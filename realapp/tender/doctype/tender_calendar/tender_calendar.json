@@ -9,6 +9,7 @@
  "field_order": [
   "sl_no",
   "project",
+  "block",
   "work_package",
   "category",
   "sub_category",
@@ -50,14 +51,18 @@
   "cascading_mode",
   "delay_days",
   "impact_level",
-  "naming_series"
+  "naming_series",
+  "is_template",
+  "towers_generated"
  ],
  "fields": [
   {
    "fieldname": "sl_no",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
+   "precision": "1",
    "label": "Serial No",
-   "read_only": 1
+   "read_only": 1,
+   "in_list_view": 1
   },
   {
    "fieldname": "project",
@@ -299,12 +304,32 @@
    "fieldtype": "Select",
    "label": "Order Type",
    "options": "\nSERVICE\nPURCHASE\nMATERIAL"
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block"
+  },
+  {
+   "fieldname": "is_template",
+   "fieldtype": "Check",
+   "label": "Is Template",
+   "hidden": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "towers_generated",
+   "fieldtype": "Check",
+   "label": "Towers Generated",
+   "read_only": 1,
+   "default": "0"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2026-05-08 15:14:42.347813",
+ "modified": "2026-05-15 09:30:00.000000",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender Calendar",
@@ -325,8 +350,8 @@
   }
  ],
  "row_format": "Dynamic",
- "sort_field": "modified",
- "sort_order": "DESC",
+ "sort_field": "sl_no",
+ "sort_order": "ASC",
  "states": [],
  "track_changes": 1
 }
