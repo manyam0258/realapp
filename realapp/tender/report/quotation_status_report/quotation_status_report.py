@@ -15,7 +15,7 @@ def get_columns():
 		{"label": "Min Vendors Req", "fieldname": "min_vendors_required", "fieldtype": "Int", "width": 120},
 		{"label": "Current Vendor Count", "fieldname": "vendor_count", "fieldtype": "Int", "width": 150},
 		{"label": "Coverage Status", "fieldname": "coverage", "fieldtype": "Data", "width": 120},
-		{"label": "RFQ Status", "fieldname": "order_status", "fieldtype": "Data", "width": 120},
+		{"label": "RFQ Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
 		{"label": "Indig / Import", "fieldname": "indigenous_import", "fieldtype": "Data", "width": 120}
 	]
 
@@ -25,7 +25,7 @@ def get_data(filters):
 		query_filters["project"] = filters["project"]
 	
 	data = frappe.db.get_all("Tender Calendar", 
-		fields=["project", "work_package", "min_vendors_required", "vendor_count", "order_status", "indigenous_import"],
+		fields=["project", "work_package", "min_vendors_required", "vendor_count", "status", "indigenous_import"],
 		filters=query_filters,
 		order_by="project, work_package"
 	)

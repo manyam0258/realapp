@@ -4,6 +4,32 @@
 frappe.ui.form.on("Tender Calendar", {
 	refresh(frm) {
 		frm.trigger("set_indicators");
+		
+		// Set document badge to order_status
+		let color = "orange";
+		if (frm.doc.order_status === "Issued") color = "green";
+		if (frm.doc.order_status === "Cancelled") color = "red";
+		frm.page.set_indicator(frm.doc.order_status, color);
+
+		// Tower Wise Generation Button
+		if (frm.doc.project_type === "Tower Wise" && !frm.doc.towers_generated && !frm.doc.__islocal) {
+			frm.add_custom_button(__("Generate Tower Tenders"), () => {
+				frappe.confirm(__("This will create individual Tender Calendar records for each Block/Tower in this Project. Do you want to proceed?"), () => {
+					frappe.call({
+						method: "realapp.tender.doctype.tender_calendar.tender_calendar.generate_tower_tenders",
+						args: { docname: frm.doc.name },
+						freeze: true,
+						freeze_message: __("Generating Towers..."),
+						callback: function(r) {
+							if (!r.exc) {
+								frappe.show_alert({ message: __("Tower Tenders Generated Successfully"), indicator: "green" });
+								frm.reload_doc();
+							}
+						}
+					});
+				});
+			}, __("Actions"));
+		}
 	},
 
 	boq_submission_date(frm) {

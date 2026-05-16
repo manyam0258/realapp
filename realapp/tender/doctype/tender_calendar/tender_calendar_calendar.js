@@ -8,9 +8,9 @@ frappe.views.calendar["Tender Calendar"] = {
 		id: "name",
 		allDay: "all_day",
 		title: "work_package",
-		status: "order_status",
+		project_status: "status",
 	},
-	style_field: "order_status",
+	style_field: "status",
 	colors: {
 		"Pending": "orange",
 		"Issued": "green",

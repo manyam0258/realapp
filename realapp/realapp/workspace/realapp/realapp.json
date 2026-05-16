@@ -183,13 +183,66 @@
    "is_query_report": 0,
    "label": "Sales Booking Data",
    "link_count": 0,
-   "link_to": "Sales Booking Data",
+   "link_to": "property-dashboard",
+   "link_type": "Page",
+   "label": "Lead Scoring",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Scoring Dimension",
+   "link_count": 0,
+   "link_to": "Lead Scoring Dimension",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Scoring Parameter",
+   "link_count": 0,
+   "link_to": "Lead Scoring Parameter",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Scoring Template",
+   "link_count": 0,
+   "link_to": "Lead Scoring Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Scoring Report",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Scoring Report",
+   "link_count": 0,
+   "link_to": "Lead Scoring Report",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-04-27 12:57:19.936859",
+ "modified": "2026-01-05 12:43:56.090540",
+ "modified": "2025-10-30 10:48:15.991034",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",

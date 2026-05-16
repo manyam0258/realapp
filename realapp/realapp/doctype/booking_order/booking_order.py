@@ -81,7 +81,6 @@ def get_item_defaults(item_code: str, company: str) -> dict:
     if not item_code:
         return {}
 
-    # Item basics
     item = frappe.db.get_value(
         "Item",
         item_code,
@@ -89,7 +88,6 @@ def get_item_defaults(item_code: str, company: str) -> dict:
         as_dict=True,
     ) or {}
 
-    # Company-specific defaults from Item Default child
     defaults = frappe.db.get_value(
         "Item Default",
         {"parent": item_code, "company": company},
@@ -97,7 +95,6 @@ def get_item_defaults(item_code: str, company: str) -> dict:
         as_dict=True,
     ) or {}
 
-    # Company fallback
     company_defaults = frappe.db.get_value(
         "Company",
         company,
@@ -107,7 +104,7 @@ def get_item_defaults(item_code: str, company: str) -> dict:
 
     return {
         "item_name": item.get("item_name"),
-        "uom": item.get("stock_uom"),  # stock uom always available
+        "uom": item.get("stock_uom"),
         "income_account": defaults.get("income_account") or company_defaults.get("default_income_account"),
         "cost_center": defaults.get("selling_cost_center") or company_defaults.get("cost_center"),
     }
@@ -132,10 +129,8 @@ def make_sales_invoice(source_name, target_doc=None, selected_rows=None):
     chosen = [r for r in bo.payment_schedule if r.name in rows]
 
     if len(chosen) == 1:
-        # single invoice → open form
         return _build_single_sales_invoice(bo, chosen[0])
     else:
-        # multiple invoices → insert in background
         si_list = []
         for row in chosen:
             si = _build_single_sales_invoice(bo, row, save=True)
@@ -196,13 +191,27 @@ def _build_single_sales_invoice(bo, row, save=False):
 def ensure_customer_from_party(party_name, party_type):
     """
     Convert Lead/Opportunity into Customer if needed.
-    Returns the Customer doc.
+    Reuses existing Customer if already created (prevents duplicates).
+    Returns the Customer document.
     """
     if party_type == "Lead":
         lead = frappe.get_doc("Lead", party_name)
-        if getattr(lead, "converted_by", None):
-            return frappe.get_doc("Customer", lead.converted_by)
 
+        # --- 1️⃣ Check if Customer already linked in Lead ---
+        if getattr(lead, "converted_by", None):
+            if frappe.db.exists("Customer", lead.converted_by):
+                return frappe.get_doc("Customer", lead.converted_by)
+
+        # --- 2️⃣ Check if Customer exists with same Lead reference ---
+        existing_customer = frappe.db.exists("Customer", {"lead_name": lead.name})
+        if existing_customer:
+            # Update Lead linkage if missing
+            lead.flags.ignore_version = True
+            lead.converted_by = existing_customer
+            lead.save(ignore_permissions=True)
+            return frappe.get_doc("Customer", existing_customer)
+
+        # --- 3️⃣ Create new Customer only if none found ---
         customer = frappe.get_doc({
             "doctype": "Customer",
             "customer_name": lead.lead_name,
@@ -212,25 +221,45 @@ def ensure_customer_from_party(party_name, party_type):
             "territory": "All Territories"
         }).insert(ignore_permissions=True)
 
+        # --- 4️⃣ Link back to Lead safely ---
+        lead = frappe.get_doc("Lead", lead.name)  # reload to avoid timestamp conflict
+        lead.flags.ignore_version = True
         lead.converted_by = customer.name
         lead.save(ignore_permissions=True)
+
         return customer
 
     elif party_type == "Opportunity":
         opp = frappe.get_doc("Opportunity", party_name)
-        if opp.customer:
+
+        # 1️⃣ Reuse linked customer if already present
+        if opp.customer and frappe.db.exists("Customer", opp.customer):
             return frappe.get_doc("Customer", opp.customer)
 
+        # 2️⃣ Check if Customer already exists for this Opportunity
+        existing_customer = frappe.db.exists("Customer", {"opportunity_name": opp.name})
+        if existing_customer:
+            opp.flags.ignore_version = True
+            opp.customer = existing_customer
+            opp.save(ignore_permissions=True)
+            return frappe.get_doc("Customer", existing_customer)
+
+        # 3️⃣ Create new one
         customer = frappe.get_doc({
             "doctype": "Customer",
             "customer_name": opp.party_name or f"Customer {party_name}",
             "customer_type": "Individual",
             "customer_group": "All Customer Groups",
-            "territory": "All Territories"
+            "territory": "All Territories",
+            "opportunity_name": opp.name
         }).insert(ignore_permissions=True)
 
+        # 4️⃣ Safely link
+        opp = frappe.get_doc("Opportunity", opp.name)
+        opp.flags.ignore_version = True
         opp.customer = customer.name
         opp.save(ignore_permissions=True)
+
         return customer
 
     else:

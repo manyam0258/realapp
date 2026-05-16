@@ -1,192 +1,376 @@
-import frappe, math
-from frappe.utils import today
+import frappe
+import math
+from frappe.utils import today, flt, cint
 
+class LeadScoringEngine:
+    def __init__(self, template_name):
+        self.template_name = template_name
+        self.template = frappe.get_doc("Lead Scoring Template", template_name)
+        self.project = frappe.get_doc("Project", self.template.project)
+        self.param_cache = {}
+        self.reports_created = 0
 
-def haversine(lat1, lon1, lat2, lon2):
-    """Calculate distance (km) between two points using the Haversine formula."""
-    try:
-        R = 6371.0
-        lat1, lon1, lat2, lon2 = map(float, [lat1 or 0, lon1 or 0, lat2 or 0, lon2 or 0])
-        dlat = math.radians(lat2 - lat1)
-        dlon = math.radians(lon2 - lon1)
-        a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-        return R * c
-    except Exception:
-        return 9999
+    def generate_reports(self, batch_size=1000, publish_progress=False):
+        """
+        Generates lead scoring reports for all leads in batches.
+        """
+        # Get total count of leads for progress tracking (optional)
+        total_leads = frappe.db.count("Lead")
+        
+        # Process in batches
+        for start in range(0, total_leads, batch_size):
+            leads = frappe.get_all("Lead", fields=["*"], limit_start=start, limit_page_length=batch_size)
+            if not leads:
+                break
+            
+            self.process_batch(leads)
+            frappe.db.commit() # Commit after each batch to avoid large transaction logs
+            
+            # Publish progress for background jobs
+            if publish_progress and total_leads > 0:
+                progress = ((start + len(leads)) / total_leads) * 100
+                frappe.publish_progress(
+                    percent=progress,
+                    title="Generating Lead Scoring Reports",
+                    description=f"Processed {start + len(leads)} of {total_leads} leads"
+                )
 
+        return f"{self.reports_created} lead scoring reports generated successfully."
 
-@frappe.whitelist()
-def generate_lead_scoring_report(template_name):
-    """Compute scores for all Leads using a given Lead Scoring Template, normalized to 100."""
-    template = frappe.get_doc("Lead Scoring Template", template_name)
-    project = frappe.get_doc("Project", template.project)
-    leads = frappe.get_all("Lead", fields=["*"])
+    def process_batch(self, leads):
+        """
+        Processes a batch of leads and inserts reports.
+        """
+        reports_to_insert = []
+        
+        # Pre-calculate total possible score from active rules
+        total_possible_score = sum([flt(d.max_score or 0) for d in self.template.details if d.active])
+        if not total_possible_score:
+            frappe.log_error("Lead Scoring Template has no active parameters with max_score", self.template_name)
+            return
 
-    if not leads:
-        frappe.throw("No leads found to evaluate.")
+        for lead_data in leads:
+            lead = frappe._dict(lead_data)
+            
+            # Evaluate Lead
+            report_data = self.evaluate_lead(lead, total_possible_score)
+            
+            # Check if report already exists for this lead and template to avoid duplicates
+            # For performance in bulk, we might skip this check or do a bulk delete first.
+            # Here, let's delete existing report for this lead/template combination to ensure idempotency.
+            frappe.db.delete("Lead Scoring Report", {
+                "lead": lead.name,
+                "lead_scoring_template": self.template.name
+            })
 
-    created_reports = []
-    param_cache = {}
+            # Create new report doc (not inserted yet)
+            report = frappe.new_doc("Lead Scoring Report")
+            report.update(report_data)
+            report.insert(ignore_permissions=True)
+            self.reports_created += 1
 
-    total_possible_score = sum([float(d.max_score or 0) for d in template.details if d.active])
-    if not total_possible_score:
-        frappe.throw("No active parameters with max_score found in this template.")
-
-    for lead_data in leads:
-        lead = frappe._dict(lead_data)
+    def evaluate_lead(self, lead, total_possible_score):
+        """
+        Evaluates a single lead against the template rules.
+        """
         total_raw_score = 0.0
         section_scores = {}
 
-        for rule in template.details:
+        for rule in self.template.details:
             if not rule.active:
                 continue
 
-            param_name = getattr(rule, "parameter", None)
-            pdoc = None
-            if param_name:
-                if param_name in param_cache:
-                    pdoc = param_cache[param_name]
-                else:
-                    try:
-                        pdoc = frappe.get_doc("Lead Scoring Parameter", param_name)
-                    except Exception:
-                        pdoc = None
-                    param_cache[param_name] = pdoc
+            # Get Parameter definition (cached)
+            param_def = self.get_parameter_definition(rule.parameter)
+            if not param_def:
+                continue
 
-            field_ref = getattr(rule, "field_reference", None) or (pdoc.field_reference if pdoc else None)
-            raw_value = None
-            if field_ref:
-                raw_value = lead.get(field_ref)
-            elif rule.parameter:
-                raw_value = lead.get(rule.parameter)
+            # Determine Score
+            raw_score = self.evaluate_rule(rule, param_def, lead)
+            total_raw_score += flt(raw_score)
+            
+            # Track section scores
+            key = rule.parameter
+            section_scores[key] = round(raw_score, 2)
 
-            raw_score = evaluate_rule_value(raw_value, lead, project, rule, pdoc)
-            total_raw_score += float(raw_score or 0)
-            section_scores[rule.parameter or (pdoc.name if pdoc else "unknown")] = round(raw_score or 0, 2)
-
-        # Normalize to 100 scale
-        normalized_score = (total_raw_score / total_possible_score) * 100
+        # Normalize Score
+        normalized_score = (total_raw_score / total_possible_score) * 100 if total_possible_score else 0
         total_score = round(normalized_score, 2)
-        category = categorize(total_score)
+        category = self.categorize_score(total_score)
 
-        report = frappe.new_doc("Lead Scoring Report")
-        report.project = project.name
-        report.lead_scoring_template = template.name
-        report.lead = lead.name
-        report.total_score = total_score
-        report.category = category
-        report.section_scores = frappe.as_json(section_scores)
-        report.report_date = today()
-        report.insert(ignore_permissions=True)
-        created_reports.append(report.name)
+        return {
+            "project": self.project.name,
+            "lead_scoring_template": self.template.name,
+            "lead": lead.name,
+            "total_score": total_score,
+            "category": category,
+            "section_scores": frappe.as_json(section_scores),
+            "report_date": today()
+        }
 
-    frappe.db.commit()
-    return f"{len(created_reports)} lead scoring reports generated successfully (normalized to 100)."
-
-
-def evaluate_rule_value(raw_value, lead, project, rule, pdoc):
-    """Return a raw score (0…rule.max_score) with normalization for bools, rupees, project-linked ranges, and geo."""
-    try:
-        logic = getattr(rule, "scoring_logic_type", None) or (pdoc.scoring_logic_type if pdoc else None)
-        criteria = (getattr(rule, "criteria", None) or (pdoc.criteria if pdoc else None) or "").strip()
-        max_score = float(getattr(rule, "max_score", None) or (pdoc.max_score if pdoc else 0) or 0)
-
-        # 🧩 Normalize boolean fields
-        if isinstance(raw_value, bool):
-            raw_value = "Yes" if raw_value else "No"
-        elif str(raw_value).strip() in ["1", "0"]:
-            raw_value = "Yes" if str(raw_value).strip() == "1" else "No"
-
-        # 💰 Handle annual_income specifically (in Rupees)
-        if rule.field_reference and "annual_income" in rule.field_reference:
-            val = float(raw_value or 0)
-            if 2_00_000 <= val <= 1_00_00_000:
-                # Expecting rupees, so compare directly
-                raw_value = val
-                criteria = "2000000-10000000"  # 20L–100L
-            else:
-                raw_value = val / 100000.0
-
-        # 📍 GeoDistance logic
-        if logic == "GeoDistance":
-            lead_lat = lead.get("lead_latitude") or lead.get("latitude")
-            lead_lon = lead.get("lead_longitude") or lead.get("longitude")
-            distance = haversine(lead_lat, lead_lon, project.latitude or 0, project.longitude or 0)
-            radius = getattr(project, "target_radius_km", None) or (float(criteria) if criteria else 5)
-            return max_score if distance <= radius else 0
-
-        # 🔤 Match / Exact
-        if logic in ["Match", "Exact"]:
-            if raw_value is None:
-                return 0
-            return max_score if str(criteria).lower() in str(raw_value).lower() else 0
-
-        # 🔎 Contains (comma-separated match)
-        if logic == "Contains":
-            if raw_value is None:
-                return 0
-            for c in str(criteria).split(","):
-                if str(c).strip().lower() in str(raw_value).lower():
-                    return max_score
-            return 0
-
-        # 🔢 Range logic
-        if logic == "Range":
-            if raw_value is None:
-                return 0
-
-            # Dynamic range cases
-            val = float(raw_value or 0)
-
-            # Age Range → use project preferred range
-            if "age" in (rule.parameter or "").lower():
-                min_age = getattr(project, "preferred_age_min", None)
-                max_age = getattr(project, "preferred_age_max", None)
-                if min_age is not None and max_age is not None:
-                    return max_score if float(min_age) <= val <= float(max_age) else 0
-
-            # For purchase timeline, last_contact_days, etc.
-            if not criteria:
-                return 0
+    def get_parameter_definition(self, param_name):
+        if param_name not in self.param_cache:
             try:
-                if "-" in criteria:
-                    mn, mx = [float(x.strip()) for x in criteria.split("-", 1)]
-                    return max_score if mn <= val <= mx else 0
-                thr = float(criteria)
-                return max_score if val >= thr else 0
+                self.param_cache[param_name] = frappe.get_doc("Lead Scoring Parameter", param_name)
             except Exception:
-                return 0
+                self.param_cache[param_name] = None
+        return self.param_cache[param_name]
 
-        # 🧠 Custom Expression
-        if logic == "Custom":
-            expr = getattr(rule, "expression", None) or (pdoc.example_expression if pdoc else None) or ""
-            context = {"lead": lead, "project": project, "float": float, "math": math}
-            try:
-                result = eval(expr, {}, context)
-                try:
-                    return float(result)
-                except Exception:
-                    return max_score if bool(result) else 0
-            except Exception as e:
-                frappe.log_error(f"Custom expression error in {rule.parameter}: {e}", "Lead Scoring Engine")
-                return 0
+    def evaluate_rule(self, rule, param_def, lead):
+        """
+        Evaluates a specific rule for a lead.
+        Logic type is derived from the Parameter definition.
+        """
+        try:
+            # 1. Identify Logic Type & Configuration
+            # CRITICAL FIX: Template Detail can override Parameter logic type
+            # This allows users to use different logic in different templates for the same parameter
+            # Priority: Template Detail > Parameter Definition
+            logic_type = rule.scoring_logic_type or param_def.scoring_logic_type
+            
+            # Criteria: Template overrides Parameter
+            criteria = (rule.criteria or param_def.criteria or "").strip()
+            
+            # Max Score comes from Template Rule (as per user request: "user will only update the scoring and weightage")
+            max_score = flt(rule.max_score)
 
-        return 0
+            # Field Reference comes from Parameter
+            field_ref = param_def.field_reference
+            
+            # Get Raw Value from Lead
+            raw_value = lead.get(field_ref) if field_ref else None
 
-    except Exception as e:
-        frappe.log_error(f"Error evaluating {getattr(rule, 'parameter', None)}: {e}", "Lead Scoring Engine")
-        return 0
+            # 2. Evaluate based on Logic Type
+            if logic_type == "GeoDistance":
+                return self.evaluate_geodistance(lead, criteria, max_score)
+            
+            elif logic_type == "Match" or logic_type == "Exact":
+                return self.evaluate_match(raw_value, criteria, max_score)
+            
+            elif logic_type == "Contains":
+                return self.evaluate_contains(raw_value, criteria, max_score)
+            
+            elif logic_type == "Range":
+                return self.evaluate_range(raw_value, criteria, max_score)
+            
+            elif logic_type == "Custom":
+                return self.evaluate_custom(rule, param_def, lead, max_score)
+            
+            return 0.0
 
+        except Exception as e:
+            frappe.log_error(f"Error evaluating rule {rule.parameter}: {e}", "Lead Scoring Engine")
+            return 0.0
 
-def categorize(score):
-    """Convert normalized score → category label."""
-    try:
-        s = float(score or 0)
-        if s >= 80:
+    def evaluate_geodistance(self, lead, criteria, max_score):
+        # Get Lead Coordinates
+        lead_lat = flt(lead.get("lead_latitude") or lead.get("latitude") or 0)
+        lead_lon = flt(lead.get("lead_longitude") or lead.get("longitude") or 0)
+        
+        # Get Project Coordinates
+        proj_lat = flt(self.project.latitude or 0)
+        proj_lon = flt(self.project.longitude or 0)
+
+        if not (lead_lat and lead_lon and proj_lat and proj_lon):
+            return 0.0
+
+        distance = self.haversine(lead_lat, lead_lon, proj_lat, proj_lon)
+        
+        # Criteria is the radius in km
+        radius = flt(criteria) if criteria else 5.0 # Default 5km if not specified
+        
+        if distance <= radius:
+            return max_score
+        return 0.0
+
+    def evaluate_match(self, raw_value, criteria, max_score):
+        if raw_value is None:
+            return 0.0
+        
+        # Normalize booleans
+        val_str = str(raw_value).lower().strip()
+        if isinstance(raw_value, bool) or val_str in ["1", "0", "true", "false"]:
+             if val_str in ["1", "true"]: val_str = "yes"
+             elif val_str in ["0", "false"]: val_str = "no"
+        
+        crit_str = str(criteria).lower().strip()
+        
+        if val_str == crit_str:
+            return max_score
+        return 0.0
+
+    def evaluate_contains(self, raw_value, criteria, max_score):
+        if raw_value is None:
+            return 0.0
+        
+        val_str = str(raw_value).lower()
+        # Criteria is comma-separated list
+        options = [x.strip().lower() for x in str(criteria).split(",")]
+        
+        for opt in options:
+            if opt and opt in val_str:
+                return max_score
+        return 0.0
+
+    def evaluate_range(self, raw_value, criteria, max_score):
+        if raw_value is None:
+            return 0.0
+        
+        val = flt(raw_value)
+        
+        # Criteria formats: "min-max" or "threshold" (assumed >= threshold)
+        try:
+            if "-" in str(criteria):
+                parts = str(criteria).split("-")
+                if len(parts) == 2:
+                    mn = flt(parts[0])
+                    mx = flt(parts[1])
+                    if mn <= val <= mx:
+                        return max_score
+            else:
+                # If single value, assume it's a minimum threshold? 
+                # Or exact match? Range usually implies comparison.
+                # Let's assume >= threshold if single number provided for Range type
+                threshold = flt(criteria)
+                if val >= threshold:
+                    return max_score
+        except Exception:
+            pass
+            
+        return 0.0
+
+    def evaluate_custom(self, rule, param_def, lead, max_score):
+        # Expression comes from Parameter (example_expression) or Rule (expression)
+        # User said "template will pull config from parameter", but Template Detail has an 'expression' field too.
+        # We'll check Rule first, then Parameter.
+        expr = rule.expression or param_def.example_expression
+        if not expr:
+            return 0.0
+            
+        context = {
+            "lead": lead,
+            "project": self.project,
+            "math": math,
+            "flt": flt,
+            "cint": cint,
+            "frappe": frappe
+        }
+        
+        try:
+            result = eval(expr, {"__builtins__": {}}, context)
+            # If result is boolean, return max_score or 0
+            if isinstance(result, bool):
+                return max_score if result else 0.0
+            # If result is number, return it (capped at max_score?)
+            # Usually custom logic returns a score directly or a multiplier.
+            # Let's assume it returns the score to be used.
+            return flt(result)
+        except Exception as e:
+            frappe.log_error(f"Custom expression error: {e}", "Lead Scoring Engine")
+            return 0.0
+
+    def categorize_score(self, score):
+        if score >= 80:
             return "Hot"
-        if s >= 60:
+        if score >= 60:
             return "Warm"
         return "Cold"
-    except Exception:
-        return "Cold"
+
+    @staticmethod
+    def haversine(lat1, lon1, lat2, lon2):
+        """Calculate distance (km) between two points using the Haversine formula."""
+        try:
+            R = 6371.0
+            dlat = math.radians(lat2 - lat1)
+            dlon = math.radians(lon2 - lon1)
+            a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+            return R * c
+        except Exception:
+            return 9999.0
+
+@frappe.whitelist()
+def generate_lead_scoring_report(template_name):
+    """
+    Enqueue lead scoring report generation as a background job.
+    """
+    frappe.enqueue(
+        method="realapp.realapp.doctype.lead_scoring_engine.engine.generate_reports_background",
+        queue="long",
+        timeout=3600,
+        template_name=template_name,
+        job_name=f"Lead Scoring: {template_name}"
+    )
+    return f"Lead scoring report generation has been queued for template '{template_name}'. Check Lead Scoring Report list for results."
+
+def generate_reports_background(template_name):
+    """
+    Background job method to generate lead scoring reports.
+    """
+    try:
+        engine = LeadScoringEngine(template_name)
+        result = engine.generate_reports(publish_progress=True)
+        frappe.publish_realtime(
+            event="lead_scoring_complete",
+            message={"template": template_name, "result": result},
+            user=frappe.session.user
+        )
+        return result
+    except Exception as e:
+        frappe.log_error(f"Error generating lead scoring reports: {str(e)}", "Lead Scoring Background Job")
+        frappe.publish_realtime(
+            event="lead_scoring_failed",
+            message={"template": template_name, "error": str(e)},
+            user=frappe.session.user
+        )
+        raise
+
+@frappe.whitelist()
+def score_specific_leads(template_name, lead_names):
+    """
+    Score specific lead(s) with a given template.
+    Args:
+        template_name: Name of the Lead Scoring Template
+        lead_names: Single lead name (string) or list of lead names
+    Returns:
+        Dictionary with scoring results
+    """
+    # Handle single lead or list of leads
+    if isinstance(lead_names, str):
+        lead_names = [lead_names]
+    
+    engine = LeadScoringEngine(template_name)
+    
+    # Pre-calculate total possible score
+    total_possible_score = sum([flt(d.max_score or 0) for d in engine.template.details if d.active])
+    if not total_possible_score:
+        frappe.throw("Lead Scoring Template has no active parameters with max_score")
+    
+    results = []
+    for lead_name in lead_names:
+        lead_data = frappe.get_doc("Lead", lead_name)
+        lead = frappe._dict(lead_data.as_dict())
+        
+        # Delete existing report for this lead/template combination
+        frappe.db.delete("Lead Scoring Report", {
+            "lead": lead.name,
+            "lead_scoring_template": engine.template.name
+        })
+        
+        # Evaluate lead
+        report_data = engine.evaluate_lead(lead, total_possible_score)
+        
+        # Create new report
+        report = frappe.new_doc("Lead Scoring Report")
+        report.update(report_data)
+        report.insert(ignore_permissions=True)
+        
+        results.append({
+            "lead": lead.name,
+            "score": report_data["total_score"],
+            "category": report_data["category"],
+            "report_name": report.name
+        })
+    
+    frappe.db.commit()
+    return results
