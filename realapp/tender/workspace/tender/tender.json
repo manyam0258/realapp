@@ -123,7 +123,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-05-06 15:41:36.242604",
+ "modified": "2026-05-20 18:10:57.352195",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
@@ -133,6 +133,39 @@
  "public": 1,
  "quick_lists": [],
  "roles": [
+  {
+   "role": "Planning"
+  },
+  {
+   "role": "Planning Head"
+  },
+  {
+   "role": "Planning Manager"
+  },
+  {
+   "role": "Architect"
+  },
+  {
+   "role": "Quantity Surveyor"
+  },
+  {
+   "role": "Procurement Team"
+  },
+  {
+   "role": "Contracts Team"
+  },
+  {
+   "role": "Project Team"
+  },
+  {
+   "role": "Tender Committee"
+  },
+  {
+   "role": "Management"
+  },
+  {
+   "role": "Project Head"
+  },
   {
    "role": "System Manager"
   }

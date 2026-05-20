@@ -5,28 +5,90 @@ frappe.ui.form.on("Tender Calendar", {
 	refresh(frm) {
 		frm.trigger("set_indicators");
 		
+		// Cache initial BOQ submission date for Suggestion Mode cascading comparison
+		frm.old_boq_submission_date = frm.doc.boq_submission_date;
+
 		// Set document badge to order_status
+		let status = frm.doc.order_status || "Pending";
 		let color = "orange";
-		if (frm.doc.order_status === "Issued") color = "green";
-		if (frm.doc.order_status === "Cancelled") color = "red";
-		frm.page.set_indicator(frm.doc.order_status, color);
+		if (status === "Issued") color = "green";
+		if (status === "Cancelled") color = "red";
+		frm.page.set_indicator(status, color);
 
 		// Tower Wise Generation Button
 		if (frm.doc.project_type === "Tower Wise" && !frm.doc.towers_generated && !frm.doc.__islocal) {
 			frm.add_custom_button(__("Generate Tower Tenders"), () => {
-				frappe.confirm(__("This will create individual Tender Calendar records for each Block/Tower in this Project. Do you want to proceed?"), () => {
-					frappe.call({
-						method: "realapp.tender.doctype.tender_calendar.tender_calendar.generate_tower_tenders",
-						args: { docname: frm.doc.name },
-						freeze: true,
-						freeze_message: __("Generating Towers..."),
-						callback: function(r) {
-							if (!r.exc) {
-								frappe.show_alert({ message: __("Tower Tenders Generated Successfully"), indicator: "green" });
-								frm.reload_doc();
-							}
+				frappe.call({
+					method: "realapp.tender.doctype.tender_calendar.tender_calendar.get_remaining_blocks",
+					args: { docname: frm.doc.name },
+					callback: function(r) {
+						let blocks = r.message || [];
+						if (blocks.length === 0) {
+							frappe.msgprint(__("No remaining blocks to generate tenders for."));
+							return;
 						}
-					});
+
+						// Build checkbox HTML
+						let html = '<div style="max-height: 250px; overflow-y: auto; padding: 10px 15px;">';
+						blocks.forEach(block => {
+							let label = block.tower_name ? `${block.tower_name} (${block.name})` : block.name;
+							html += `
+								<div class="checkbox" style="margin-bottom: 8px;">
+									<label style="cursor: pointer; display: flex; align-items: center;">
+										<input type="checkbox" class="block-select" value="${block.name}" checked style="margin-right: 8px;">
+										<span>${label}</span>
+									</label>
+								</div>
+							`;
+						});
+						html += '</div>';
+
+						let dialog = new frappe.ui.Dialog({
+							title: __("Select Blocks/Towers"),
+							fields: [
+								{
+									fieldtype: "HTML",
+									fieldname: "blocks_list_html"
+								}
+							],
+							primary_action_label: __("Generate"),
+							primary_action() {
+								let selected_blocks = [];
+								dialog.$wrapper.find('.block-select:checked').each(function() {
+									selected_blocks.push($(this).val());
+								});
+
+								if (selected_blocks.length === 0) {
+									frappe.msgprint(__("Please select at least one block."));
+									return;
+								}
+
+								dialog.hide();
+
+								frappe.call({
+									method: "realapp.tender.doctype.tender_calendar.tender_calendar.generate_selected_tower_tenders",
+									args: {
+										docname: frm.doc.name,
+										selected_blocks: selected_blocks
+									},
+									freeze: true,
+									freeze_message: __("Generating Tenders..."),
+									callback: function(res) {
+										if (!res.exc) {
+											frappe.show_alert({
+												message: __("Tower Tenders Generated Successfully"),
+												indicator: "green"
+											});
+											frm.reload_doc();
+										}
+									}
+								});
+							}
+						});
+
+						dialog.show();
+						dialog.fields_dict.blocks_list_html.set_value(html);
+					}
 				});
 			}, __("Actions"));
 		}
@@ -45,10 +107,11 @@ frappe.ui.form.on("Tender Calendar", {
 	},
 
 	propose_cascade(frm) {
-		// Logic to calculate shift based on old value
-		// For simplicity in JS, we compare against original doc if available
-		let old_date = frm.doc.__onsave && frm.doc.__onsave.boq_submission_date;
-		if (!old_date) return;
+		let old_date = frm.old_boq_submission_date;
+		if (!old_date) {
+			frm.old_boq_submission_date = frm.doc.boq_submission_date;
+			return;
+		}
 
 		let delta = frappe.datetime.get_diff(frm.doc.boq_submission_date, old_date);
 		if (delta > 0) {
@@ -66,8 +129,14 @@ frappe.ui.form.on("Tender Calendar", {
 						message: __("Downstream dates shifted successfully"),
 						indicator: "green"
 					});
+					frm.old_boq_submission_date = frm.doc.boq_submission_date;
+				},
+				() => {
+					frm.old_boq_submission_date = frm.doc.boq_submission_date;
 				}
 			);
+		} else {
+			frm.old_boq_submission_date = frm.doc.boq_submission_date;
 		}
 	},
 

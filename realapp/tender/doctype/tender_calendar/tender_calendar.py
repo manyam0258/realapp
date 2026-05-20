@@ -31,6 +31,8 @@ class TenderCalendar(Document):
 		self.gantt_title = f"{self.sl_no or ''} - {self.category or ''} - {self.work_package or ''}".strip(" - ")
 
 	def on_trash(self):
+		if getattr(frappe.flags, "skip_sequence_shift", False):
+			return
 		if self.sl_no and self.project:
 			if self.sl_no % 1 != 0:
 				# Sub-item deletion: shift siblings down
@@ -42,6 +44,15 @@ class TenderCalendar(Document):
 					AND sl_no > %s 
 					AND sl_no < %s
 				""", (self.project, self.sl_no, parent_sl_no + 1))
+				
+				# Reset towers_generated to 0 on the parent template record
+				parent_name = frappe.db.get_value("Tender Calendar", {
+					"project": self.project,
+					"sl_no": float(parent_sl_no),
+					"is_template": 1
+				})
+				if parent_name:
+					frappe.db.set_value("Tender Calendar", parent_name, "towers_generated", 0)
 			else:
 				# Master item deletion: shift all downstream masters and their subs
 				frappe.db.sql("""
@@ -159,23 +170,55 @@ def get_calendar_events(start, end, filters=None):
 	return events
 
 @frappe.whitelist()
-def generate_tower_tenders(docname):
+def get_remaining_blocks(docname):
+	master_doc = frappe.get_doc("Tender Calendar", docname)
+	
+	# Get all blocks for the project
+	all_blocks = frappe.get_all("Block", filters={"project": master_doc.project}, fields=["name", "tower_name", "block"])
+	
+	# Get already generated blocks for this template
+	generated_block_names = frappe.get_all("Tender Calendar", filters=[
+		["project", "=", master_doc.project],
+		["sl_no", ">", master_doc.sl_no],
+		["sl_no", "<", int(master_doc.sl_no) + 1],
+		["block", "is", "set"]
+	], pluck="block")
+	
+	# Filter remaining blocks
+	remaining_blocks = [b for b in all_blocks if b.name not in generated_block_names]
+	return remaining_blocks
+
+
+@frappe.whitelist()
+def generate_selected_tower_tenders(docname, selected_blocks):
+	import json
+	if isinstance(selected_blocks, str):
+		selected_blocks = json.loads(selected_blocks)
+		
 	master_doc = frappe.get_doc("Tender Calendar", docname)
 	
 	if master_doc.project_type != "Tower Wise":
-		frappe.throw(_("Can only generate sub-tenders for 'Tower Wise' projects."))
-	if master_doc.get("towers_generated"):
-		frappe.throw(_("Tower Tenders have already been generated for this record."))
+		frappe.throw(frappe._("Can only generate sub-tenders for 'Tower Wise' projects."))
 		
-	# Get blocks
-	blocks = frappe.get_all("Block", filters={"project": master_doc.project}, fields=["name", "tower_name", "block"])
-	if not blocks:
-		frappe.throw(_("No Blocks found for Project {0}").format(master_doc.project))
+	# Find max sl_no for this parent's sub-items
+	max_sub_sl_no = frappe.db.sql("""
+		SELECT MAX(sl_no) FROM `tabTender Calendar`
+		WHERE project = %s 
+		AND sl_no > %s 
+		AND sl_no < %s
+	""", (master_doc.project, master_doc.sl_no, int(master_doc.sl_no) + 1))[0][0]
+	
+	if max_sub_sl_no:
+		start_sl_no = float(max_sub_sl_no)
+	else:
+		start_sl_no = float(master_doc.sl_no)
 		
-	for index, block in enumerate(blocks):
+	for index, block_name in enumerate(selected_blocks):
+		block = frappe.get_doc("Block", block_name)
 		new_doc = frappe.copy_doc(master_doc)
-		# Keep the same sl_no as the parent but append .1, .2, etc.
-		new_sl_no = round(float(master_doc.sl_no) + ((index + 1) * 0.1), 1)
+		
+		# Calculate new sl_no incrementally
+		new_sl_no = round(start_sl_no + ((index + 1) * 0.1), 1)
 		new_doc.sl_no = new_sl_no
 		
 		# Update work package and block reference
@@ -184,14 +227,35 @@ def generate_tower_tenders(docname):
 		new_doc.block = block.name
 		new_doc.is_template = 0
 		new_doc.towers_generated = 0
-		
-		# Optionally switch to Project type to prevent endless generation
 		new_doc.project_type = "Project"
 		
 		new_doc.insert()
 		
-	# Mark the original as template and generated
-	master_doc.db_set("towers_generated", 1)
+	# Update master status
+	# Check if all blocks are now generated
+	all_blocks = frappe.get_all("Block", filters={"project": master_doc.project})
+	generated_blocks = frappe.get_all("Tender Calendar", filters=[
+		["project", "=", master_doc.project],
+		["sl_no", ">", master_doc.sl_no],
+		["sl_no", "<", int(master_doc.sl_no) + 1],
+		["block", "is", "set"]
+	], pluck="block")
+	
+	if len(generated_blocks) >= len(all_blocks):
+		master_doc.db_set("towers_generated", 1)
+	else:
+		master_doc.db_set("towers_generated", 0)
+		
 	master_doc.db_set("is_template", 1)
 	
 	return True
+
+
+@frappe.whitelist()
+def generate_tower_tenders(docname):
+	# Legacy compatibility: generates all remaining blocks
+	remaining = get_remaining_blocks(docname)
+	if not remaining:
+		frappe.throw(frappe._("All Tower Tenders have already been generated for this record."))
+	selected_names = [b.name for b in remaining]
+	return generate_selected_tower_tenders(docname, selected_names)
