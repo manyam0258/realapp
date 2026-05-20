@@ -1,6 +1,6 @@
 # Implementation Plan: Tender Calendar Enhancements
 
-Based on the requirements to enhance the `Tender Calendar` with sequence sorting, status badge configuration, and automated "Tower Wise" generation, here is the proposed implementation plan:
+Based on the requirements to enhance the `Tender Calendar` with sequence sorting, status badge configuration, automated "Tower Wise" generation, and role-based workflows, here is the updated enhancement plan:
 
 ## 1. Sequence (`sl_no`) in List View & Sorting
 Currently, the `sl_no` is present but not configured as the primary sort field or visible in the list view.
@@ -23,8 +23,8 @@ Currently, Frappe uses the `status` field (Finalised / Not Finalised) as the def
   - Add logic in the `refresh` event using `frm.page.set_indicator(frm.doc.order_status, color)` to explicitly set the top-left badge of the document form to reflect the `Order Status`.
 - **Why this approach?**: This is the safest "Frappe-way" because it visually changes the badge without needing to rename the actual database fields, ensuring existing reports and data aren't broken.
 
-## 3. Tower Wise Generation Engine
-When a user selects `project_type` = "Tower Wise", we want to allow them to fill in the dates once, and then click a button to explode that record into individual line items for all 7 Towers (Blocks) in the Project.
+## 3. Tower Wise Generation Engine (Block-Wise Selection Popup)
+When a user selects `project_type` = "Tower Wise", we want to allow them to fill in dates once and click a button to generate line items block-by-block using an interactive popup instead of generating all blocks at once.
 
 **Action Plan:**
 - **Database Schema Changes**:
@@ -32,19 +32,27 @@ When a user selects `project_type` = "Tower Wise", we want to allow them to fill
   - Add an `is_template` (Check) field (hidden) to identify the master record that spawned the child records.
   - Add a `towers_generated` (Check) field (read-only) to track if the generation has already occurred.
 - **Client Script (`tender_calendar.js`)**:
-  - Add a custom button **"Generate Tower Tenders"**.
-  - Make the button visible ONLY IF `project_type == 'Tower Wise'` AND `towers_generated == 0`.
+  - Add custom action button **"Generate Tower Tenders"** under the Actions button.
+  - Make the button visible if `project_type == 'Tower Wise'` and the master record is saved.
+  - Show a customized `frappe.ui.Dialog` with a checklist of remaining blocks linked to the project.
 - **Server Script (`tender_calendar.py`)**:
-  - Create a `@frappe.whitelist()` method `generate_tower_tenders`.
-  - The method will query the `Block` DocType for all records linked to the current `project` (e.g., Tower A, Tower B, etc.).
-  - For each Block, it will dynamically create a new `Tender Calendar` record by copying all dates, categories, and readiness fields from the master.
-  - It will append the block name to the Work Package (e.g., `Painting Works - Tower A`).
-  - It will assign the specific `Block` link to the new record.
-  - Once all 7 are created, it sets `towers_generated = 1` and `is_template = 1` on the master record.
-- **Report Updates**:
-  - Modify the existing script reports (BOQ Tracker, Combined Tracker, etc.) to simply filter out records where `is_template = 1`. 
-  - Because the 7 generated records are just standard `Tender Calendar` records, **they will automatically appear in all your existing reports** and calendar views with their own sequence numbers (`sl_no`), allowing users to edit the dates for each tower individually!
+  - Create a `@frappe.whitelist()` method `get_remaining_blocks` to return blocks linked to the project that do not have a corresponding child `Tender Calendar` record.
+  - Create a `@frappe.whitelist()` method `generate_selected_tower_tenders` to copy all dates/details from the master template to new records for each selected block, updating the Work Package title (e.g., `Painting Works - Tower A`).
+  - Automatically update `towers_generated = 1` only when all blocks have been generated.
+  - Support deleted sub-item re-generation (if a block's child record is deleted, it reappears in the actions button remaining blocks list).
 
----
+## 4. Multi-State Workflow & Role-Based Permissions
+To govern stage-gate progression and enforce collaborative access, we need to implement role-based document access controls and a 14-state approval workflow.
 
-> Please confirm if this approach aligns with your vision. If approved, I can begin executing Phase 1 (Sorting & Status Badges) or Phase 3 (The Generation Engine) immediately!
+**Action Plan:**
+- **Role Setup & Custom DocPerms**:
+  - Implement a setup script `setup_permissions.py` to create 11 required roles (`Planning`, `Planning Head`, `Planning Manager`, `Architect`, `Quantity Surveyor`, `Procurement Team`, `Contracts Team`, `Project Team`, `Tender Committee`, `Management`, `Project Head`).
+  - Configure Custom DocPerms: Planning roles and System Managers get full write/create/delete access; other roles get read/write (edit-only) access to collaborate.
+  - Configure roles visibility for the Tender Workspace so all users can access it.
+- **Workflow Setup**:
+  - Programmatically create and activate the `"Tender Calendar Workflow"` linked to `Tender Calendar` doctype.
+  - Define 14 states with custom styled color badges and map editing capabilities to the corresponding owner role for each step.
+  - Configure 26 transition actions aligning the lifecycle steps from `Tender Creation` to `Completed`.
+- **Validation & Verification**:
+  - Write automated verification tests verifying role creation, restriction rules, and sequential workflow transitions.
+  - Add database deadlock prevention safeguards to bypass sequence updates during bulk cleanup.

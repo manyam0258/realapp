@@ -10,6 +10,7 @@ def execute(filters=None):
 
 def get_columns():
 	return [
+		{"label": "Sl No", "fieldname": "sl_no", "fieldtype": "Float", "width": 80},
 		{"label": "Project", "fieldname": "project", "fieldtype": "Link", "options": "Project", "width": 150},
 		{"label": "Work Package", "fieldname": "work_package", "fieldtype": "Data", "width": 200},
 		{"label": "Category", "fieldname": "category", "fieldtype": "Data", "width": 120},
@@ -36,12 +37,12 @@ def get_data(filters):
 
 	data = frappe.db.get_all("Tender Calendar", 
 		fields=[
-			"project", "work_package", "category", "boq_status", 
+			"sl_no", "project", "work_package", "category", "boq_status", 
 			"boq_submission_date", "boq_submitted_date", "tender_issue_date", 
 			"approval_date", "contract_date", "mobilization_date", 
 			"target_date", "status", "impact_level"
 		],
 		filters=query_filters,
-		order_by="project, target_date asc"
+		order_by="sl_no asc"
 	)
 	return data
