@@ -1,139 +1,49 @@
-# Master Walkthrough: Tender Management Module
+# Walkthrough
 
-Welcome to the Tender Management module. This module provides a robust, data-driven engine for procurement planning and execution. This walkthrough demonstrates the sequence of features developed and outlines the path forward.
+## Changes Made
 
----
+### 1. Date Formatting Fix (Previous Phase)
+- **Report**: [master_tender_calendar.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/report/master_tender_calendar/master_tender_calendar.py)
+- Replaced database-specific `DATE_FORMAT(target_date, '%%M %%Y')` with python formatting `strftime("%B %Y")`.
+- This resolves database-specific parsing issues where the month was displayed literally as `%M %Y`.
 
-## 🌟 Phase 1: Core Foundation & Unified Tender Hub
+### 2. Workflow Stage Integration & 'Send Back' Transitions (Current Phase)
+- **Workflow Fixtures & Setup**:
+  - Updated [workflow.json](file:///home/demo/frappe-bench2/apps/realapp/realapp/fixtures/workflow.json) and [setup_permissions.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/setup_permissions.py) to add the new `"Send Back"` transitions:
+    - **BOQ Submission** $\rightarrow$ **Design Sample / Drawings** (Planning, QS)
+    - **Technical Evaluation** $\rightarrow$ **Vendor Finalisation** (Project Team, Procurement, Management)
+    - **Order for Approval** $\rightarrow$ **Supplier Negotiation - 2** (Tender Committee, Management)
+    - **Contract Agreement / Issue of Order** $\rightarrow$ **Order for Approval** (Procurement, Contracts)
+  - Registered `"Send Back"` in the `Workflow Action Master` filters list in [hooks.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/hooks.py) for clean fixture export.
 
-### 1. The Unified Tender Hub
-- **Tender Workspace**: A central dashboard for procurement managers.
-- **Milestone Indicators**: Projects and work packages are color-coded in the list view (e.g., Red for "Critical" impact tenders).
+- **Validation Rules**:
+  - Added client-side validation in [tender_calendar.js](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/doctype/tender_calendar/tender_calendar.js) inside the `before_workflow_action(frm)` event to:
+    1. Check if the form is dirty (`frm.is_dirty()`). If dirty when triggering a `"Send Back"` transition, unfreeze the UI, block the transition, and prompt the user to save changes first.
+    2. Check if the `remarks` field is empty during a `"Send Back"` transition (only if form is not dirty/saved). If empty, set the field as required (`frm.toggle_reqd("remarks", true)`), scroll to the field (`frm.scroll_to_field("remarks")`), focus on the input, show a validation warning, and reject the transition.
+    3. Explicitly clear the `remarks` field client-side (`frm.set_value("remarks", "")`) when executing any forward/non-Send-Back transition.
+  - Resolved a UI freeze issue where rejecting the workflow action left the screen greyed out due to Frappe's synchronous overlay locking: introduced a deferred `frappe.dom.unfreeze()` call via `setTimeout` to ensure the `#freeze` backdrop is cleanly removed from the DOM after the event loop tick.
+  - Added matching server-side validation in [tender_calendar.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/doctype/tender_calendar/tender_calendar.py) (`validate_workflow_send_back`) to block API-level updates if `remarks` is empty on a send-back transition.
 
-### 2. Unified Visualizations
-- **The Lifecycle Calendar**: 
-    - Showing **5 distinct events** for every single tender record (Pre-Bid, Issue, Approval, Contract, Mobilization).
-    - Color-coded by event type for easy multi-track management.
-- **Procurement Gantt**: Standard timeline view from BOQ start to project handover.
+- **UI & Views Updates**:
+  - Removed custom page badge / status indicators from [tender_calendar.js](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/doctype/tender_calendar/tender_calendar.js) to prevent duplicate/overlapping status indicators on form load.
+  - Updated list view in [tender_calendar_list.js](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/doctype/tender_calendar/tender_calendar_list.js) to display indicators based on the `workflow_state` instead of the static `order_status` field.
 
-### 3. Advanced Business Intelligence (5 Reports)
-- **BOQ Tracker**: Monitors "Planned vs Actual" and highlights "Yet to Submit" items.
-- **Quotation Coverage**: Tracks if enough vendors have been onboarded vs the requirement.
-- **Financial Status**: Summarizes contract values (Lakhs) and order issuance progress.
-- **Combined Master Sheet**: A flat, horizontal view of the entire procurement pipeline.
-- **Monthly Pipeline**: A chart-driven report showing work package targets by month.
+- **Reports Update**:
+  - Modified [master_tender_calendar.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/report/master_tender_calendar/master_tender_calendar.py) and [order_status_report.py](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/report/order_status_report/order_status_report.py) to replace the "Order Status" column with "Workflow State", retrieving and rendering the actual active workflow stage of the line item.
 
----
-
-## 🔄 Phase 2: Cascading Engine & UI Enhancements
-
-### 1. Date Management (Cascading Engine)
-- **Auto Mode**: Automatically shifts downstream dates when the `BOQ Submission Date` is delayed. It follows a progressive buffer logic:
-    - Tender Issue: +D
-    - Approval: +D+2
-    - Contract: +D+5
-    - Mobilization/Target: +D+10
-- **Suggestion Mode**: Detects date changes in the browser and prompts the user to apply the calculated shift across the lifecycle.
-- **Manual Mode**: Allows independent date management without automatic shifting.
-
-### 2. Validation & Impact Engine
-- **Impact Engine**: Calculates `delay_days` and `impact_level` (Low, Medium, High, Critical) automatically on save based on the `Target Date`.
-- **Chronological Guardrails**: Real-time warnings if dates are entered out of sequence (e.g., Contract before Approval).
+- **Layout Reorganization**:
+  - Added 9 new `Column Break` fields to [tender_calendar.json](file:///home/demo/frappe-bench2/apps/realapp/realapp/tender/doctype/tender_calendar/tender_calendar.json) and inserted them into the `field_order` list.
+  - This configures 2-column layouts for all 11 existing sections to make the document page significantly more compact, organized, and readable.
 
 ---
 
-## 🚀 Phase 3: Sequence & Gantt Enhancements
+## Verification Results
 
-### 1. Robust Sequence Auto-Generation
-The `sl_no` (Serial Number) field is configured as an Integer format. When a new `Tender Calendar` record is created, the system automatically queries the database to find the highest sequence number for that specific **Project** and increments it by 1.
-
-### 2. Sequence Resilience (Deletion Handling)
-To ensure sequence integrity, gaps in numbering are automatically resolved. If a user deletes a record, a background script runs (`on_trash` hook) and updates all subsequent records for that project by shifting their sequence numbers down.
-
-### 3. Enhanced Gantt View Clarity
-A background field, `gantt_title`, was added to the schema. Whenever a record is saved, the system dynamically constructs:
-> `[Sequence Number] - [Category] - [Work Package]`
-
-The Gantt chart uses this rich title to show the sequence order and the category group at a glance.
-
----
-
-## 🏗️ Phase 4: Tower-Wise Custom Selection Engine
-
-### 1. Block-Wise Checklist Dialog
-When the project type is "Tower Wise", clicking the **"Generate Tower Tenders"** custom action button triggers a popup showing a checkbox list of remaining blocks linked to the project. Users can select specific blocks to generate tender lines for.
-
-### 2. Deletion Resilience & Regeneration
-- Dynamically queries only blocks that do not already have active tender records.
-- If any block-specific tender record is deleted, that block is automatically restored to the checklist, allowing users to regenerate it at any time.
-
----
-
-## 🔒 Phase 5: Workflow Roles & Security Policies
-
-### 1. Custom DocPerms & Setup Script
-- Running `setup_permissions.py` initializes 11 required roles and workspace permissions.
-- Planning roles and System Managers have full permissions. Other collaborative roles (Architect, Quantity Surveyor, Procurement, Contracts, Project Team, Project Head, Tender Committee, Management) have view/edit permissions, but are restricted from creating or deleting documents.
-
-### 2. Multi-State Approval Workflow
-- Activated `"Tender Calendar Workflow"` on the doctype featuring 14 states (from `Tender Creation` to `Completed`).
-- Integrates badge colors (Primary, Warning, Info, Success) for visual feedback.
-- Restricts editing permissions on each state to the owner role designated for that lifecycle stage.
-
----
-
-## 🛠️ Verification & Testing
-
-### 1. Try Suggestion Mode:
-1. Open a **Tender Calendar** record.
-2. Set 'Cascading Mode' to **Suggestion**.
-3. Enter a new (more delayed) **BOQ Submission Date (Actual)**.
-4. Save the record and observe the interactive impact prompt.
-
-### 2. Run Automated Verification Tests:
-All 8 test cases can be run using the following command:
-```bash
-$ bench --site selfcare.tridasa.in execute realapp.tender.doctype.tender_calendar.test_tender_calendar.run_tests
-```
-
-**Test Execution Output:**
-```text
-test_autoname_and_insert (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_autoname_and_insert)
-Test that the sequence sl_no is auto-generated and gantt_title is populated. ... ok
-test_calendar_events_retrieval (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_calendar_events_retrieval)
-Test get_calendar_events endpoint structure. ... ok
-test_cascading_auto (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_cascading_auto)
-Test that delaying the BOQ submission date cascades dates progressively in Auto mode. ... ok
-test_generate_tower_tenders (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_generate_tower_tenders)
-Test the Tower Wise generation engine with partial selection and deletion resilience. ... ok
-test_permission_restrictions (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_permission_restrictions)
-Test that only planning roles can create Tender Calendar docs. ... ok
-test_report_sorting (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_report_sorting)
-Test that all specified reports sort their data by sl_no asc. ... ok
-test_sequence_trash_handling (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_sequence_trash_handling)
-Test sequence re-ordering when a record is deleted. ... ok
-test_workflow_transitions (realapp.tender.doctype.tender_calendar.test_tender_calendar.TestTenderCalendar.test_workflow_transitions)
-Test that Tender Calendar workflow transitions states correctly using assigned roles. ... ok
-
-----------------------------------------------------------------------
-Ran 8 tests in 37.915s
-
-OK
-All tests passed successfully!
-```
-
----
-
-## 🗺️ Roadmap (Pending Features)
-
-The following features are scheduled for future development sprints:
-
-### Level 1: Predecessor Sequencing
-- **Cross-Record Dependency Cascading**: Using sequence order to automatically check if a work package's timeline conflicts with its immediate predecessor and visually flag delay risks.
-
-### Level 2: Stage-Gate Validation
-- **Transition Constraints**: Enforcing hard validation rules at the Python layer to ensure transition actions cannot bypass chronological date checks.
-
-### Level 3: ERPNext Integration & Alerts
-- **Notification Engine**: Daily email/Slack alerts for upcoming 3-day deadlines.
-- **RFQ Bridge**: Dynamic linkages to automatically initialize standard RFQs in ERPNext from a finalized Tender Calendar record.
+### Automated Verification
+1. Ran `bench execute` on both report modules. The commands returned successfully showing rows with active workflow stages (e.g. `"workflow_state": "Tender Creation"`) instead of legacy status strings:
+   ```bash
+   bench --site selfcare.tridasa.in execute realapp.tender.report.master_tender_calendar.master_tender_calendar.execute
+   bench --site selfcare.tridasa.in execute realapp.tender.report.order_status_report.order_status_report.execute
+   ```
+2. Ran a programmatic validation script. When trying to transition to a prior state without remarks, the validator successfully intercepted the request and threw `ValidationError: Remarks are mandatory when sending back the workflow.` When remarks were supplied, the transition completed successfully.
+3. Ran `bench migrate` to sync the updated DocType schema layout (including the new column breaks) with the database. The migration completed successfully.
