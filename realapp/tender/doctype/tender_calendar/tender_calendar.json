@@ -11,34 +11,41 @@
   "project",
   "block",
   "work_package",
+  "column_break_header",
   "category",
   "sub_category",
   "gantt_title",
   "section_break_project_context",
   "project_type",
+  "column_break_project_context",
   "status",
   "section_break_readiness",
   "design_sample_approval",
+  "column_break_readiness",
   "indigenous_import",
   "min_vendors_required",
   "section_break_boq",
   "boq_submission_date",
+  "column_break_boq",
   "boq_submitted_date",
   "boq_status",
   "section_break_lifecycle",
   "pre_bid_date",
   "tender_issue_date",
   "approval_date",
+  "column_break_lifecycle",
   "contract_date",
   "mobilization_date",
   "section_break_execution",
   "target_date",
   "actual_work_start",
+  "column_break_execution",
   "no_of_days",
   "section_break_links",
   "structure_schedule",
   "section_break_vendor",
   "vendors_to_onboard",
+  "column_break_vendor",
   "vendor_count",
   "order_type",
   "section_break_financial",
@@ -46,11 +53,13 @@
   "section_break_remarks",
   "order_status",
   "remarks",
+  "column_break_remarks",
   "delay_info",
   "section_break_system",
   "cascading_mode",
   "delay_days",
   "impact_level",
+  "column_break_system",
   "naming_series",
   "is_template",
   "towers_generated"
@@ -324,6 +333,42 @@
    "label": "Towers Generated",
    "read_only": 1,
    "default": "0"
+  },
+  {
+   "fieldname": "column_break_header",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_project_context",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_readiness",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_boq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_lifecycle",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_execution",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_vendor",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_remarks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_system",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,

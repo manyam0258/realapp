@@ -281,7 +281,7 @@ fixtures = [
 				"Start Technical Evaluation", "Complete Technical Evaluation", 
 				"Issue Tender", "Complete Pre-Bid Meeting", "Submit Quotations / Comparison", 
 				"Complete Negotiation 1", "Submit for Approval", "Approve Order", 
-				"Execute Contract", "Complete Onboarding"
+				"Execute Contract", "Complete Onboarding", "Send Back"
 			]]
 		]
 	},

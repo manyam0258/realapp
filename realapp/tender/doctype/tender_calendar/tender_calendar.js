@@ -3,17 +3,11 @@
 
 frappe.ui.form.on("Tender Calendar", {
 	refresh(frm) {
+		frm.toggle_reqd("remarks", false);
 		frm.trigger("set_indicators");
 		
 		// Cache initial BOQ submission date for Suggestion Mode cascading comparison
 		frm.old_boq_submission_date = frm.doc.boq_submission_date;
-
-		// Set document badge to order_status
-		let status = frm.doc.order_status || "Pending";
-		let color = "orange";
-		if (status === "Issued") color = "green";
-		if (status === "Cancelled") color = "red";
-		frm.page.set_indicator(status, color);
 
 		// Tower Wise Generation Button
 		if (frm.doc.project_type === "Tower Wise" && !frm.doc.towers_generated && !frm.doc.__islocal) {
@@ -91,6 +85,62 @@ frappe.ui.form.on("Tender Calendar", {
 					}
 				});
 			}, __("Actions"));
+		}
+	},
+
+	before_workflow_action(frm) {
+		if (frm.selected_workflow_action === "Send Back") {
+			if (frm.is_dirty()) {
+				frappe.dom.unfreeze();
+				setTimeout(() => {
+					frappe.dom.unfreeze();
+					if ($("#freeze").length) {
+						$("#freeze").removeClass("in").remove();
+						frappe.dom.freeze_count = 0;
+					}
+				}, 100);
+
+				frappe.msgprint({
+					title: __("Unsaved Changes"),
+					message: __("Please save your changes before sending back the workflow."),
+					indicator: "orange"
+				});
+				frappe.validated = false;
+				return Promise.reject();
+			}
+
+			if (!frm.doc.remarks) {
+				// Mark remarks as mandatory and scroll/focus on it in the UI
+				frm.toggle_reqd("remarks", true);
+				frm.scroll_to_field("remarks");
+
+				frappe.dom.unfreeze();
+				setTimeout(() => {
+					frappe.dom.unfreeze();
+					if ($("#freeze").length) {
+						$("#freeze").removeClass("in").remove();
+						frappe.dom.freeze_count = 0;
+					}
+					if (frm.fields_dict.remarks && frm.fields_dict.remarks.$input) {
+						frm.fields_dict.remarks.$input.focus();
+					}
+				}, 100);
+
+				frappe.msgprint({
+					title: __("Remarks Required"),
+					message: __("Remarks are mandatory when sending back the workflow."),
+					indicator: "red"
+				});
+				frappe.validated = false;
+				return Promise.reject();
+			} else {
+				frm.toggle_reqd("remarks", false);
+			}
+		} else {
+			frm.toggle_reqd("remarks", false);
+			if (frm.doc.remarks) {
+				frm.set_value("remarks", "");
+			}
 		}
 	},
 

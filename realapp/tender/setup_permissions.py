@@ -139,7 +139,8 @@ def setup_workflow():
         "Submit for Approval",
         "Approve Order",
         "Execute Contract",
-        "Complete Onboarding"
+        "Complete Onboarding",
+        "Send Back"
     ]
     for action in actions:
         if not frappe.db.exists("Workflow Action Master", action):
@@ -227,7 +228,18 @@ def setup_workflow():
             
             # Vendor Onboarding -> Completed
             {"state": "Vendor Onboarding", "action": "Complete Onboarding", "next_state": "Completed", "allowed": "Planning Head"},
-            {"state": "Vendor Onboarding", "action": "Complete Onboarding", "next_state": "Completed", "allowed": "Project Head"}
+            {"state": "Vendor Onboarding", "action": "Complete Onboarding", "next_state": "Completed", "allowed": "Project Head"},
+
+            # Send Back transitions
+            {"state": "BOQ Submission", "action": "Send Back", "next_state": "Design Sample / Drawings", "allowed": "Planning"},
+            {"state": "BOQ Submission", "action": "Send Back", "next_state": "Design Sample / Drawings", "allowed": "Quantity Surveyor"},
+            {"state": "Technical Evaluation", "action": "Send Back", "next_state": "Vendor Finalisation", "allowed": "Project Team"},
+            {"state": "Technical Evaluation", "action": "Send Back", "next_state": "Vendor Finalisation", "allowed": "Procurement Team"},
+            {"state": "Technical Evaluation", "action": "Send Back", "next_state": "Vendor Finalisation", "allowed": "Management"},
+            {"state": "Order for Approval", "action": "Send Back", "next_state": "Supplier Negotiation - 2", "allowed": "Tender Committee"},
+            {"state": "Order for Approval", "action": "Send Back", "next_state": "Supplier Negotiation - 2", "allowed": "Management"},
+            {"state": "Contract Agreement / Issue of Order", "action": "Send Back", "next_state": "Order for Approval", "allowed": "Procurement Team"},
+            {"state": "Contract Agreement / Issue of Order", "action": "Send Back", "next_state": "Order for Approval", "allowed": "Contracts Team"}
         ]
     })
     wf.insert(ignore_permissions=True)

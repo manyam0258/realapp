@@ -21,7 +21,7 @@ def get_columns():
 		{"label": "Category", "fieldname": "category", "fieldtype": "Data", "width": 120},
 		{"label": "BOQ Target", "fieldname": "boq_submission_date", "fieldtype": "Date", "width": 120},
 		{"label": "Tender Issue", "fieldname": "tender_issue_date", "fieldtype": "Date", "width": 120},
-		{"label": "Order Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
+		{"label": "Workflow State", "fieldname": "workflow_state", "fieldtype": "Data", "width": 150},
 		{"label": "Contract Value", "fieldname": "contract_value_lakhs", "fieldtype": "Currency", "width": 120}
 	]
 
@@ -35,14 +35,20 @@ def get_data(filters):
 
 	data = frappe.db.get_all("Tender Calendar", 
 		fields=[
-			"sl_no", "DATE_FORMAT(target_date, '%%M %%Y') as month", 
-			"project", "work_package", "category", 
+			"sl_no", "project", "work_package", "category", 
 			"boq_submission_date", "tender_issue_date", 
-			"status", "contract_value_lakhs", "target_date"
+			"workflow_state", "contract_value_lakhs", "target_date"
 		],
 		filters=query_filters,
 		order_by="sl_no asc"
 	)
+
+	for row in data:
+		if row.get("target_date"):
+			row["month"] = frappe.utils.getdate(row.target_date).strftime("%B %Y")
+		else:
+			row["month"] = ""
+
 	return data
 
 def get_chart(data):

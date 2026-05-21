@@ -14,7 +14,7 @@ def get_columns():
 		{"label": "Project", "fieldname": "project", "fieldtype": "Link", "options": "Project", "width": 150},
 		{"label": "Work Package", "fieldname": "work_package", "fieldtype": "Data", "width": 200},
 		{"label": "Target Date", "fieldname": "target_date", "fieldtype": "Date", "width": 120},
-		{"label": "Order Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
+		{"label": "Workflow State", "fieldname": "workflow_state", "fieldtype": "Data", "width": 150},
 		{"label": "Contract Value (Lakhs)", "fieldname": "contract_value_lakhs", "fieldtype": "Currency", "width": 150},
 		{"label": "Category", "fieldname": "category", "fieldtype": "Data", "width": 120},
 		{"label": "Order Type", "fieldname": "order_type", "fieldtype": "Data", "width": 120}
@@ -24,11 +24,11 @@ def get_data(filters):
 	query_filters = {}
 	if filters.get("project"):
 		query_filters["project"] = filters["project"]
-	if filters.get("status"):
-		query_filters["status"] = filters["status"]
+	if filters.get("workflow_state"):
+		query_filters["workflow_state"] = filters["workflow_state"]
 
 	data = frappe.db.get_all("Tender Calendar", 
-		fields=["sl_no", "project", "work_package", "target_date", "status", "contract_value_lakhs", "category", "order_type"],
+		fields=["sl_no", "project", "work_package", "target_date", "workflow_state", "contract_value_lakhs", "category", "order_type"],
 		filters=query_filters,
 		order_by="sl_no asc"
 	)
