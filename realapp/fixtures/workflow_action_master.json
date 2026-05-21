@@ -1,0 +1,93 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.768987",
+  "name": "Send for Design",
+  "workflow_action_name": "Send for Design"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.799885",
+  "name": "Submit Design",
+  "workflow_action_name": "Submit Design"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.812896",
+  "name": "Submit BOQ",
+  "workflow_action_name": "Submit BOQ"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.824711",
+  "name": "Start Technical Evaluation",
+  "workflow_action_name": "Start Technical Evaluation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.835928",
+  "name": "Complete Technical Evaluation",
+  "workflow_action_name": "Complete Technical Evaluation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.848211",
+  "name": "Issue Tender",
+  "workflow_action_name": "Issue Tender"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.860516",
+  "name": "Complete Pre-Bid Meeting",
+  "workflow_action_name": "Complete Pre-Bid Meeting"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.872108",
+  "name": "Submit Quotations / Comparison",
+  "workflow_action_name": "Submit Quotations / Comparison"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.883610",
+  "name": "Complete Negotiation 1",
+  "workflow_action_name": "Complete Negotiation 1"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.895588",
+  "name": "Submit for Approval",
+  "workflow_action_name": "Submit for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.907821",
+  "name": "Approve Order",
+  "workflow_action_name": "Approve Order"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.918803",
+  "name": "Execute Contract",
+  "workflow_action_name": "Execute Contract"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-20 18:10:57.932502",
+  "name": "Complete Onboarding",
+  "workflow_action_name": "Complete Onboarding"
+ }
+]
