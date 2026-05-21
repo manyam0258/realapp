@@ -29,6 +29,31 @@ class TenderCalendar(Document):
 		self.calculate_delay_and_impact()
 		self.handle_cascading()
 		self.gantt_title = f"{self.sl_no or ''} - {self.category or ''} - {self.work_package or ''}".strip(" - ")
+		self.validate_workflow_send_back()
+
+	def validate_workflow_send_back(self):
+		if not self.is_new():
+			old_state = frappe.db.get_value("Tender Calendar", self.name, "workflow_state")
+			new_state = self.workflow_state
+			
+			send_back_transitions = {
+				"BOQ Submission": "Design Sample / Drawings",
+				"Technical Evaluation": "Vendor Finalisation",
+				"Order for Approval": "Supplier Negotiation - 2",
+				"Contract Agreement / Issue of Order": "Order for Approval"
+			}
+			
+			if old_state != new_state:
+				is_send_back = False
+				if old_state in send_back_transitions and new_state == send_back_transitions[old_state]:
+					is_send_back = True
+				
+				if is_send_back:
+					if not self.remarks:
+						frappe.throw(_("Remarks are mandatory when sending back the workflow."))
+				else:
+					# Clear remarks on forward transitions
+					self.remarks = ""
 
 	def on_trash(self):
 		if getattr(frappe.flags, "skip_sequence_shift", False):

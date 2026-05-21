@@ -3,12 +3,15 @@
 
 frappe.listview_settings['Tender Calendar'] = {
 	get_indicator: function(doc) {
-		if (doc.order_status === "Issued") {
-			return [__("Issued"), "green", "order_status,=,Issued"];
-		} else if (doc.order_status === "Cancelled") {
-			return [__("Cancelled"), "red", "order_status,=,Cancelled"];
+		let state = doc.workflow_state || "Tender Creation";
+		let color = "orange";
+		if (state === "Completed") {
+			color = "green";
+		} else if (state === "Tender Creation") {
+			color = "gray";
 		} else {
-			return [__("Pending"), "orange", "order_status,=,Pending"];
+			color = "blue";
 		}
+		return [__(state), color, "workflow_state,=," + state];
 	}
 };
