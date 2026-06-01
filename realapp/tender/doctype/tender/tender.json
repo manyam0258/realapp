@@ -1,0 +1,1097 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "TEN-.#####",
+ "creation": "2026-05-28 17:12:37.220921",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "initiation_tab",
+  "initiation_section",
+  "data_reference",
+  "initiated_date",
+  "block_name",
+  "column_break_rstz",
+  "ref_no",
+  "project",
+  "floor_level_section",
+  "from",
+  "column_break_iqqt",
+  "to",
+  "section_break_yvjo",
+  "unit",
+  "new__amd",
+  "required_shortlisted_vendors",
+  "approx_value_in_lakhs",
+  "column_break_cirl",
+  "order_type",
+  "indigenous_import",
+  "no_of_vendors_to_be_onboarded_for_the_project",
+  "schematic_readyness_section",
+  "no_of_days_planned",
+  "column_break_ztuk",
+  "target_date",
+  "boq_submission_section",
+  "boq_submission_days_planned",
+  "column_break_icse",
+  "boq_submission_target_date",
+  "order_closure_section",
+  "vendor_evaluation",
+  "vendor_evaluation_section",
+  "introduction_meet_days_planned",
+  "column_break_amsa",
+  "vendor_evaluation_target_date",
+  "floating_of_enquiries_section",
+  "floating_enquiries_days_planned",
+  "column_break_xhmu",
+  "floating_enquiries_target_date",
+  "pre_bidtechnical_meeting_section",
+  "pre_bid_no_of_days_planned",
+  "column_break_geuf",
+  "pre_bid_target_date",
+  "quotations_collection_rate_comparison_and_negotiation_1_section",
+  "quotation_1_days_planned",
+  "column_break_itck",
+  "quotation_1_target_date",
+  "quotations_collection_rate_comparison_negotiation_2_section",
+  "quotation_2_days_planned",
+  "column_break_slok",
+  "quotation_2_target_date",
+  "order_approval_section",
+  "order_approval_days_planned",
+  "column_break_hcgg",
+  "order_approval_target_date",
+  "agreementorder_issue_section",
+  "agreement_no_of_days_planned",
+  "column_break_srcr",
+  "agreement_target_date",
+  "vendor_onboarding_section",
+  "introduction_meeting",
+  "introduction_meeting_section",
+  "introduction_meeting_days_planned",
+  "column_break_tdmc",
+  "introduction_meet_days_planne",
+  "schematic_readiness_tab",
+  "section_break_fzcz",
+  "design_samppe_days_planned",
+  "revised_planned_date",
+  "work_initiation",
+  "submission_date",
+  "column_break_jnxv",
+  "design_sample_target_date",
+  "duration_left",
+  "revision_status",
+  "submission_status",
+  "tab_3_tab",
+  "boq_no_of_days_planned",
+  "revised_date",
+  "boq_work_initiation",
+  "boq_submission_date",
+  "column_break_hpvv",
+  "boq_target_date",
+  "boq_duration_left",
+  "boq_revision_status",
+  "boq_submission_status",
+  "tab_4_tab",
+  "order_closure_vendor_evaluation",
+  "vendor_evaluation_days_planned",
+  "vendor_evaluation_revised_planned_date",
+  "vendor_evaluation_work_initiation",
+  "vendor_evaluation_submission_date",
+  "column_break_rpnu",
+  "vendor_target_date",
+  "vendor_evaluation_duration_left",
+  "vendor_evaluation_revision_status",
+  "vendor_evaluation_submission_status",
+  "floating_enquiries_section",
+  "floating_enquiries_no_of_days_planned",
+  "floating_enquiries_revised_planned_date",
+  "floating_enquiries_work_initiation",
+  "floating_enquiries_submission_date",
+  "column_break_zozx",
+  "floating_enquiries_target",
+  "floating_enquiries_duration_left",
+  "floating_enquiries_revision_status",
+  "floating_enquiries_submission_status",
+  "pre_bid_or_technical_meeting_section",
+  "pre_bid_technical_meeting_no_of_days_planned",
+  "pre_bid_technical_meeting_revised_planned_date",
+  "pre_bid_technical_meeting_work_initiation",
+  "pre_bid_technical_meeting_submission_date",
+  "column_break_naga",
+  "pre_bid_technical_meeting_target_date",
+  "pre_bid_technical_meeting_duration_left",
+  "pre_bid_technical_meeting_revision_status",
+  "pre_bid_technical_meeting_submission_status",
+  "quotations_collection_rate_comparison_and_negotiation__1_section",
+  "negotiations_1_days_plan",
+  "negotiations_1_rev_plan_date",
+  "negotiations_1_work_initiation",
+  "negotiations_1_submit_date",
+  "column_break_dzci",
+  "negotiations_1_target_date",
+  "negotiations_1_duration_left",
+  "negotiations_1_revision_status",
+  "negotiations_1_submit_status",
+  "quotations_collection_rate_comparison_and_negotiation_2_section",
+  "negotiations_2_days_plan",
+  "negotiations_2_rev_plan_date",
+  "negotiations_2_work_initiation",
+  "negotiations_2_submit_date",
+  "column_break_mbcv",
+  "negotiations_2_target_date",
+  "negotiations_2_duration_left",
+  "negotiations_2_revision_status",
+  "negotiations_2_submit_status",
+  "orders_approval_section",
+  "order_approval_days",
+  "order_approval_revised_date",
+  "order_approval_work_initiation",
+  "order_approval_submit_date",
+  "column_break_hnib",
+  "order_approval_targe",
+  "order_approval_duration_left",
+  "order_approval_revision_status",
+  "order_approval_submit_status",
+  "agreement_or_order_issue_section",
+  "agreement_order_days_planned",
+  "agreement_order_revised_plan_date",
+  "agreement_order_work_initiation",
+  "agreement_order_submit_date",
+  "column_break_qzpx",
+  "agreement_order_target_date",
+  "agreement_order_duration_left",
+  "agreement_order_revision_status",
+  "agreement_order_submission",
+  "tab_5_tab",
+  "vendor_introduction_meeting",
+  "introduction_days_planned",
+  "introduction_revised_planned_date",
+  "introduction_work_initiation",
+  "introduction_submission_date",
+  "column_break_vgli",
+  "introduction_target_date",
+  "introduction_duration_left",
+  "introduction_revision_status",
+  "introduction_submission_status",
+  "vendor_mobilization_and_work_commencement_section",
+  "mobilization_days_planned",
+  "mobilization_revised_planned_date",
+  "mobilization_work_initiation",
+  "mobilization_submit_date",
+  "column_break_udrn",
+  "mobilization_target_date",
+  "mobilization_duration_left",
+  "mobilization_revision_status",
+  "mobilization_submit_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "initiation_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "data_reference",
+   "fieldtype": "Select",
+   "label": "Data Reference",
+   "options": "Tender Calender\nOrder Request Mail"
+  },
+  {
+   "fieldname": "ref_no",
+   "fieldtype": "Data",
+   "label": "Ref No.",
+   "mandatory_depends_on": "doc.data_reference == \"Order Request Mail\"",
+   "read_only_depends_on": "doc.data_reference == \"Order Request Mail\""
+  },
+  {
+   "default": "Today",
+   "fieldname": "initiated_date",
+   "fieldtype": "Date",
+   "label": "Initiated Date"
+  },
+  {
+   "fieldname": "column_break_rstz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "block_name",
+   "fieldtype": "Link",
+   "label": "Block Name",
+   "options": "Block"
+  },
+  {
+   "fieldname": "floor_level_section",
+   "fieldtype": "Section Break",
+   "label": "Floor Level"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Link",
+   "label": "From",
+   "options": "Floor"
+  },
+  {
+   "fieldname": "column_break_iqqt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "label": "To",
+   "options": "Floor"
+  },
+  {
+   "fieldname": "section_break_yvjo",
+   "fieldtype": "Section Break",
+   "options": "Purchase\nService\nWork\nOthers\n"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Link",
+   "label": "Unit",
+   "options": "Unit"
+  },
+  {
+   "fieldname": "column_break_cirl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_type",
+   "fieldtype": "Select",
+   "label": "Order Type",
+   "options": "Purchase\nService\nWork\nOthers"
+  },
+  {
+   "fieldname": "new__amd",
+   "fieldtype": "Select",
+   "label": "New / AMD",
+   "options": "New\nAMD"
+  },
+  {
+   "fieldname": "indigenous_import",
+   "fieldtype": "Select",
+   "label": "Indigenous/ Import",
+   "options": "INDIGENOUS\nIMPORT\nNA"
+  },
+  {
+   "fieldname": "required_shortlisted_vendors",
+   "fieldtype": "Int",
+   "label": "Required Shortlisted Vendors"
+  },
+  {
+   "fieldname": "no_of_vendors_to_be_onboarded_for_the_project",
+   "fieldtype": "Int",
+   "label": "No. of vendors to be onboarded for the project"
+  },
+  {
+   "fieldname": "approx_value_in_lakhs",
+   "fieldtype": "Currency",
+   "label": "Approx. value in lakhs"
+  },
+  {
+   "fieldname": "schematic_readyness_section",
+   "fieldtype": "Section Break",
+   "label": "SCHEMATIC READYNESS"
+  },
+  {
+   "fieldname": "no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_ztuk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "boq_submission_section",
+   "fieldtype": "Section Break",
+   "label": "BOQ SUBMISSION"
+  },
+  {
+   "fieldname": "column_break_icse",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vendor_evaluation_section",
+   "fieldtype": "Section Break",
+   "label": "Vendor Evaluation"
+  },
+  {
+   "fieldname": "boq_submission_target_date",
+   "fieldtype": "Int",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "column_break_amsa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vendor_evaluation_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "order_closure_section",
+   "fieldtype": "Section Break",
+   "label": "ORDER CLOSURE"
+  },
+  {
+   "fieldname": "vendor_evaluation",
+   "fieldtype": "HTML",
+   "label": "Vendor Evaluation"
+  },
+  {
+   "fieldname": "boq_submission_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "floating_of_enquiries_section",
+   "fieldtype": "Section Break",
+   "label": "Floating of Enquiries"
+  },
+  {
+   "fieldname": "floating_enquiries_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_xhmu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "floating_enquiries_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "pre_bidtechnical_meeting_section",
+   "fieldtype": "Section Break",
+   "label": "Pre Bid/Technical Meeting"
+  },
+  {
+   "fieldname": "pre_bid_no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_geuf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pre_bid_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "quotations_collection_rate_comparison_and_negotiation_1_section",
+   "fieldtype": "Section Break",
+   "label": "Quotations Collection, Rate Comparison and Negotiation 1"
+  },
+  {
+   "fieldname": "quotation_1_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_itck",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quotation_1_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "quotations_collection_rate_comparison_negotiation_2_section",
+   "fieldtype": "Section Break",
+   "label": "Quotations Collection, Rate Comparison Negotiation 2"
+  },
+  {
+   "fieldname": "quotation_2_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_slok",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quotation_2_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "order_approval_section",
+   "fieldtype": "Section Break",
+   "label": "Order Approval"
+  },
+  {
+   "fieldname": "order_approval_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_hcgg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_approval_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "agreementorder_issue_section",
+   "fieldtype": "Section Break",
+   "label": "Agreement/Order Issue"
+  },
+  {
+   "fieldname": "agreement_no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_srcr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "agreement_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "vendor_onboarding_section",
+   "fieldtype": "Section Break",
+   "label": "VENDOR ONBOARDING"
+  },
+  {
+   "fieldname": "introduction_meeting",
+   "fieldtype": "HTML",
+   "label": "Introduction Meeting"
+  },
+  {
+   "fieldname": "section_break_fzcz",
+   "fieldtype": "Section Break",
+   "label": "Design/Sample Approval"
+  },
+  {
+   "fieldname": "column_break_jnxv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "introduction_meet_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "introduction_meet_days_planne",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "initiation_tab",
+   "fieldtype": "Tab Break",
+   "label": "INITIATION"
+  },
+  {
+   "fieldname": "introduction_meeting_section",
+   "fieldtype": "Section Break",
+   "label": "Introduction Meeting"
+  },
+  {
+   "fieldname": "introduction_meeting_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "column_break_tdmc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "schematic_readiness_tab",
+   "fieldtype": "Tab Break",
+   "label": "SCHEMATIC READINESS"
+  },
+  {
+   "fieldname": "design_samppe_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "design_sample_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "duration_left",
+   "fieldtype": "Int",
+   "label": "Duration left"
+  },
+  {
+   "fieldname": "tab_3_tab",
+   "fieldtype": "Tab Break",
+   "label": "BOQ SUBMISSION"
+  },
+  {
+   "fieldname": "tab_4_tab",
+   "fieldtype": "Tab Break",
+   "label": "ORDER CLOSURE"
+  },
+  {
+   "fieldname": "tab_5_tab",
+   "fieldtype": "Tab Break",
+   "label": "VENDOR ONBOARDING"
+  },
+  {
+   "fieldname": "revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
+  },
+  {
+   "fieldname": "boq_no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "revised_date",
+   "fieldtype": "Date",
+   "label": "Revised Date"
+  },
+  {
+   "fieldname": "boq_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "boq_submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_hpvv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "boq_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "boq_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "boq_revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "boq_submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status",
+   "options": "Yet to Submit\nsubmi"
+  },
+  {
+   "fieldname": "order_closure_vendor_evaluation",
+   "fieldtype": "Section Break",
+   "label": "Vendor Evaluation"
+  },
+  {
+   "fieldname": "vendor_evaluation_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days Planned"
+  },
+  {
+   "fieldname": "vendor_evaluation_revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "vendor_evaluation_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "vendor_evaluation_submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_rpnu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vendor_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "vendor_evaluation_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "vendor_evaluation_revision_status",
+   "fieldtype": "Select",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "vendor_evaluation_submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "vendor_introduction_meeting",
+   "fieldtype": "Section Break",
+   "label": "INTRODUCTION MEETING"
+  },
+  {
+   "fieldname": "introduction_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "introduction_revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "introduction_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "introduction_submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_vgli",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "introduction_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "introduction_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "introduction_revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "introduction_submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "vendor_mobilization_and_work_commencement_section",
+   "fieldtype": "Section Break",
+   "label": "VENDOR MOBILIZATION AND WORK COMMENCEMENT"
+  },
+  {
+   "fieldname": "mobilization_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days Planned"
+  },
+  {
+   "fieldname": "mobilization_revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "mobilization_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "mobilization_submit_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_udrn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mobilization_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "mobilization_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "mobilization_revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "mobilization_submit_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "floating_enquiries_section",
+   "fieldtype": "Section Break",
+   "label": "FLOATING ENQUIRIES"
+  },
+  {
+   "fieldname": "column_break_zozx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pre_bid_or_technical_meeting_section",
+   "fieldtype": "Section Break",
+   "label": "PRE BID or TECHNICAL MEETING"
+  },
+  {
+   "fieldname": "column_break_naga",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quotations_collection_rate_comparison_and_negotiation__1_section",
+   "fieldtype": "Section Break",
+   "label": "QUOTATIONS COLLECTION, RATE COMPARISON AND NEGOTIATION  1"
+  },
+  {
+   "fieldname": "column_break_dzci",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "quotations_collection_rate_comparison_and_negotiation_2_section",
+   "fieldtype": "Section Break",
+   "label": "QUOTATIONS COLLECTION, RATE COMPARISON AND NEGOTIATION 2"
+  },
+  {
+   "fieldname": "column_break_mbcv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "orders_approval_section",
+   "fieldtype": "Section Break",
+   "label": "Orders Approval"
+  },
+  {
+   "fieldname": "order_approval_days",
+   "fieldtype": "Int",
+   "label": "No of Days Planned"
+  },
+  {
+   "fieldname": "order_approval_revised_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "order_approval_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "order_approval_submit_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_hnib",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_approval_targe",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "order_approval_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "order_approval_revision_status",
+   "fieldtype": "Select",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "order_approval_submit_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "agreement_or_order_issue_section",
+   "fieldtype": "Section Break",
+   "label": "AGREEMENT OR ORDER ISSUE"
+  },
+  {
+   "fieldname": "agreement_order_days_planned",
+   "fieldtype": "Int",
+   "label": "No of Days Planned"
+  },
+  {
+   "fieldname": "agreement_order_revised_plan_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "agreement_order_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "agreement_order_submit_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "column_break_qzpx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "agreement_order_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "agreement_order_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "agreement_order_revision_status",
+   "fieldtype": "Select",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "agreement_order_submission",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "negotiations_2_days_plan",
+   "fieldtype": "Int",
+   "label": "No of Days Planned"
+  },
+  {
+   "fieldname": "negotiations_2_rev_plan_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "negotiations_2_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "negotiations_2_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "negotiations_2_submit_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "negotiations_2_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "negotiations_2_revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "negotiations_2_submit_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "negotiations_1_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "negotiations_1_days_plan",
+   "fieldtype": "Int",
+   "label": "No. of Days Planned"
+  },
+  {
+   "fieldname": "negotiations_1_rev_plan_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "negotiations_1_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "negotiations_1_submit_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "negotiations_1_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "negotiations_1_revision_status",
+   "fieldtype": "Data",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "negotiations_1_submit_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days Palnned"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_revision_status",
+   "fieldtype": "Select",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  },
+  {
+   "fieldname": "floating_enquiries_no_of_days_planned",
+   "fieldtype": "Int",
+   "label": "No of Days Planned"
+  },
+  {
+   "fieldname": "floating_enquiries_target",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "floating_enquiries_revised_planned_date",
+   "fieldtype": "Date",
+   "label": "Revised Planned Date"
+  },
+  {
+   "fieldname": "floating_enquiries_work_initiation",
+   "fieldtype": "Date",
+   "label": "Work Initiation"
+  },
+  {
+   "fieldname": "floating_enquiries_submission_date",
+   "fieldtype": "Date",
+   "label": "Submission Date"
+  },
+  {
+   "fieldname": "floating_enquiries_duration_left",
+   "fieldtype": "Int",
+   "label": "Duration Left"
+  },
+  {
+   "fieldname": "floating_enquiries_revision_status",
+   "fieldtype": "Select",
+   "label": "Revision Status"
+  },
+  {
+   "fieldname": "floating_enquiries_submission_status",
+   "fieldtype": "Select",
+   "label": "Submission Status"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-01 11:28:37.218313",
+ "modified_by": "Administrator",
+ "module": "Tender",
+ "name": "Tender",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
