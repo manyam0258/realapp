@@ -51,7 +51,7 @@
   },
   {
    "fieldname": "op_reporting_month",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": "Reporting Month"
   },
   {
@@ -77,7 +77,7 @@
    "fieldname": "op_bhk",
    "fieldtype": "Select",
    "label": "BHK",
-   "options": "\n3 BHK\n4 BHK\nNA"
+   "options": "\n3 BHK\n3.5 BHK\n4 BHK\nNA"
   },
   {
    "fieldname": "sb_source",
@@ -104,8 +104,9 @@
   },
   {
    "description": "Partner / vendor grouping (mirrors LD Lead Source -> Partner)",
+   "fetch_from": "op_lead_id.lead_source_partner",
    "fieldname": "op_vendor",
-   "fieldtype": "Data",
+   "fieldtype": "Read Only",
    "label": "Vendor"
   },
   {
@@ -148,7 +149,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-03 16:10:40.457003",
+ "modified": "2026-06-04 18:07:28.486571",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "sf_opportunity",
