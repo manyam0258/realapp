@@ -22,11 +22,12 @@
   "unit",
   "new__amd",
   "required_shortlisted_vendors",
-  "approx_value_in_lakhs",
+  "no_of_vendors_to_be_onboarded_for_the_project",
   "column_break_cirl",
   "order_type",
   "indigenous_import",
-  "no_of_vendors_to_be_onboarded_for_the_project",
+  "approx_value_in_lakhs",
+  "others",
   "schematic_readyness_section",
   "no_of_days_planned",
   "column_break_ztuk",
@@ -70,12 +71,12 @@
   "introduction_meeting_section",
   "introduction_meeting_days_planned",
   "column_break_tdmc",
-  "introduction_meet_days_planne",
+  "introduction_meet_days_plan",
   "schematic_readiness_tab",
   "section_break_fzcz",
-  "design_samppe_days_planned",
-  "revised_planned_date",
+  "design_sample_days_planned",
   "work_initiation",
+  "revised_planned_date",
   "submission_date",
   "column_break_jnxv",
   "design_sample_target_date",
@@ -84,8 +85,8 @@
   "submission_status",
   "tab_3_tab",
   "boq_no_of_days_planned",
-  "revised_date",
   "boq_work_initiation",
+  "revised_date",
   "boq_submission_date",
   "column_break_hpvv",
   "boq_target_date",
@@ -95,8 +96,8 @@
   "tab_4_tab",
   "order_closure_vendor_evaluation",
   "vendor_evaluation_days_planned",
-  "vendor_evaluation_revised_planned_date",
   "vendor_evaluation_work_initiation",
+  "vendor_evaluation_revised_planned_date",
   "vendor_evaluation_submission_date",
   "column_break_rpnu",
   "vendor_target_date",
@@ -105,8 +106,8 @@
   "vendor_evaluation_submission_status",
   "floating_enquiries_section",
   "floating_enquiries_no_of_days_planned",
-  "floating_enquiries_revised_planned_date",
   "floating_enquiries_work_initiation",
+  "floating_enquiries_revised_planned_date",
   "floating_enquiries_submission_date",
   "column_break_zozx",
   "floating_enquiries_target",
@@ -115,8 +116,8 @@
   "floating_enquiries_submission_status",
   "pre_bid_or_technical_meeting_section",
   "pre_bid_technical_meeting_no_of_days_planned",
-  "pre_bid_technical_meeting_revised_planned_date",
   "pre_bid_technical_meeting_work_initiation",
+  "pre_bid_technical_meeting_revised_planned_date",
   "pre_bid_technical_meeting_submission_date",
   "column_break_naga",
   "pre_bid_technical_meeting_target_date",
@@ -125,8 +126,8 @@
   "pre_bid_technical_meeting_submission_status",
   "quotations_collection_rate_comparison_and_negotiation__1_section",
   "negotiations_1_days_plan",
-  "negotiations_1_rev_plan_date",
   "negotiations_1_work_initiation",
+  "negotiations_1_rev_plan_date",
   "negotiations_1_submit_date",
   "column_break_dzci",
   "negotiations_1_target_date",
@@ -135,8 +136,8 @@
   "negotiations_1_submit_status",
   "quotations_collection_rate_comparison_and_negotiation_2_section",
   "negotiations_2_days_plan",
-  "negotiations_2_rev_plan_date",
   "negotiations_2_work_initiation",
+  "negotiations_2_rev_plan_date",
   "negotiations_2_submit_date",
   "column_break_mbcv",
   "negotiations_2_target_date",
@@ -145,29 +146,37 @@
   "negotiations_2_submit_status",
   "orders_approval_section",
   "order_approval_days",
-  "order_approval_revised_date",
   "order_approval_work_initiation",
+  "order_approval_revised_date",
   "order_approval_submit_date",
   "column_break_hnib",
-  "order_approval_targe",
+  "order_approval_target",
   "order_approval_duration_left",
   "order_approval_revision_status",
   "order_approval_submit_status",
   "agreement_or_order_issue_section",
   "agreement_order_days_planned",
-  "agreement_order_revised_plan_date",
   "agreement_order_work_initiation",
+  "agreement_order_revised_plan_date",
   "agreement_order_submit_date",
   "column_break_qzpx",
   "agreement_order_target_date",
   "agreement_order_duration_left",
   "agreement_order_revision_status",
   "agreement_order_submission",
+  "section_break_tyfm",
+  "finalized_vendor_name",
+  "column_break_eawb",
+  "contact_details",
   "tab_5_tab",
+  "vendor_details_section",
+  "final_vendor_name",
+  "column_break_rphs",
+  "vendor_contact_details",
   "vendor_introduction_meeting",
   "introduction_days_planned",
-  "introduction_revised_planned_date",
   "introduction_work_initiation",
+  "introduction_revised_planned_date",
   "introduction_submission_date",
   "column_break_vgli",
   "introduction_target_date",
@@ -176,8 +185,8 @@
   "introduction_submission_status",
   "vendor_mobilization_and_work_commencement_section",
   "mobilization_days_planned",
-  "mobilization_revised_planned_date",
   "mobilization_work_initiation",
+  "mobilization_revised_planned_date",
   "mobilization_submit_date",
   "column_break_udrn",
   "mobilization_target_date",
@@ -329,7 +338,7 @@
   },
   {
    "fieldname": "boq_submission_target_date",
-   "fieldtype": "Int",
+   "fieldtype": "Date",
    "label": "Target Date"
   },
   {
@@ -495,11 +504,6 @@
    "label": "No. of Days planned"
   },
   {
-   "fieldname": "introduction_meet_days_planne",
-   "fieldtype": "Date",
-   "label": "Target Date"
-  },
-  {
    "fieldname": "initiation_tab",
    "fieldtype": "Tab Break",
    "label": "INITIATION"
@@ -522,11 +526,6 @@
    "fieldname": "schematic_readiness_tab",
    "fieldtype": "Tab Break",
    "label": "SCHEMATIC READINESS"
-  },
-  {
-   "fieldname": "design_samppe_days_planned",
-   "fieldtype": "Int",
-   "label": "No. of Days planned"
   },
   {
    "fieldname": "revised_planned_date",
@@ -565,8 +564,9 @@
   },
   {
    "fieldname": "revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "submission_date",
@@ -577,7 +577,8 @@
    "fieldname": "submission_status",
    "fieldtype": "Select",
    "label": "Submission Status",
-   "options": "Yet to Submit\nSubmitted"
+   "options": "Yet to Submit\nSubmitted",
+   "read_only": 1
   },
   {
    "fieldname": "boq_no_of_days_planned",
@@ -615,14 +616,16 @@
   },
   {
    "fieldname": "boq_revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "boq_submission_status",
    "fieldtype": "Select",
    "label": "Submission Status",
-   "options": "Yet to Submit\nsubmi"
+   "options": "Yet to Submit\nSubmitted",
+   "read_only": 1
   },
   {
    "fieldname": "order_closure_vendor_evaluation",
@@ -666,12 +669,15 @@
   {
    "fieldname": "vendor_evaluation_revision_status",
    "fieldtype": "Select",
-   "label": "Revision Status"
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "vendor_evaluation_submission_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted",
+   "read_only": 1
   },
   {
    "fieldname": "vendor_introduction_meeting",
@@ -714,13 +720,16 @@
   },
   {
    "fieldname": "introduction_revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4",
+   "read_only": 1
   },
   {
    "fieldname": "introduction_submission_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "vendor_mobilization_and_work_commencement_section",
@@ -763,13 +772,15 @@
   },
   {
    "fieldname": "mobilization_revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "mobilization_submit_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "floating_enquiries_section",
@@ -837,11 +848,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "order_approval_targe",
-   "fieldtype": "Date",
-   "label": "Target Date"
-  },
-  {
    "fieldname": "order_approval_duration_left",
    "fieldtype": "Int",
    "label": "Duration Left"
@@ -849,12 +855,14 @@
   {
    "fieldname": "order_approval_revision_status",
    "fieldtype": "Select",
-   "label": "Revision Status"
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "order_approval_submit_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "agreement_or_order_issue_section",
@@ -898,12 +906,14 @@
   {
    "fieldname": "agreement_order_revision_status",
    "fieldtype": "Select",
-   "label": "Revision Status"
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "agreement_order_submission",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "negotiations_2_days_plan",
@@ -937,13 +947,15 @@
   },
   {
    "fieldname": "negotiations_2_revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "negotiations_2_submit_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "negotiations_1_target_date",
@@ -977,13 +989,15 @@
   },
   {
    "fieldname": "negotiations_1_revision_status",
-   "fieldtype": "Data",
-   "label": "Revision Status"
+   "fieldtype": "Select",
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "negotiations_1_submit_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "pre_bid_technical_meeting_no_of_days_planned",
@@ -1018,12 +1032,14 @@
   {
    "fieldname": "pre_bid_technical_meeting_revision_status",
    "fieldtype": "Select",
-   "label": "Revision Status"
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "pre_bid_technical_meeting_submission_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
   },
   {
    "fieldname": "floating_enquiries_no_of_days_planned",
@@ -1058,18 +1074,82 @@
   {
    "fieldname": "floating_enquiries_revision_status",
    "fieldtype": "Select",
-   "label": "Revision Status"
+   "label": "Revision Status",
+   "options": "R0\nR1\nR2\nR3\nR4"
   },
   {
    "fieldname": "floating_enquiries_submission_status",
    "fieldtype": "Select",
-   "label": "Submission Status"
+   "label": "Submission Status",
+   "options": "Yet to Submit\nSubmitted"
+  },
+  {
+   "fieldname": "introduction_meet_days_plan",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "design_sample_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days planned"
+  },
+  {
+   "fieldname": "order_approval_target",
+   "fieldtype": "Date",
+   "label": "Target Date"
+  },
+  {
+   "fieldname": "section_break_tyfm",
+   "fieldtype": "Section Break",
+   "label": "Vendor Details"
+  },
+  {
+   "fieldname": "finalized_vendor_name",
+   "fieldtype": "Data",
+   "label": "Finalized Vendor Name"
+  },
+  {
+   "fieldname": "column_break_eawb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_details",
+   "fieldtype": "Data",
+   "label": "Contact Details",
+   "length": 10
+  },
+  {
+   "fieldname": "final_vendor_name",
+   "fieldtype": "Data",
+   "label": "Finalized Vendor Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rphs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vendor_contact_details",
+   "fieldtype": "Data",
+   "label": "Contact Details",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vendor_details_section",
+   "fieldtype": "Section Break",
+   "label": "Vendor Details"
+  },
+  {
+   "fieldname": "others",
+   "fieldtype": "Select",
+   "label": "Others",
+   "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-01 11:28:37.218313",
+ "modified": "2026-06-09 14:45:48.618162",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
