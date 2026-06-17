@@ -81,9 +81,30 @@ class Tender(Document):
         else:
             self.submission_status = "Yet to Submit"
 
+        # Chaining of dates: work initiation of next stage = submission date of previous stage
+        if self.submission_date:
+            self.boq_work_initiation = self.submission_date
+        if self.boq_submission_date:
+            self.vendor_evaluation_work_initiation = self.boq_submission_date
+        if self.vendor_evaluation_submission_date:
+            self.floating_enquiries_work_initiation = self.vendor_evaluation_submission_date
+        if self.floating_enquiries_submission_date:
+            self.pre_bid_technical_meeting_work_initiation = self.floating_enquiries_submission_date
+        if self.pre_bid_technical_meeting_submission_date:
+            self.negotiations_1_work_initiation = self.pre_bid_technical_meeting_submission_date
+        if self.negotiations_1_submit_date:
+            self.negotiations_2_work_initiation = self.negotiations_1_submit_date
+        if self.negotiations_2_submit_date:
+            self.order_approval_work_initiation = self.negotiations_2_submit_date
+        if self.order_approval_submit_date:
+            self.agreement_order_work_initiation = self.order_approval_submit_date
+        if self.agreement_order_submit_date:
+            self.introduction_work_initiation = self.agreement_order_submit_date
+        if self.introduction_submission_date:
+            self.mobilization_work_initiation = self.introduction_submission_date
+
         self.boq_no_of_days_planned = self.boq_submission_days_planned
         self.boq_target_date = self.boq_submission_target_date
-        self.boq_work_initiation = self.submission_date
 
         if self.boq_work_initiation and self.boq_target_date:
             self.boq_duration_left = (
@@ -99,7 +120,6 @@ class Tender(Document):
 
         self.vendor_evaluation_days_planned = self.introduction_meeting_days_planned
         self.vendor_target_date = self.vendor_evaluation_target_date
-        self.vendor_evaluation_work_initiation = self.boq_submission_date
         if (
             self.vendor_evaluation_work_initiation
             and self.vendor_target_date
@@ -116,7 +136,6 @@ class Tender(Document):
             self.vendor_evaluation_submission_status = "Yet to Submit"
         self.introduction_days_planned = self.introduction_meeting_days_planned
         self.introduction_target_date = self.introduction_meet_days_plan
-        self.introduction_work_initiation = self.agreement_order_submit_date
         if (
             self.introduction_work_initiation
             and self.introduction_target_date

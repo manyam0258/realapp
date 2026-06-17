@@ -8,12 +8,16 @@
  "field_order": [
   "initiation_tab",
   "initiation_section",
+  "custom_sno",
   "data_reference",
   "initiated_date",
   "block_name",
+  "custom_work_package",
   "column_break_rstz",
+  "custom_work_category",
   "ref_no",
   "project",
+  "custom_others",
   "floor_level_section",
   "from",
   "column_break_iqqt",
@@ -1144,12 +1148,34 @@
    "fieldtype": "Select",
    "label": "Others",
    "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
+  },
+  {
+   "fieldname": "custom_sno",
+   "fieldtype": "Int",
+   "label": "S.No"
+  },
+  {
+   "fieldname": "custom_work_category",
+   "fieldtype": "Select",
+   "label": "Work Category",
+   "options": "\nShell and Core\nFinishes\nMEP\nContingency\nOthers"
+  },
+  {
+   "fieldname": "custom_work_package",
+   "fieldtype": "Data",
+   "label": "Work Package"
+  },
+  {
+   "fieldname": "custom_others",
+   "fieldtype": "Select",
+   "label": "Others",
+   "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-09 14:45:48.618162",
+ "modified": "2026-06-17 17:12:01.143087",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
