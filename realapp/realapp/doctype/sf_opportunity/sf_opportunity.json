@@ -1,0 +1,188 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-06-03 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_identification",
+  "naming_series",
+  "op_lead_id",
+  "op_reporting_month",
+  "cb_id_1",
+  "op_lead_type",
+  "op_stage",
+  "op_bhk",
+  "sb_source",
+  "op_lead_source",
+  "op_lead_sub_source",
+  "cb_source_1",
+  "op_vendor",
+  "sb_ownership",
+  "op_sales_team_member",
+  "op_pre_sales_team_member",
+  "sb_dates",
+  "op_created_date",
+  "cb_dates_1",
+  "op_booking_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_identification",
+   "fieldtype": "Section Break",
+   "label": "Identification"
+  },
+  {
+   "default": "OPP-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "OPP-.YYYY.-"
+  },
+  {
+   "fieldname": "op_lead_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead",
+   "options": "sf_lead"
+  },
+  {
+   "fieldname": "op_reporting_month",
+   "fieldtype": "Data",
+   "label": "Reporting Month"
+  },
+  {
+   "fieldname": "cb_id_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "op_lead_type",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Lead Type",
+   "options": "LD Lead Type"
+  },
+  {
+   "fieldname": "op_stage",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Stage",
+   "options": "OP Opportunity Stage"
+  },
+  {
+   "fieldname": "op_bhk",
+   "fieldtype": "Select",
+   "label": "BHK",
+   "options": "\n3 BHK\n3.5 BHK\n4 BHK\nNA"
+  },
+  {
+   "fieldname": "sb_source",
+   "fieldtype": "Section Break",
+   "label": "Source"
+  },
+  {
+   "fieldname": "op_lead_source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead Source",
+   "options": "LD Lead Source"
+  },
+  {
+   "fieldname": "op_lead_sub_source",
+   "fieldtype": "Link",
+   "label": "Lead Sub Source",
+   "options": "OP Opportunity Sub Source"
+  },
+  {
+   "fieldname": "cb_source_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Partner / vendor grouping (mirrors LD Lead Source -> Partner)",
+   "fetch_from": "op_lead_id.lead_source_partner",
+   "fieldname": "op_vendor",
+   "fieldtype": "Read Only",
+   "label": "Vendor"
+  },
+  {
+   "fieldname": "sb_ownership",
+   "fieldtype": "Section Break",
+   "label": "Ownership"
+  },
+  {
+   "fieldname": "op_sales_team_member",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sales Team Member",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "op_pre_sales_team_member",
+   "fieldtype": "Link",
+   "label": "Pre Sales Team Member",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "sb_dates",
+   "fieldtype": "Section Break",
+   "label": "Dates"
+  },
+  {
+   "fieldname": "op_created_date",
+   "fieldtype": "Date",
+   "label": "Created Date"
+  },
+  {
+   "fieldname": "cb_dates_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "op_booking_date",
+   "fieldtype": "Date",
+   "label": "Booking Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-04 18:07:28.486571",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "sf_opportunity",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

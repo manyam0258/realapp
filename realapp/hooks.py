@@ -83,8 +83,7 @@ doctype_js = {"Lead" : "realapp/custom/lead.js"}
 # ------------
 
 # before_install = "realapp.install.before_install"
-after_install = "realapp.tender.setup_permissions.run"
-after_migrate = "realapp.tender.setup_permissions.run"
+# after_install = "realapp.install.after_install"
 
 # Uninstallation
 # ------------
@@ -242,54 +241,5 @@ after_migrate = "realapp.tender.setup_permissions.run"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-fixtures = [
-	"Custom Field",
-	{
-		"dt": "Role",
-		"filters": [
-			["role_name", "in", [
-				"Planning", "Planning Head", "Planning Manager", "Architect", 
-				"Quantity Surveyor", "Procurement Team", "Contracts Team", 
-				"Project Team", "Tender Committee", "Management", "Project Head"
-			]]
-		]
-	},
-	{
-		"dt": "Workflow",
-		"filters": [
-			["name", "=", "Tender Calendar Workflow"]
-		]
-	},
-	{
-		"dt": "Workflow State",
-		"filters": [
-			["workflow_state_name", "in", [
-				"Tender Creation", "Design Sample / Drawings", "BOQ Submission", 
-				"Vendor Finalisation", "Technical Evaluation", "Issue of Tender / Quotations", 
-				"Pre-Bid Meeting", "Quotation Collection / Rate Comparison", 
-				"Supplier Negotiation - 1", "Supplier Negotiation - 2", 
-				"Order for Approval", "Contract Agreement / Issue of Order", 
-				"Vendor Onboarding", "Completed"
-			]]
-		]
-	},
-	{
-		"dt": "Workflow Action Master",
-		"filters": [
-			["workflow_action_name", "in", [
-				"Send for Design", "Submit Design", "Submit BOQ", 
-				"Start Technical Evaluation", "Complete Technical Evaluation", 
-				"Issue Tender", "Complete Pre-Bid Meeting", "Submit Quotations / Comparison", 
-				"Complete Negotiation 1", "Submit for Approval", "Approve Order", 
-				"Execute Contract", "Complete Onboarding", "Send Back"
-			]]
-		]
-	},
-	{
-		"dt": "Custom DocPerm",
-		"filters": [
-			["parent", "=", "Tender Calendar"]
-		]
-	}
-]
+fixtures = ["Custom Field"]
 

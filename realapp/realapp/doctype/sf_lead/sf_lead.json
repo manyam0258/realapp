@@ -1,0 +1,278 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:ld_lead_id",
+ "creation": "2026-06-03 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_identification",
+  "ld_lead_id",
+  "ld_project",
+  "ld_reporting_month",
+  "cb_id_1",
+  "ld_lead_type",
+  "lead_type_seq",
+  "ld_lead_status",
+  "ld_form_name",
+  "sb_source",
+  "ld_lead_source",
+  "lead_source_seq",
+  "lead_source_partner",
+  "cb_source_1",
+  "ld_channel_partner",
+  "ld_lead_sub_source",
+  "lead_sub_source_short",
+  "sb_contact",
+  "ld_phone",
+  "ld_unit_type",
+  "cb_contact_1",
+  "ld_qualification_criteria",
+  "sb_ownership",
+  "ld_lead_owner",
+  "ld_pre_sales_team_member",
+  "sb_dates",
+  "ld_create_date",
+  "cb_dates_1",
+  "ld_last_modified",
+  "ld_dropped_stage",
+  "sb_referral",
+  "ld_referred_by_name",
+  "cb_ref_1",
+  "ld_referred_by_phone"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_identification",
+   "fieldtype": "Section Break",
+   "label": "Identification"
+  },
+  {
+   "fieldname": "ld_lead_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead Id",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "TRIDASA Rise",
+   "fieldname": "ld_project",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Project"
+  },
+  {
+   "fieldname": "ld_reporting_month",
+   "fieldtype": "Data",
+   "label": "Reporting Month"
+  },
+  {
+   "fieldname": "cb_id_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ld_lead_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead Type",
+   "options": "LD Lead Type"
+  },
+  {
+   "fieldname": "ld_lead_status",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead Status",
+   "options": "LD Lead Stage"
+  },
+  {
+   "fieldname": "ld_form_name",
+   "fieldtype": "Data",
+   "label": "Form Name"
+  },
+  {
+   "fieldname": "sb_source",
+   "fieldtype": "Section Break",
+   "label": "Source"
+  },
+  {
+   "fieldname": "ld_lead_source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lead Source",
+   "options": "LD Lead Source"
+  },
+  {
+   "fieldname": "ld_lead_sub_source",
+   "fieldtype": "Link",
+   "label": "Lead Sub Source",
+   "options": "LD Lead Sub Source"
+  },
+  {
+   "fieldname": "cb_source_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ld_channel_partner",
+   "fieldtype": "Data",
+   "label": "Channel Partner"
+  },
+  {
+   "fieldname": "sb_contact",
+   "fieldtype": "Section Break",
+   "label": "Contact & Requirement"
+  },
+  {
+   "fieldname": "ld_phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "ld_unit_type",
+   "fieldtype": "Select",
+   "label": "Unit Type",
+   "options": "\n3 BHK\n3.5 BHK\n4 BHK\nNA"
+  },
+  {
+   "fieldname": "cb_contact_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "May contain multiple values separated by ; (e.g. Location; Configuration)",
+   "fieldname": "ld_qualification_criteria",
+   "fieldtype": "Small Text",
+   "label": "Qualification Criteria"
+  },
+  {
+   "fieldname": "sb_ownership",
+   "fieldtype": "Section Break",
+   "label": "Ownership"
+  },
+  {
+   "fieldname": "ld_lead_owner",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Lead Owner",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "ld_pre_sales_team_member",
+   "fieldtype": "Link",
+   "label": "Pre Sales Team Member",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "sb_dates",
+   "fieldtype": "Section Break",
+   "label": "Dates"
+  },
+  {
+   "fieldname": "ld_create_date",
+   "fieldtype": "Date",
+   "label": "Create Date"
+  },
+  {
+   "fieldname": "cb_dates_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ld_last_modified",
+   "fieldtype": "Date",
+   "label": "Last Modified"
+  },
+  {
+   "fieldname": "ld_dropped_stage",
+   "fieldtype": "Data",
+   "label": "Dropped Stage"
+  },
+  {
+   "fieldname": "sb_referral",
+   "fieldtype": "Section Break",
+   "label": "Referral"
+  },
+  {
+   "fieldname": "ld_referred_by_name",
+   "fieldtype": "Data",
+   "label": "Referred By Name"
+  },
+  {
+   "fieldname": "cb_ref_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ld_referred_by_phone",
+   "fieldtype": "Data",
+   "label": "Referred By Phone"
+  },
+  {
+   "fetch_from": "ld_lead_type.ld_short_name",
+   "fieldname": "lead_type_seq",
+   "fieldtype": "Read Only",
+   "label": "Lead Type Seq"
+  },
+  {
+   "fetch_from": "ld_lead_source.ld_short_name",
+   "fieldname": "lead_source_seq",
+   "fieldtype": "Read Only",
+   "label": "Lead Source Seq"
+  },
+  {
+   "fetch_from": "ld_lead_source.ld_partner",
+   "fieldname": "lead_source_partner",
+   "fieldtype": "Read Only",
+   "label": "Lead Source Partner"
+  },
+  {
+   "fetch_from": "ld_lead_sub_source.ld_short_name",
+   "fieldname": "lead_sub_source_short",
+   "fieldtype": "Read Only",
+   "label": "Lead Sub Source Short"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-03 16:29:49.383951",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "sf_lead",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "ld_phone,ld_lead_source,ld_lead_status",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "ld_lead_id",
+ "track_changes": 1
+}
