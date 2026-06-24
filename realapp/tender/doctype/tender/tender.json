@@ -8,12 +8,17 @@
  "field_order": [
   "initiation_tab",
   "initiation_section",
+  "custom_sno",
   "data_reference",
   "initiated_date",
   "block_name",
+  "custom_work_package",
   "column_break_rstz",
+  "custom_work_category",
+  "work_category_others",
   "ref_no",
   "project",
+  "custom_others",
   "floor_level_section",
   "from",
   "column_break_iqqt",
@@ -72,27 +77,35 @@
   "introduction_meeting_days_planned",
   "column_break_tdmc",
   "introduction_meet_days_plan",
+  "vendor_mobilization_section",
+  "vendor_days_planned",
+  "column_break_fbmt",
+  "vendor_mobilization_target_date",
   "schematic_readiness_tab",
   "section_break_fzcz",
   "design_sample_days_planned",
   "work_initiation",
   "revised_planned_date",
   "submission_date",
+  "remarks",
   "column_break_jnxv",
   "design_sample_target_date",
   "duration_left",
   "revision_status",
   "submission_status",
+  "send_back_remarks",
   "tab_3_tab",
   "boq_no_of_days_planned",
   "boq_work_initiation",
   "revised_date",
   "boq_submission_date",
+  "boq_remarks",
   "column_break_hpvv",
   "boq_target_date",
   "boq_duration_left",
   "boq_revision_status",
   "boq_submission_status",
+  "boq_send_back_remarks",
   "tab_4_tab",
   "order_closure_vendor_evaluation",
   "vendor_evaluation_days_planned",
@@ -168,6 +181,10 @@
   "finalized_vendor_name",
   "column_break_eawb",
   "contact_details",
+  "section_break_dsmx",
+  "order_closure_remarks",
+  "column_break_sspg",
+  "order_closure_send_back_remarks",
   "tab_5_tab",
   "vendor_details_section",
   "final_vendor_name",
@@ -188,11 +205,14 @@
   "mobilization_work_initiation",
   "mobilization_revised_planned_date",
   "mobilization_submit_date",
+  "vendor_onboarding_remarks",
   "column_break_udrn",
   "mobilization_target_date",
   "mobilization_duration_left",
   "mobilization_revision_status",
-  "mobilization_submit_status"
+  "mobilization_submit_status",
+  "amended_from",
+  "vendor_onboarding_send_back_remarks"
  ],
  "fields": [
   {
@@ -530,7 +550,7 @@
   {
    "fieldname": "revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "work_initiation",
@@ -544,8 +564,8 @@
   },
   {
    "fieldname": "duration_left",
-   "fieldtype": "Int",
-   "label": "Duration left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "tab_3_tab",
@@ -588,7 +608,7 @@
   {
    "fieldname": "revised_date",
    "fieldtype": "Date",
-   "label": "Revised Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "boq_work_initiation",
@@ -611,8 +631,8 @@
   },
   {
    "fieldname": "boq_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "boq_revision_status",
@@ -640,7 +660,7 @@
   {
    "fieldname": "vendor_evaluation_revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "vendor_evaluation_work_initiation",
@@ -663,8 +683,8 @@
   },
   {
    "fieldname": "vendor_evaluation_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "vendor_evaluation_revision_status",
@@ -692,7 +712,7 @@
   {
    "fieldname": "introduction_revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "introduction_work_initiation",
@@ -715,8 +735,8 @@
   },
   {
    "fieldname": "introduction_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "introduction_revision_status",
@@ -744,7 +764,7 @@
   {
    "fieldname": "mobilization_revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "mobilization_work_initiation",
@@ -767,8 +787,8 @@
   },
   {
    "fieldname": "mobilization_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "mobilization_revision_status",
@@ -831,7 +851,7 @@
   {
    "fieldname": "order_approval_revised_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "order_approval_work_initiation",
@@ -849,8 +869,8 @@
   },
   {
    "fieldname": "order_approval_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "order_approval_revision_status",
@@ -877,7 +897,7 @@
   {
    "fieldname": "agreement_order_revised_plan_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "agreement_order_work_initiation",
@@ -900,8 +920,8 @@
   },
   {
    "fieldname": "agreement_order_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "agreement_order_revision_status",
@@ -942,8 +962,8 @@
   },
   {
    "fieldname": "negotiations_2_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "negotiations_2_revision_status",
@@ -970,7 +990,7 @@
   {
    "fieldname": "negotiations_1_rev_plan_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "negotiations_1_work_initiation",
@@ -984,8 +1004,8 @@
   },
   {
    "fieldname": "negotiations_1_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "negotiations_1_revision_status",
@@ -1007,7 +1027,7 @@
   {
    "fieldname": "pre_bid_technical_meeting_revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "pre_bid_technical_meeting_work_initiation",
@@ -1026,8 +1046,8 @@
   },
   {
    "fieldname": "pre_bid_technical_meeting_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "pre_bid_technical_meeting_revision_status",
@@ -1068,8 +1088,8 @@
   },
   {
    "fieldname": "floating_enquiries_duration_left",
-   "fieldtype": "Int",
-   "label": "Duration Left"
+   "fieldtype": "Data",
+   "label": "Timeline Status"
   },
   {
    "fieldname": "floating_enquiries_revision_status",
@@ -1105,8 +1125,9 @@
   },
   {
    "fieldname": "finalized_vendor_name",
-   "fieldtype": "Data",
-   "label": "Finalized Vendor Name"
+   "fieldtype": "Link",
+   "label": "Finalized Vendor Name",
+   "options": "Supplier"
   },
   {
    "fieldname": "column_break_eawb",
@@ -1144,12 +1165,123 @@
    "fieldtype": "Select",
    "label": "Others",
    "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
+  },
+  {
+   "fieldname": "custom_sno",
+   "fieldtype": "Int",
+   "label": "S.No"
+  },
+  {
+   "fieldname": "custom_work_package",
+   "fieldtype": "Data",
+   "label": "Work Package"
+  },
+  {
+   "fieldname": "custom_work_category",
+   "fieldtype": "Select",
+   "label": "Work Category",
+   "options": "\nShell and Core\nFinishes\nMEP\nContingency\nOthers"
+  },
+  {
+   "depends_on": "eval:doc.custom_work_category == 'Others'",
+   "fieldname": "work_category_others",
+   "fieldtype": "Data",
+   "label": "Work Category Others",
+   "mandatory_depends_on": "eval:doc.custom_work_category == 'Others'"
+  },
+  {
+   "fieldname": "custom_others",
+   "fieldtype": "Select",
+   "label": "Others",
+   "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tender",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "boq_remarks",
+   "fieldtype": "Small Text",
+   "label": "Boq Remarks"
+  },
+  {
+   "fieldname": "boq_send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Boq Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dsmx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "order_closure_remarks",
+   "fieldtype": "Small Text",
+   "label": "Order Closure Remarks"
+  },
+  {
+   "fieldname": "column_break_sspg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "order_closure_send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Order Closure Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vendor_onboarding_remarks",
+   "fieldtype": "Small Text",
+   "label": "Vendor Onboarding Remarks"
+  },
+  {
+   "fieldname": "vendor_onboarding_send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Vendor Onboarding Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vendor_mobilization_section",
+   "fieldtype": "Section Break",
+   "label": "VENDOR MOBILIZATION AND WORK COMMENCEMENT"
+  },
+  {
+   "fieldname": "vendor_days_planned",
+   "fieldtype": "Int",
+   "label": "No. of Days Planned"
+  },
+  {
+   "fieldname": "column_break_fbmt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vendor_mobilization_target_date",
+   "fieldtype": "Date",
+   "label": "Target Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-06-09 14:45:48.618162",
+ "modified": "2026-06-23 17:11:21.620412",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
@@ -1173,5 +1305,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
