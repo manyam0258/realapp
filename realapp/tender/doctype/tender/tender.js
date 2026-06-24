@@ -260,6 +260,95 @@ frappe.ui.form.on("Tender", {
         if (frm.doc.data_reference === "Order Request Mail") {
             frm.set_value("ref_no", "");
         }
+    },
+    before_workflow_action(frm) {
+        let action = frm.selected_workflow_action;
+        let today = frappe.datetime.get_today();
+        if (action === "Submit Design") {
+            frm.set_value("submission_date", today);
+        } else if (action === "Submit BOQ") {
+            frm.set_value("boq_submission_date", today);
+        } else if (action === "Submit Order Closure") {
+            frm.set_value("vendor_evaluation_submission_date", today);
+            frm.set_value("floating_enquiries_submission_date", today);
+            frm.set_value("pre_bid_technical_meeting_submission_date", today);
+            frm.set_value("negotiations_1_submit_date", today);
+            frm.set_value("negotiations_2_submit_date", today);
+            frm.set_value("order_approval_submit_date", today);
+            frm.set_value("agreement_order_submit_date", today);
+        } else if (action === "Submit for Vendor Onboarding" || action === "Vendor Onboarded") {
+            frm.set_value("introduction_submission_date", today);
+            frm.set_value("mobilization_submit_date", today);
+        } else if (action === "Send Back") {
+            let current_state = frm.doc.workflow_state;
+            let fieldname = null;
+            let field_label = "";
+            let revision_field = null;
+            
+            if (current_state === "Design Sample / Drawings") {
+                fieldname = "send_back_remarks";
+                field_label = "Send Back Remarks";
+                revision_field = "revision_status";
+            } else if (current_state === "BOQ Submission") {
+                fieldname = "boq_send_back_remarks";
+                field_label = "BOQ Send Back Remarks";
+                revision_field = "boq_revision_status";
+            } else if (current_state === "Order Closure") {
+                fieldname = "order_closure_send_back_remarks";
+                field_label = "Order Closure Send Back Remarks";
+                revision_field = "vendor_evaluation_revision_status";
+            } else if (current_state === "Vendor Finalisation") {
+                fieldname = "vendor_onboarding_send_back_remarks";
+                field_label = "Vendor Onboarding Send Back Remarks";
+                revision_field = "introduction_revision_status";
+            }
+
+            if (fieldname) {
+                return new Promise((resolve, reject) => {
+                    frappe.dom.unfreeze();
+                    let dialog = new frappe.ui.Dialog({
+                        title: __("Enter {0}", [__(field_label)]),
+                        fields: [
+                            {
+                                label: __(field_label),
+                                fieldname: "remarks",
+                                fieldtype: "Small Text",
+                                reqd: 0
+                            }
+                        ],
+                        primary_action_label: __("Send Back"),
+                        primary_action(values) {
+                            frm.set_value(fieldname, values.remarks || "");
+                            frm.doc[fieldname] = values.remarks || "";
+                            frm.refresh_field(fieldname);
+                            if (revision_field) {
+                                let current_status = frm.doc[revision_field] || "R0";
+                                let revision_levels = ["R0", "R1", "R2", "R3", "R4"];
+                                let current_idx = revision_levels.indexOf(current_status);
+                                if (current_idx < revision_levels.length - 1) {
+                                    frm.set_value(revision_field, revision_levels[current_idx + 1]);
+                                    frm.doc[revision_field] = revision_levels[current_idx + 1];
+                                    frm.refresh_field(revision_field);
+                                }
+                            }
+                            dialog.primary_action_fulfilled = true;
+                            dialog.hide();
+                            frappe.dom.freeze();
+                            frm.save().then(() => {
+                                resolve();
+                            });
+                        },
+                        on_hide() {
+                            if (!dialog.primary_action_fulfilled) {
+                                frappe.dom.unfreeze();
+                                reject();
+                            }
+                        }
+                    });
+                    dialog.show();
+                });
+            }
+        }
     }
 });
 
