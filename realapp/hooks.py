@@ -241,5 +241,10 @@ doctype_js = {"Lead" : "realapp/custom/lead.js"}
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-fixtures = ["Custom Field"]
+fixtures = [
+    "Custom Field",
+    {"dt": "Workflow", "filters": [["name", "=", "Tender Calendar Final WF"]]},
+    {"dt": "Workflow State", "filters": [["name", "in", ["Tender Creation", "Design Sample / Drawings", "BOQ Submission", "Order Closure", "Vendor Finalisation", "Completed"]]]},
+    {"dt": "Workflow Action", "filters": [["name", "in", ["Submit Design", "Submit BOQ", "Submit Order Closure", "Submit for Vendor Onboarding", "Vendor Onboarded", "Send Back"]]]}
+]
 

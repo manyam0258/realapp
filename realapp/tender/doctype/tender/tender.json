@@ -88,24 +88,38 @@
   "revised_planned_date",
   "submission_date",
   "remarks",
+  "schematic_attachment_1",
+  "schematic_attachment_3",
+  "schematic_attachment_5",
+  "schematic_attachment_7",
   "column_break_jnxv",
   "design_sample_target_date",
   "duration_left",
   "revision_status",
   "submission_status",
   "send_back_remarks",
+  "schematic_attachment_2",
+  "schematic_attachment_4",
+  "schematic_attachment_6",
+  "schematic_attachment_8",
   "tab_3_tab",
   "boq_no_of_days_planned",
   "boq_work_initiation",
   "revised_date",
   "boq_submission_date",
   "boq_remarks",
+  "boq_attachment_1",
+  "boq_attachment_3",
+  "boq_attachment_5",
   "column_break_hpvv",
   "boq_target_date",
   "boq_duration_left",
   "boq_revision_status",
   "boq_submission_status",
   "boq_send_back_remarks",
+  "boq_attachment_2",
+  "boq_attachment_4",
+  "boq_attachment_6",
   "tab_4_tab",
   "order_closure_vendor_evaluation",
   "vendor_evaluation_days_planned",
@@ -142,41 +156,51 @@
   "negotiations_1_work_initiation",
   "negotiations_1_rev_plan_date",
   "negotiations_1_submit_date",
+  "negotiation_1__attachment_1",
+  "negotiation_1__attachment_3",
   "column_break_dzci",
   "negotiations_1_target_date",
   "negotiations_1_duration_left",
   "negotiations_1_revision_status",
   "negotiations_1_submit_status",
+  "negotiation_1__attachment_2",
   "quotations_collection_rate_comparison_and_negotiation_2_section",
   "negotiations_2_days_plan",
   "negotiations_2_work_initiation",
   "negotiations_2_rev_plan_date",
   "negotiations_2_submit_date",
+  "negotiation_2_attachment_1",
+  "negotiation_2_attachment_3",
   "column_break_mbcv",
   "negotiations_2_target_date",
   "negotiations_2_duration_left",
   "negotiations_2_revision_status",
   "negotiations_2_submit_status",
+  "negotiation_2_attachment_2",
   "orders_approval_section",
   "order_approval_days",
   "order_approval_work_initiation",
   "order_approval_revised_date",
   "order_approval_submit_date",
+  "order_approval_attachment_1",
   "column_break_hnib",
   "order_approval_target",
   "order_approval_duration_left",
   "order_approval_revision_status",
   "order_approval_submit_status",
+  "order_approval_attachment_2",
   "agreement_or_order_issue_section",
   "agreement_order_days_planned",
   "agreement_order_work_initiation",
   "agreement_order_revised_plan_date",
   "agreement_order_submit_date",
+  "order_issue_attachment_1",
   "column_break_qzpx",
   "agreement_order_target_date",
   "agreement_order_duration_left",
   "agreement_order_revision_status",
   "agreement_order_submission",
+  "order_issue_attachment_2",
   "section_break_tyfm",
   "finalized_vendor_name",
   "column_break_eawb",
@@ -1275,13 +1299,174 @@
    "fieldname": "vendor_mobilization_target_date",
    "fieldtype": "Date",
    "label": "Target Date"
+  },
+  {
+   "fieldname": "schematic_attachment_1",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 1"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_2",
+   "fieldname": "schematic_attachment_3",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 3",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_4",
+   "fieldname": "schematic_attachment_5",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 5",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_6",
+   "fieldname": "schematic_attachment_7",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 7",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_1",
+   "fieldname": "schematic_attachment_2",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 2",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_3",
+   "fieldname": "schematic_attachment_4",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 4",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_5",
+   "fieldname": "schematic_attachment_6",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 6",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "depends_on": "eval:doc.schematic_attachment_7",
+   "fieldname": "schematic_attachment_8",
+   "fieldtype": "Data",
+   "label": "Schematic Attachment 8",
+   "placeholder": "Add only OneDrive Link here"
+  },
+  {
+   "fieldname": "boq_attachment_1",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 1",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.boq_attachment_2",
+   "fieldname": "boq_attachment_3",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 3",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.boq_attachment_4",
+   "fieldname": "boq_attachment_5",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 5",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.boq_attachment_1",
+   "fieldname": "boq_attachment_2",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 2",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.boq_attachment_3",
+   "fieldname": "boq_attachment_4",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 4",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.boq_attachment_5",
+   "fieldname": "boq_attachment_6",
+   "fieldtype": "Data",
+   "label": "BOQ Attachment 6",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "fieldname": "negotiation_1__attachment_1",
+   "fieldtype": "Data",
+   "label": "Negotiation 1  Attachment 1",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.negotiation_1_attachment_2",
+   "fieldname": "negotiation_1__attachment_3",
+   "fieldtype": "Data",
+   "label": "Negotiation 1  Attachment 3",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.negotiation_1_attachment_1",
+   "fieldname": "negotiation_1__attachment_2",
+   "fieldtype": "Data",
+   "label": "Negotiation 1  Attachment 2",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "fieldname": "negotiation_2_attachment_1",
+   "fieldtype": "Data",
+   "label": "Negotiation 2 Attachment 1",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.negotiation_2_attachment_2",
+   "fieldname": "negotiation_2_attachment_3",
+   "fieldtype": "Data",
+   "label": "Negotiation 2 Attachment 3",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.negotiation_2_attachment_1",
+   "fieldname": "negotiation_2_attachment_2",
+   "fieldtype": "Data",
+   "label": "Negotiation 2 Attachment 2",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "fieldname": "order_approval_attachment_1",
+   "fieldtype": "Data",
+   "label": "Order Approval Attachment 1",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.order_approval_attachment_1",
+   "fieldname": "order_approval_attachment_2",
+   "fieldtype": "Data",
+   "label": "Order Approval Attachment 2",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "fieldname": "order_issue_attachment_1",
+   "fieldtype": "Data",
+   "label": "Order Issue Attachment 1",
+   "placeholder": "Add only One Drive Link here"
+  },
+  {
+   "depends_on": "eval:doc.order_issue_attachment_1",
+   "fieldname": "order_issue_attachment_2",
+   "fieldtype": "Data",
+   "label": "Order Issue Attachment 2",
+   "placeholder": "Add only One Drive Link here"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-24 15:57:00.000000",
+ "modified": "2026-06-26 12:39:58.704683",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
