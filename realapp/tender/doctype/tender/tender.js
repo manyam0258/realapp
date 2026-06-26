@@ -24,18 +24,13 @@ frappe.ui.form.on("Tender", {
         const tab2_fields = [
             "design_sample_days_planned", "revised_planned_date", "work_initiation", 
             "submission_date", "design_sample_target_date", "duration_left", 
-            "revision_status", "submission_status", "custom_attachment_1", 
-            "custom_attachment_2", "custom_attachment_3", "custom_attachment_4", 
-            "custom_attachment_5", "custom_attachment_6", "custom_attachment_7", 
-            "custom_attachment_8", "send_back_remarks"
+            "revision_status", "submission_status", "schematic_attachments", "send_back_remarks"
         ];
 
         const tab3_fields = [
             "boq_no_of_days_planned", "revised_date", "boq_work_initiation", 
             "boq_submission_date", "boq_target_date", "boq_duration_left", 
-            "boq_revision_status", "boq_submission_status", "custom_boq_attachment_1", 
-            "custom_boq_attachment_2", "custom_boq_attachment_3", "custom_boq_attachment_4", 
-            "custom_boq_attachment_5", "custom_boq_attachment_6", "custom_boq_attachment_7",
+            "boq_revision_status", "boq_submission_status", "boq_attachments",
             "boq_send_back_remarks"
         ];
 
@@ -56,23 +51,19 @@ frappe.ui.form.on("Tender", {
             "negotiations_1_work_initiation", "negotiations_1_submit_date", 
             "negotiations_1_target_date", "negotiations_1_duration_left", 
             "negotiations_1_revision_status", "negotiations_1_submit_status", 
-            "custom_attachment_negotiation_1_", "custom_attachment_negotiation_2", 
-            "custom_attachment_negotiation_3", "negotiations_2_days_plan", 
+            "negotiation_1_attachments", "negotiations_2_days_plan", 
             "negotiations_2_rev_plan_date", "negotiations_2_work_initiation", 
             "negotiations_2_submit_date", "negotiations_2_target_date", 
             "negotiations_2_duration_left", "negotiations_2_revision_status", 
-            "negotiations_2_submit_status", "custom_attachment_1_negotiation_2", 
-            "custom_attachment_2_negotiation_2", "custom_attachment_3_negotiation_2", 
+            "negotiations_2_submit_status", "negotiation_2_attachments", 
             "order_approval_days", "order_approval_revised_date", "order_approval_work_initiation", 
             "order_approval_submit_date", "order_approval_target", "order_approval_duration_left", 
             "order_approval_revision_status", "order_approval_submit_status", 
-            "custom_order_approval_attachment_1", "custom_order_approval_attachment_2", 
-            "agreement_order_days_planned", "agreement_order_revised_plan_date", 
+            "order_approval_attachments", "agreement_order_days_planned", "agreement_order_revised_plan_date", 
             "agreement_order_work_initiation", "agreement_order_submit_date", 
             "agreement_order_target_date", "agreement_order_duration_left", 
             "agreement_order_revision_status", "agreement_order_submission", 
-            "custom_order_issue_attachment_1", "custom_order_issue_attachment_2", 
-            "finalized_vendor_name", "contact_details", "order_closure_send_back_remarks"
+            "agreement_order_attachments", "finalized_vendor_name", "contact_details", "order_closure_send_back_remarks"
         ];
 
         const tab5_fields = [
@@ -469,6 +460,24 @@ frappe.ui.form.on("Tender", {
                 });
             }
         }
+    },
+    schematic_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "Schematic");
+    },
+    boq_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "BOQ");
+    },
+    negotiation_1_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "Negotiation 1");
+    },
+    negotiation_2_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "Negotiation 2");
+    },
+    order_approval_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "Order Approval");
+    },
+    agreement_order_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "Agreement/Order");
     }
 });
 
