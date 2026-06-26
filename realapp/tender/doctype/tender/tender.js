@@ -24,14 +24,14 @@ frappe.ui.form.on("Tender", {
         const tab2_fields = [
             "design_sample_days_planned", "revised_planned_date", "work_initiation", 
             "submission_date", "design_sample_target_date", "duration_left", 
-            "revision_status", "submission_status", "schematic_attachments", "send_back_remarks"
+            "revision_status", "submission_status", "schematic_attachments", "remarks", "send_back_remarks"
         ];
 
         const tab3_fields = [
             "boq_no_of_days_planned", "revised_date", "boq_work_initiation", 
             "boq_submission_date", "boq_target_date", "boq_duration_left", 
             "boq_revision_status", "boq_submission_status", "boq_attachments",
-            "boq_send_back_remarks"
+            "boq_remarks", "boq_send_back_remarks"
         ];
 
         const tab4_fields = [
@@ -63,7 +63,7 @@ frappe.ui.form.on("Tender", {
             "agreement_order_work_initiation", "agreement_order_submit_date", 
             "agreement_order_target_date", "agreement_order_duration_left", 
             "agreement_order_revision_status", "agreement_order_submission", 
-            "agreement_order_attachments", "finalized_vendor_name", "contact_details", "order_closure_send_back_remarks"
+            "agreement_order_attachments", "finalized_vendor_name", "contact_details", "order_closure_remarks", "order_closure_send_back_remarks"
         ];
 
         const tab5_fields = [
@@ -73,7 +73,7 @@ frappe.ui.form.on("Tender", {
             "introduction_revision_status", "introduction_submission_status", "mobilization_days_planned", 
             "mobilization_revised_planned_date", "mobilization_work_initiation", "mobilization_submit_date", 
             "mobilization_target_date", "mobilization_duration_left", "mobilization_revision_status", 
-            "mobilization_submit_status", "vendor_onboarding_send_back_remarks"
+            "mobilization_submit_status", "vendor_onboarding_remarks", "vendor_onboarding_send_back_remarks"
         ];
 
         // ─── 2. UTILITY HELPERS FOR VISIBILITY ───
@@ -156,7 +156,8 @@ frappe.ui.form.on("Tender", {
                 edit_tab1 = true;
                 show_tab5 = true;
                 edit_tab5 = true;
-                if (frm.doc.send_back_remarks) {
+                show_tab4 = true; // Previous stage read-only
+                if (frm.doc.workflow_state === "Tender Creation" && frm.doc.send_back_remarks) {
                     show_tab2 = true;
                     show_tab2_remarks_only = true;
                 }
@@ -164,25 +165,25 @@ frappe.ui.form.on("Tender", {
             if (roles.includes("Architect")) {
                 show_tab2 = true;
                 edit_tab2 = true;
-                if (frm.doc.boq_send_back_remarks) {
+                if (frm.doc.workflow_state === "Design Sample / Drawings" && frm.doc.boq_send_back_remarks) {
                     show_tab3 = true;
                     show_tab3_remarks_only = true;
                 }
             }
             if (roles.includes("Quantity Surveyor")) {
-                show_tab2 = true; // Read-only
+                show_tab2 = true; // Previous stage read-only
                 show_tab3 = true;
                 edit_tab3 = true;
-                if (frm.doc.order_closure_send_back_remarks) {
+                if (frm.doc.workflow_state === "BOQ Submission" && frm.doc.order_closure_send_back_remarks) {
                     show_tab4 = true;
                     show_tab4_remarks_only = true;
                 }
             }
             if (roles.includes("Procurement Team")) {
-                show_tab3 = true; // Read-only
+                show_tab3 = true; // Previous stage read-only
                 show_tab4 = true;
                 edit_tab4 = true;
-                if (frm.doc.vendor_onboarding_send_back_remarks) {
+                if (frm.doc.workflow_state === "Order Closure" && frm.doc.vendor_onboarding_send_back_remarks) {
                     show_tab5 = true;
                     show_tab5_remarks_only = true;
                 }
@@ -915,3 +916,36 @@ function update_vendor_onboarding_section(frm, silent=false) {
         set_field_value(frm, "mobilization_submit_status", "Yet to Submit", silent);
     }
 }
+
+frappe.ui.form.on("Tender Attachment", {
+    tender_attachment_add(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        const mapping = {
+            "schematic_attachments": "Schematic",
+            "boq_attachments": "BOQ",
+            "negotiation_1_attachments": "Negotiation 1",
+            "negotiation_2_attachments": "Negotiation 2",
+            "order_approval_attachments": "Order Approval",
+            "agreement_order_attachments": "Agreement/Order"
+        };
+        if (row.parentfield && mapping[row.parentfield]) {
+            frappe.model.set_value(cdt, cdn, "stage", mapping[row.parentfield]);
+        }
+    },
+    attachment(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (!row.stage) {
+            const mapping = {
+                "schematic_attachments": "Schematic",
+                "boq_attachments": "BOQ",
+                "negotiation_1_attachments": "Negotiation 1",
+                "negotiation_2_attachments": "Negotiation 2",
+                "order_approval_attachments": "Order Approval",
+                "agreement_order_attachments": "Agreement/Order"
+            };
+            if (row.parentfield && mapping[row.parentfield]) {
+                frappe.model.set_value(cdt, cdn, "stage", mapping[row.parentfield]);
+            }
+        }
+    }
+});

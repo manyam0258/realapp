@@ -21,9 +21,10 @@
   },
   {
    "fieldname": "attachment",
-   "fieldtype": "Attach",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Attachment"
+   "label": "Attachment",
+   "options": "URL"
   },
   {
    "fieldname": "remarks",
