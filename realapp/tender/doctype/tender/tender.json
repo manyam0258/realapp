@@ -1203,7 +1203,7 @@
   {
    "fieldname": "custom_others",
    "fieldtype": "Select",
-   "label": "Others",
+   "label": "Other Areas",
    "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
   },
   {
@@ -1392,7 +1392,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-29 18:03:05.999521",
+ "modified": "2026-06-30 12:48:32.991841",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
