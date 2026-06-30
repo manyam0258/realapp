@@ -16,7 +16,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Stage",
-   "options": "Schematic\nBOQ\nNegotiation 1\nNegotiation 2\nOrder Approval\nAgreement/Order",
+   "options": "Schematic\nBOQ\nNegotiation 1\nNegotiation 2\nOrder Approval\nOrder Issue\nIntroduction Meeting\nMobilization",
    "read_only": 1
   },
   {

@@ -119,6 +119,7 @@
   "vendor_evaluation_duration_left",
   "vendor_evaluation_revision_status",
   "vendor_evaluation_submission_status",
+  "vendor_evaluation_remarks",
   "floating_enquiries_section",
   "floating_enquiries_no_of_days_planned",
   "floating_enquiries_work_initiation",
@@ -129,6 +130,7 @@
   "floating_enquiries_duration_left",
   "floating_enquiries_revision_status",
   "floating_enquiries_submission_status",
+  "floating_enquiries_remarks",
   "pre_bid_or_technical_meeting_section",
   "pre_bid_technical_meeting_no_of_days_planned",
   "pre_bid_technical_meeting_work_initiation",
@@ -139,6 +141,7 @@
   "pre_bid_technical_meeting_duration_left",
   "pre_bid_technical_meeting_revision_status",
   "pre_bid_technical_meeting_submission_status",
+  "pre_bid_technical_meeting_remarks",
   "quotations_collection_rate_comparison_and_negotiation__1_section",
   "negotiations_1_days_plan",
   "negotiations_1_work_initiation",
@@ -150,6 +153,7 @@
   "negotiations_1_duration_left",
   "negotiations_1_revision_status",
   "negotiations_1_submit_status",
+  "negotiations_1_remarks",
   "quotations_collection_rate_comparison_and_negotiation_2_section",
   "negotiations_2_days_plan",
   "negotiations_2_work_initiation",
@@ -161,6 +165,7 @@
   "negotiations_2_duration_left",
   "negotiations_2_revision_status",
   "negotiations_2_submit_status",
+  "negotiations_2_remarks",
   "orders_approval_section",
   "order_approval_days",
   "order_approval_work_initiation",
@@ -172,6 +177,7 @@
   "order_approval_duration_left",
   "order_approval_revision_status",
   "order_approval_submit_status",
+  "order_approval_remarks",
   "agreement_or_order_issue_section",
   "agreement_order_days_planned",
   "agreement_order_work_initiation",
@@ -183,6 +189,7 @@
   "agreement_order_duration_left",
   "agreement_order_revision_status",
   "agreement_order_submission",
+  "agreement_order_remarks",
   "section_break_tyfm",
   "finalized_vendor_name",
   "column_break_eawb",
@@ -206,6 +213,8 @@
   "introduction_duration_left",
   "introduction_revision_status",
   "introduction_submission_status",
+  "introduction_remarks",
+  "introduction_attachments",
   "vendor_mobilization_and_work_commencement_section",
   "mobilization_days_planned",
   "mobilization_work_initiation",
@@ -217,6 +226,8 @@
   "mobilization_duration_left",
   "mobilization_revision_status",
   "mobilization_submit_status",
+  "mobilization_remarks",
+  "mobilization_attachments",
   "amended_from",
   "vendor_onboarding_send_back_remarks"
  ],
@@ -249,10 +260,11 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "RISE",
    "fieldname": "project",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Project",
-   "options": "Project"
+   "read_only": 1
   },
   {
    "fieldname": "block_name",
@@ -1317,13 +1329,70 @@
    "fieldtype": "Table",
    "label": "Agreement/Order Attachments",
    "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "vendor_evaluation_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "floating_enquiries_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "negotiations_1_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "negotiations_2_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "order_approval_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "agreement_order_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "introduction_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "mobilization_remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "introduction_attachments",
+   "fieldtype": "Table",
+   "label": "Introduction Meeting Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "mobilization_attachments",
+   "fieldtype": "Table",
+   "label": "Mobilization Attachments",
+   "options": "Tender Attachment"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-26 12:39:58.704683",
+ "modified": "2026-06-29 18:03:05.999521",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
@@ -1347,5 +1416,6 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

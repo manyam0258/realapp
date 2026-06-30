@@ -234,6 +234,8 @@ class Tender(Document):
             self.introduction_submission_status = "Yet to Submit"
 
         # Stage 11: Mobilization
+        self.mobilization_days_planned = self.vendor_days_planned
+        self.mobilization_target_date = self.vendor_mobilization_target_date
         if not self.mobilization_work_initiation or self.has_value_changed("introduction_submission_date"):
             self.mobilization_work_initiation = self.introduction_submission_date
         self.mobilization_duration_left = self.get_duration_left_str(self.mobilization_target_date, self.mobilization_work_initiation)
@@ -243,6 +245,7 @@ class Tender(Document):
             self.mobilization_submit_status = "Yet to Submit"
         self.set_ref_no()
         self.calculate_revised_target_dates()
+        self.set_attachment_stages()
 
     def get_duration_left_str(self, target_date, work_initiation=None):
         if target_date:
@@ -270,20 +273,17 @@ class Tender(Document):
             if self.is_new() or not self.ref_no:
                 existing = frappe.get_all(
                     "Tender",
-                    filters={
-                        "custom_work_package": self.custom_work_package
-                    },
                     pluck="ref_no"
                 )
                 max_no = 0
                 for ref in existing:
-                    if ref and ref.startswith(f"{self.custom_work_package}-"):
+                    if ref and ref.startswith("TR-"):
                         try:
-                            num = int(ref.split("-")[-1])
+                            num = int(ref.replace("TR-", ""))
                             max_no = max(max_no, num)
                         except Exception:
                             pass
-                self.ref_no = f"{self.custom_work_package}-{max_no + 1}"
+                self.ref_no = f"TR-{max_no + 1}"
         elif self.data_reference == "Order Request Mail":
             if not self.ref_no:
                 frappe.throw(
@@ -340,57 +340,107 @@ class Tender(Document):
             return None
 
         # Tab 2: Schematic Readiness
-        self.revised_planned_date = calculate_revised(
-            self.work_initiation, self.target_date, self.no_of_days_planned
-        )
+        if self.work_initiation and self.no_of_days_planned:
+            self.revised_planned_date = self.add_working_days(
+                getdate(self.work_initiation), int(self.no_of_days_planned)
+            )
+        else:
+            self.revised_planned_date = None
 
         # Tab 3: BOQ Submission
-        self.revised_date = calculate_revised(
-            self.boq_work_initiation, self.boq_target_date, self.boq_submission_days_planned
-        )
+        if self.boq_work_initiation and self.boq_submission_days_planned:
+            self.revised_date = self.add_working_days(
+                getdate(self.boq_work_initiation), int(self.boq_submission_days_planned)
+            )
+        else:
+            self.revised_date = None
 
         # Tab 4: Order Closure - Vendor Evaluation
         # Note: Fixed discrepancy using introduction_meet_days_planned instead of introduction_meeting_days_planned
-        self.vendor_evaluation_revised_planned_date = calculate_revised(
-            self.vendor_evaluation_work_initiation, self.vendor_target_date, self.introduction_meet_days_planned
-        )
+        # Tab 4: Order Closure - Vendor Evaluation
+        # Note: Fixed discrepancy using introduction_meet_days_planned instead of introduction_meeting_days_planned
+        if self.vendor_evaluation_work_initiation and self.introduction_meet_days_planned:
+            self.vendor_evaluation_revised_planned_date = self.add_working_days(
+                getdate(self.vendor_evaluation_work_initiation), int(self.introduction_meet_days_planned)
+            )
+        else:
+            self.vendor_evaluation_revised_planned_date = None
 
         # Tab 4: Floating Enquiries
-        self.floating_enquiries_revised_planned_date = calculate_revised(
-            self.floating_enquiries_work_initiation, self.floating_enquiries_target, self.floating_enquiries_days_planned
-        )
+        if self.floating_enquiries_work_initiation and self.floating_enquiries_days_planned:
+            self.floating_enquiries_revised_planned_date = self.add_working_days(
+                getdate(self.floating_enquiries_work_initiation), int(self.floating_enquiries_days_planned)
+            )
+        else:
+            self.floating_enquiries_revised_planned_date = None
 
         # Tab 4: Pre-Bid Technical Meeting
-        self.pre_bid_technical_meeting_revised_planned_date = calculate_revised(
-            self.pre_bid_technical_meeting_work_initiation, self.pre_bid_technical_meeting_target_date, self.pre_bid_no_of_days_planned
-        )
+        if self.pre_bid_technical_meeting_work_initiation and self.pre_bid_no_of_days_planned:
+            self.pre_bid_technical_meeting_revised_planned_date = self.add_working_days(
+                getdate(self.pre_bid_technical_meeting_work_initiation), int(self.pre_bid_no_of_days_planned)
+            )
+        else:
+            self.pre_bid_technical_meeting_revised_planned_date = None
 
         # Tab 4: Negotiations 1
-        self.negotiations_1_rev_plan_date = calculate_revised(
-            self.negotiations_1_work_initiation, self.negotiations_1_target_date, self.quotation_1_days_planned
-        )
+        if self.negotiations_1_work_initiation and self.quotation_1_days_planned:
+            self.negotiations_1_rev_plan_date = self.add_working_days(
+                getdate(self.negotiations_1_work_initiation), int(self.quotation_1_days_planned)
+            )
+        else:
+            self.negotiations_1_rev_plan_date = None
 
         # Tab 4: Negotiations 2
-        self.negotiations_2_rev_plan_date = calculate_revised(
-            self.negotiations_2_work_initiation, self.negotiations_2_target_date, self.quotation_2_days_planned
-        )
+        if self.negotiations_2_work_initiation and self.quotation_2_days_planned:
+            self.negotiations_2_rev_plan_date = self.add_working_days(
+                getdate(self.negotiations_2_work_initiation), int(self.quotation_2_days_planned)
+            )
+        else:
+            self.negotiations_2_rev_plan_date = None
 
         # Tab 4: Order Approval
-        self.order_approval_revised_date = calculate_revised(
-            self.order_approval_work_initiation, self.order_approval_target, self.order_approval_days_planned
-        )
+        if self.order_approval_work_initiation and self.order_approval_days_planned:
+            self.order_approval_revised_date = self.add_working_days(
+                getdate(self.order_approval_work_initiation), int(self.order_approval_days_planned)
+            )
+        else:
+            self.order_approval_revised_date = None
 
         # Tab 5: Agreement Order
-        self.agreement_order_revised_plan_date = calculate_revised(
-            self.agreement_order_work_initiation, self.agreement_order_target_date, self.agreement_no_of_days_planned
-        )
+        if self.agreement_order_work_initiation and self.agreement_no_of_days_planned:
+            self.agreement_order_revised_plan_date = self.add_working_days(
+                getdate(self.agreement_order_work_initiation), int(self.agreement_no_of_days_planned)
+            )
+        else:
+            self.agreement_order_revised_plan_date = None
 
         # Tab 5: Introduction Meeting
-        self.introduction_revised_planned_date = calculate_revised(
-            self.introduction_work_initiation, self.introduction_target_date, self.introduction_meeting_days_planned
-        )
+        if self.introduction_work_initiation and self.introduction_meeting_days_planned:
+            self.introduction_revised_planned_date = self.add_working_days(
+                getdate(self.introduction_work_initiation), int(self.introduction_meeting_days_planned)
+            )
+        else:
+            self.introduction_revised_planned_date = None
 
         # Tab 5: Mobilization
-        self.mobilization_revised_planned_date = calculate_revised(
-            self.mobilization_work_initiation, self.mobilization_target_date, self.mobilization_days_planned
-        )
+        if self.mobilization_work_initiation and self.mobilization_days_planned:
+            self.mobilization_revised_planned_date = self.add_working_days(
+                getdate(self.mobilization_work_initiation), int(self.mobilization_days_planned)
+            )
+        else:
+            self.mobilization_revised_planned_date = None
+
+    def set_attachment_stages(self):
+        mapping = {
+            "schematic_attachments": "Schematic",
+            "boq_attachments": "BOQ",
+            "negotiation_1_attachments": "Negotiation 1",
+            "negotiation_2_attachments": "Negotiation 2",
+            "order_approval_attachments": "Order Approval",
+            "agreement_order_attachments": "Order Issue",
+            "introduction_attachments": "Introduction Meeting",
+            "mobilization_attachments": "Mobilization"
+        }
+        for fieldname, stage_val in mapping.items():
+            for row in self.get(fieldname) or []:
+                row.stage = stage_val
