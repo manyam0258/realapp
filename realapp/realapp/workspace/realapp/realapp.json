@@ -124,10 +124,20 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Reports",
-   "link_count": 2,
+   "link_count": 1,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Real Estate Inventory",
+   "link_count": 0,
+   "link_to": "property-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -287,7 +297,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-06-03 14:24:38.821112",
+ "modified": "2026-07-03 11:54:10.621901",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",

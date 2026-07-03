@@ -4,7 +4,7 @@
     "module": "Realapp",
     "title": "Real Estate Inventory",
     "page_name": "property-dashboard",
-    "standard": "No",
+    "standard": "Yes",
     "system_page": 0,
     "roles": [
         {

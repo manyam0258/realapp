@@ -35,29 +35,32 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 	page.project_filter = page.add_field({
 		fieldname: 'project',
 		label: 'Project',
-		fieldtype: 'Data',
-		change: render_dashboard
+		fieldtype: 'Link',
+		options: 'Project',
+		change: () => render_dashboard()
 	});
 
 	page.block_filter = page.add_field({
 		fieldname: 'block',
 		label: 'Block',
-		fieldtype: 'Data',
-		change: render_dashboard
+		fieldtype: 'MultiSelectList',
+		get_data: function (txt) {
+			return frappe.db.get_link_options('Block', txt);
+		}
 	});
 
 	page.floor_filter = page.add_field({
 		fieldname: 'floor_number',
 		label: 'Floor',
 		fieldtype: 'Int',
-		change: render_dashboard
+		change: () => render_dashboard()
 	});
 
 	page.unit_filter = page.add_field({
 		fieldname: 'unit_name',
 		label: 'Unit',
 		fieldtype: 'Data',
-		change: render_dashboard
+		change: () => render_dashboard()
 	});
 
 	/* ✅ RESTORED: Status Filter */
@@ -66,7 +69,20 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 		label: 'Status',
 		fieldtype: 'Select',
 		options: "\nAvailable\nBooked\nBlocked\nSold",
-		change: render_dashboard
+		change: () => render_dashboard()
+	});
+
+	// Immediate/live update listeners via event delegation on wrapper
+	$(wrapper).on('input change', '[data-fieldname="floor_number"] input', () => {
+		clearTimeout(page.floor_filter_timeout);
+		page.floor_filter_timeout = setTimeout(() => render_dashboard(), 300);
+	});
+	$(wrapper).on('input change', '[data-fieldname="unit_name"] input', () => {
+		clearTimeout(page.unit_filter_timeout);
+		page.unit_filter_timeout = setTimeout(() => render_dashboard(), 300);
+	});
+	$(wrapper).on('click', '[data-fieldname="block"] .selectable-item, [data-fieldname="block"] .clear-selections, [data-fieldname="block"] .select-all-options', () => {
+		setTimeout(() => render_dashboard(), 50);
 	});
 
 	/* ✅ RESTORED: Refresh Button */
@@ -113,17 +129,28 @@ frappe.pages['property-dashboard'].on_page_load = function (wrapper) {
 	function render_dashboard() {
 		let filters = {};
 
-		if (page.project_filter.get_value())
-			filters.project = ['like', `%${page.project_filter.get_value()}%`];
+		let project_val = page.project_filter.get_value();
+		if (project_val) {
+			filters.project = project_val;
+		}
 
-		if (page.block_filter.get_value())
-			filters.block = page.block_filter.get_value();
+		let blocks = page.block_filter.get_value();
+		if (blocks && blocks.length > 0) {
+			filters.block = ['in', blocks];
+		}
 
-		if (page.floor_filter.get_value())
-			filters.floor_number = page.floor_filter.get_value();
+		let floor_val = $(wrapper).find('[data-fieldname="floor_number"] input').val();
+		if (floor_val !== "" && floor_val !== null && floor_val !== undefined) {
+			let parsed_floor = parseInt(floor_val);
+			if (!isNaN(parsed_floor)) {
+				filters.floor_number = parsed_floor;
+			}
+		}
 
-		if (page.unit_filter.get_value())
-			filters.unit_name = ['like', `%${page.unit_filter.get_value()}%`];
+		let unit_val = $(wrapper).find('[data-fieldname="unit_name"] input').val();
+		if (unit_val) {
+			filters.unit_name = ['like', `%${unit_val}%`];
+		}
 
 		if (page.status_filter.get_value())
 			filters.status = page.status_filter.get_value();
