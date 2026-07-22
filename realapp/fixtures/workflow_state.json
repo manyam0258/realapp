@@ -30,6 +30,15 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
+  "modified": "2026-07-22 11:30:00.000000",
+  "name": "Evaluation Process",
+  "style": "",
+  "workflow_state_name": "Evaluation Process"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
   "modified": "2026-06-17 16:32:58.114260",
   "name": "Order Closure",
   "style": "",

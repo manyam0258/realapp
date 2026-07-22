@@ -38,51 +38,46 @@ frappe.ui.form.on("Tender", {
             "vendor_evaluation_days_planned", "vendor_evaluation_revised_planned_date", 
             "vendor_evaluation_work_initiation", "vendor_evaluation_submission_date", 
             "vendor_target_date", "vendor_evaluation_duration_left", 
-            "vendor_evaluation_revision_status", "vendor_evaluation_submission_status", 
-            "vendor_evaluation_remarks",
+            "vendor_evaluation_revision_status", "vendor_evaluation_submission_status", "vendor_evaluation_attachments", 
             "floating_enquiries_no_of_days_planned", "floating_enquiries_revised_planned_date", 
             "floating_enquiries_work_initiation", "floating_enquiries_submission_date", 
             "floating_enquiries_target", "floating_enquiries_duration_left", 
-            "floating_enquiries_revision_status", "floating_enquiries_submission_status", 
-            "floating_enquiries_remarks",
+            "floating_enquiries_revision_status", "floating_enquiries_submission_status", "floating_enquiries_attachments", 
             "pre_bid_technical_meeting_no_of_days_planned", "pre_bid_technical_meeting_revised_planned_date", 
             "pre_bid_technical_meeting_work_initiation", "pre_bid_technical_meeting_submission_date", 
             "pre_bid_technical_meeting_target_date", "pre_bid_technical_meeting_duration_left", 
-            "pre_bid_technical_meeting_revision_status", "pre_bid_technical_meeting_submission_status", 
-            "pre_bid_technical_meeting_remarks",
+            "pre_bid_technical_meeting_revision_status", "pre_bid_technical_meeting_submission_status", "pre_bid_technical_meeting_attachments", 
             "negotiations_1_days_plan", "negotiations_1_rev_plan_date", 
             "negotiations_1_work_initiation", "negotiations_1_submit_date", 
             "negotiations_1_target_date", "negotiations_1_duration_left", 
             "negotiations_1_revision_status", "negotiations_1_submit_status", 
-            "negotiation_1_attachments", "negotiations_1_remarks",
-            "negotiations_2_days_plan", 
+            "negotiation_1_attachments", "negotiations_2_days_plan", 
             "negotiations_2_rev_plan_date", "negotiations_2_work_initiation", 
             "negotiations_2_submit_date", "negotiations_2_target_date", 
             "negotiations_2_duration_left", "negotiations_2_revision_status", 
-            "negotiations_2_submit_status", "negotiation_2_attachments", "negotiations_2_remarks",
-            "order_approval_days", "order_approval_revised_date", "order_approval_work_initiation", 
-            "order_approval_submit_date", "order_approval_target", "order_approval_duration_left", 
-            "order_approval_revision_status", "order_approval_submit_status", 
-            "order_approval_attachments", "order_approval_remarks",
-            "agreement_order_days_planned", "agreement_order_revised_plan_date", 
-            "agreement_order_work_initiation", "agreement_order_submit_date", 
-            "agreement_order_target_date", "agreement_order_duration_left", 
-            "agreement_order_revision_status", "agreement_order_submission", 
-            "agreement_order_attachments", "agreement_order_remarks",
-            "finalized_vendor_name", "contact_details", "order_closure_remarks", "order_closure_send_back_remarks"
+            "negotiations_2_submit_status", "negotiation_2_attachments",
+            "evaluation_remarks", "evaluation_send_back_remarks"
         ];
 
         const tab5_fields = [
+            "order_approval_days", "order_approval_revised_date", "order_approval_work_initiation", 
+            "order_approval_submit_date", "order_approval_target", "order_approval_duration_left", 
+            "order_approval_revision_status", "order_approval_submit_status", 
+            "order_approval_attachments", "agreement_order_days_planned", "agreement_order_revised_plan_date", 
+            "agreement_order_work_initiation", "agreement_order_submit_date", 
+            "agreement_order_target_date", "agreement_order_duration_left", 
+            "agreement_order_revision_status", "agreement_order_submission", 
+            "agreement_order_attachments", "finalized_vendor_name", "contact_details", "order_closure_remarks", "order_closure_send_back_remarks"
+        ];
+
+        const tab6_fields = [
             "final_vendor_name", "vendor_contact_details", "introduction_days_planned", 
             "introduction_revised_planned_date", "introduction_work_initiation", 
             "introduction_submission_date", "introduction_target_date", "introduction_duration_left", 
-            "introduction_revision_status", "introduction_submission_status", "introduction_remarks",
-            "introduction_attachments",
-            "mobilization_days_planned", 
+            "introduction_revision_status", "introduction_submission_status", "introduction_meeting_attachments", "mobilization_days_planned", 
             "mobilization_revised_planned_date", "mobilization_work_initiation", "mobilization_submit_date", 
             "mobilization_target_date", "mobilization_duration_left", "mobilization_revision_status", 
-            "mobilization_submit_status", "mobilization_remarks", "mobilization_attachments",
-            "vendor_onboarding_remarks", "vendor_onboarding_send_back_remarks"
+            "mobilization_submit_status", "mobilization_attachments", "vendor_onboarding_remarks", "vendor_onboarding_send_back_remarks"
         ];
 
         // ─── 2. UTILITY HELPERS FOR VISIBILITY ───
@@ -132,17 +127,20 @@ frappe.ui.form.on("Tender", {
         let show_tab3 = false;
         let show_tab4 = false;
         let show_tab5 = false;
+        let show_tab6 = false;
 
         let edit_tab1 = false;
         let edit_tab2 = false;
         let edit_tab3 = false;
         let edit_tab4 = false;
         let edit_tab5 = false;
+        let edit_tab6 = false;
 
         let show_tab2_remarks_only = false;
         let show_tab3_remarks_only = false;
         let show_tab4_remarks_only = false;
         let show_tab5_remarks_only = false;
+        let show_tab6_remarks_only = false;
 
         const roles = frappe.user_roles || [];
 
@@ -152,30 +150,26 @@ frappe.ui.form.on("Tender", {
             show_tab3 = true;
             show_tab4 = true;
             show_tab5 = true;
+            show_tab6 = true;
             edit_tab1 = true;
             edit_tab2 = true;
             edit_tab3 = true;
             edit_tab4 = true;
             edit_tab5 = true;
+            edit_tab6 = true;
         } else {
             // Tab 1 (Initiation) is visible to all roles (but editable only by Planning)
             show_tab1 = true;
 
             if (roles.includes("Planning")) {
                 edit_tab1 = true;
-                show_tab5 = true;
-                edit_tab5 = true;
+                show_tab6 = true;
+                edit_tab6 = true;
                 show_tab4 = true; // Previous stage read-only
+                show_tab5 = true; // Previous stage read-only
                 if (frm.doc.workflow_state === "Tender Creation" && frm.doc.send_back_remarks) {
                     show_tab2 = true;
                     show_tab2_remarks_only = true;
-                }
-                if (frm.doc.workflow_state === "Vendor Finalisation") {
-                    show_tab1 = true;
-                    show_tab2 = true;
-                    show_tab3 = true;
-                    show_tab4 = true;
-                    show_tab5 = true;
                 }
             }
             if (roles.includes("Architect")) {
@@ -190,18 +184,33 @@ frappe.ui.form.on("Tender", {
                 show_tab2 = true; // Previous stage read-only
                 show_tab3 = true;
                 edit_tab3 = true;
-                if (frm.doc.workflow_state === "BOQ Submission" && frm.doc.order_closure_send_back_remarks) {
+                if (frm.doc.workflow_state === "BOQ Submission" && frm.doc.evaluation_send_back_remarks) {
                     show_tab4 = true;
                     show_tab4_remarks_only = true;
                 }
             }
             if (roles.includes("Procurement Team")) {
                 show_tab3 = true; // Previous stage read-only
-                show_tab4 = true;
-                edit_tab4 = true;
-                if (frm.doc.workflow_state === "Order Closure" && frm.doc.vendor_onboarding_send_back_remarks) {
+
+                if (frm.doc.workflow_state === "Evaluation Process") {
+                    show_tab4 = true;
+                    edit_tab4 = true;
+                    if (frm.doc.order_closure_send_back_remarks) {
+                        show_tab5 = true;
+                        show_tab5_remarks_only = true;
+                    }
+                } else if (frm.doc.workflow_state === "Order Closure") {
+                    show_tab4 = true; // Previous stage read-only
                     show_tab5 = true;
-                    show_tab5_remarks_only = true;
+                    edit_tab5 = true;
+                    if (frm.doc.vendor_onboarding_send_back_remarks) {
+                        show_tab6 = true;
+                        show_tab6_remarks_only = true;
+                    }
+                } else {
+                    // For all other states (e.g. Vendor Finalisation, Completed)
+                    show_tab4 = true;
+                    show_tab5 = true;
                 }
             }
         }
@@ -211,49 +220,16 @@ frappe.ui.form.on("Tender", {
         set_tab_visible("schematic_readiness_tab", show_tab2);
         set_tab_visible("tab_3_tab", show_tab3);
         set_tab_visible("tab_4_tab", show_tab4);
-        set_tab_visible("tab_5_tab", show_tab5);
+        set_tab_visible("order_closure_tab", show_tab5);
+        set_tab_visible("tab_5_tab", show_tab6);
 
         // Apply field states (hidden, read_only)
         set_fields_state(tab1_fields, !show_tab1, !edit_tab1);
         set_fields_state(tab2_fields, !show_tab2, !edit_tab2);
-        if (show_tab2 && edit_tab2) {
-            ["design_sample_days_planned", "design_sample_target_date", "revised_planned_date", "duration_left", "submission_status"].forEach(field => {
-                frm.set_df_property(field, "read_only", 1);
-                frm.refresh_field(field);
-            });
-        }
         set_fields_state(tab3_fields, !show_tab3, !edit_tab3);
-        if (show_tab3 && edit_tab3) {
-            ["boq_no_of_days_planned", "boq_target_date", "revised_date", "boq_duration_left", "boq_submission_status"].forEach(field => {
-                frm.set_df_property(field, "read_only", 1);
-                frm.refresh_field(field);
-            });
-        }
         set_fields_state(tab4_fields, !show_tab4, !edit_tab4);
-        if (show_tab4 && edit_tab4) {
-            [
-                "vendor_evaluation_days_planned", "vendor_target_date", "vendor_evaluation_revised_planned_date", "vendor_evaluation_duration_left", "vendor_evaluation_submission_status",
-                "floating_enquiries_no_of_days_planned", "floating_enquiries_target", "floating_enquiries_revised_planned_date", "floating_enquiries_duration_left", "floating_enquiries_submission_status",
-                "pre_bid_technical_meeting_no_of_days_planned", "pre_bid_technical_meeting_target_date", "pre_bid_technical_meeting_revised_planned_date", "pre_bid_technical_meeting_duration_left", "pre_bid_technical_meeting_submission_status",
-                "negotiations_1_days_plan", "negotiations_1_target_date", "negotiations_1_rev_plan_date", "negotiations_1_duration_left", "negotiations_1_submit_status",
-                "negotiations_2_days_plan", "negotiations_2_target_date", "negotiations_2_rev_plan_date", "negotiations_2_duration_left", "negotiations_2_submit_status",
-                "order_approval_days", "order_approval_target", "order_approval_revised_date", "order_approval_duration_left", "order_approval_submit_status",
-                "agreement_order_days_planned", "agreement_order_target_date", "agreement_order_revised_plan_date", "agreement_order_duration_left", "agreement_order_submission"
-            ].forEach(field => {
-                frm.set_df_property(field, "read_only", 1);
-                frm.refresh_field(field);
-            });
-        }
         set_fields_state(tab5_fields, !show_tab5, !edit_tab5);
-        if (show_tab5 && edit_tab5) {
-            [
-                "introduction_days_planned", "introduction_target_date", "introduction_revised_planned_date", "introduction_duration_left", "introduction_submission_status",
-                "mobilization_days_planned", "mobilization_target_date", "mobilization_revised_planned_date", "mobilization_duration_left", "mobilization_submit_status"
-            ].forEach(field => {
-                frm.set_df_property(field, "read_only", 1);
-                frm.refresh_field(field);
-            });
-        }
+        set_fields_state(tab6_fields, !show_tab6, !edit_tab6);
 
         // Overrides for Tab Remarks Only view
         if (show_tab2_remarks_only) {
@@ -263,10 +239,13 @@ frappe.ui.form.on("Tender", {
             set_tab_remarks_only(tab3_fields, "boq_send_back_remarks");
         }
         if (show_tab4_remarks_only) {
-            set_tab_remarks_only(tab4_fields, "order_closure_send_back_remarks");
+            set_tab_remarks_only(tab4_fields, "evaluation_send_back_remarks");
         }
         if (show_tab5_remarks_only) {
-            set_tab_remarks_only(tab5_fields, "vendor_onboarding_send_back_remarks");
+            set_tab_remarks_only(tab5_fields, "order_closure_send_back_remarks");
+        }
+        if (show_tab6_remarks_only) {
+            set_tab_remarks_only(tab6_fields, "vendor_onboarding_send_back_remarks");
         }
 
         // ─── 4. SILENT UPDATE OF CALCULATED FIELDS ───
@@ -277,7 +256,10 @@ frappe.ui.form.on("Tender", {
         update_introduction_section(frm, true);
         update_order_closure_section(frm, true);
         update_vendor_onboarding_section(frm, true);
-        set_attachment_stages(frm);
+        update_approx_value_in_words(frm);
+    },
+    approx_value_in_lakhs(frm) {
+        update_approx_value_in_words(frm);
     },
     order_type(frm) {
         if (frm.doc.order_type === "Service") {
@@ -290,7 +272,7 @@ frappe.ui.form.on("Tender", {
     },
     introduction_submission_date(frm) {
         if (frm.doc.introduction_submission_date) {
-            frm.set_value("mobilization_work_initiation", frm.doc.introduction_submission_date);
+            frm.set_value("mobilization_work_initiation", get_next_working_day(frm.doc.introduction_submission_date));
         }
         update_introduction_section(frm);
         update_vendor_onboarding_section(frm);
@@ -307,7 +289,7 @@ frappe.ui.form.on("Tender", {
     },
     submission_date(frm) {
         if (frm.doc.submission_date) {
-            frm.set_value("boq_work_initiation", frm.doc.submission_date);
+            frm.set_value("boq_work_initiation", get_next_working_day(frm.doc.submission_date));
         }
         update_design_sample_section(frm);
         update_boq_section(frm);
@@ -321,7 +303,7 @@ frappe.ui.form.on("Tender", {
     },
     boq_submission_date(frm) {
         if (frm.doc.boq_submission_date) {
-            frm.set_value("vendor_evaluation_work_initiation", frm.doc.boq_submission_date);
+            frm.set_value("vendor_evaluation_work_initiation", get_next_working_day(frm.doc.boq_submission_date));
         }
         update_boq_section(frm);
         update_vendor_evaluation_section(frm);
@@ -369,44 +351,44 @@ frappe.ui.form.on("Tender", {
     },
     vendor_evaluation_submission_date(frm) {
         if (frm.doc.vendor_evaluation_submission_date) {
-            frm.set_value("floating_enquiries_work_initiation", frm.doc.vendor_evaluation_submission_date);
+            frm.set_value("floating_enquiries_work_initiation", get_next_working_day(frm.doc.vendor_evaluation_submission_date));
         }
         update_vendor_evaluation_section(frm);
         update_order_closure_section(frm);
     },
     floating_enquiries_submission_date(frm) {
         if (frm.doc.floating_enquiries_submission_date) {
-            frm.set_value("pre_bid_technical_meeting_work_initiation", frm.doc.floating_enquiries_submission_date);
+            frm.set_value("pre_bid_technical_meeting_work_initiation", get_next_working_day(frm.doc.floating_enquiries_submission_date));
         }
         update_order_closure_section(frm);
     },
     pre_bid_technical_meeting_submission_date(frm) {
         if (frm.doc.pre_bid_technical_meeting_submission_date) {
-            frm.set_value("negotiations_1_work_initiation", frm.doc.pre_bid_technical_meeting_submission_date);
+            frm.set_value("negotiations_1_work_initiation", get_next_working_day(frm.doc.pre_bid_technical_meeting_submission_date));
         }
         update_order_closure_section(frm);
     },
     negotiations_1_submit_date(frm) {
         if (frm.doc.negotiations_1_submit_date) {
-            frm.set_value("negotiations_2_work_initiation", frm.doc.negotiations_1_submit_date);
+            frm.set_value("negotiations_2_work_initiation", get_next_working_day(frm.doc.negotiations_1_submit_date));
         }
         update_order_closure_section(frm);
     },
     negotiations_2_submit_date(frm) {
         if (frm.doc.negotiations_2_submit_date) {
-            frm.set_value("order_approval_work_initiation", frm.doc.negotiations_2_submit_date);
+            frm.set_value("order_approval_work_initiation", get_next_working_day(frm.doc.negotiations_2_submit_date));
         }
         update_order_closure_section(frm);
     },
     order_approval_submit_date(frm) {
         if (frm.doc.order_approval_submit_date) {
-            frm.set_value("agreement_order_work_initiation", frm.doc.order_approval_submit_date);
+            frm.set_value("agreement_order_work_initiation", get_next_working_day(frm.doc.order_approval_submit_date));
         }
         update_order_closure_section(frm);
     },
     agreement_order_submit_date(frm) {
         if (frm.doc.agreement_order_submit_date) {
-            frm.set_value("introduction_work_initiation", frm.doc.agreement_order_submit_date);
+            frm.set_value("introduction_work_initiation", get_next_working_day(frm.doc.agreement_order_submit_date));
         }
         update_introduction_section(frm);
         update_order_closure_section(frm);
@@ -447,12 +429,13 @@ frappe.ui.form.on("Tender", {
             frm.set_value("submission_date", today);
         } else if (action === "Submit BOQ") {
             frm.set_value("boq_submission_date", today);
-        } else if (action === "Submit Order Closure") {
+        } else if (action === "Submit Evaluation") {
             frm.set_value("vendor_evaluation_submission_date", today);
             frm.set_value("floating_enquiries_submission_date", today);
             frm.set_value("pre_bid_technical_meeting_submission_date", today);
             frm.set_value("negotiations_1_submit_date", today);
             frm.set_value("negotiations_2_submit_date", today);
+        } else if (action === "Submit Order Closure") {
             frm.set_value("order_approval_submit_date", today);
             frm.set_value("agreement_order_submit_date", today);
         } else if (action === "Submit for Vendor Onboarding" || action === "Vendor Onboarded") {
@@ -462,13 +445,16 @@ frappe.ui.form.on("Tender", {
             let current_state = frm.doc.workflow_state;
             let fieldname = null;
             let field_label = "";
-            
+
             if (current_state === "Design Sample / Drawings") {
                 fieldname = "send_back_remarks";
                 field_label = "Send Back Remarks";
             } else if (current_state === "BOQ Submission") {
                 fieldname = "boq_send_back_remarks";
                 field_label = "BOQ Send Back Remarks";
+            } else if (current_state === "Evaluation Process") {
+                fieldname = "evaluation_send_back_remarks";
+                field_label = "Evaluation Send Back Remarks";
             } else if (current_state === "Order Closure") {
                 fieldname = "order_closure_send_back_remarks";
                 field_label = "Order Closure Send Back Remarks";
@@ -515,36 +501,37 @@ frappe.ui.form.on("Tender", {
         }
     },
     schematic_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Schematic");
-        frm.fields_dict.schematic_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "schematic");
     },
     boq_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "BOQ");
-        frm.fields_dict.boq_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "boq");
+    },
+    vendor_evaluation_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "vendor evaluation");
+    },
+    floating_enquiries_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "floating enquiries");
+    },
+    pre_bid_technical_meeting_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "pre-bid / technical meeting");
     },
     negotiation_1_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Negotiation 1");
-        frm.fields_dict.negotiation_1_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "negotiation 1");
     },
     negotiation_2_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Negotiation 2");
-        frm.fields_dict.negotiation_2_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "negotiation 2");
     },
     order_approval_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Order Approval");
-        frm.fields_dict.order_approval_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "order approval");
     },
     agreement_order_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Order Issue");
-        frm.fields_dict.agreement_order_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "agreement/order");
     },
-    introduction_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Introduction Meeting");
-        frm.fields_dict.introduction_attachments.grid.refresh();
+    introduction_meeting_attachments_add(frm, cdt, cdn) {
+        frappe.model.set_value(cdt, cdn, "stage", "introduction meeting");
     },
     mobilization_attachments_add(frm, cdt, cdn) {
-        frappe.model.set_value(cdt, cdn, "stage", "Mobilization");
-        frm.fields_dict.mobilization_attachments.grid.refresh();
+        frappe.model.set_value(cdt, cdn, "stage", "mobilization");
     }
 });
 
@@ -572,6 +559,13 @@ function get_duration_left_str(target_date, work_initiation=null) {
         let abs_diff = Math.abs(diff);
         return abs_diff === 1 ? "1 day delayed" : abs_diff + " days delayed";
     }
+}
+
+function get_next_working_day(date_val) {
+    if (date_val) {
+        return add_working_days(date_val, 1);
+    }
+    return null;
 }
 
 function calculate_all_dates(frm) {
@@ -795,10 +789,7 @@ function update_design_sample_section(frm, silent=false) {
     set_field_value(frm, "design_sample_days_planned", frm.doc.no_of_days_planned || null, silent);
     set_field_value(frm, "design_sample_target_date", frm.doc.target_date || null, silent);
     
-    let revised = null;
-    if (frm.doc.work_initiation && frm.doc.no_of_days_planned) {
-        revised = add_working_days(frm.doc.work_initiation, frm.doc.no_of_days_planned);
-    }
+    let revised = get_revised_date(frm.doc.work_initiation, frm.doc.target_date, frm.doc.no_of_days_planned);
     set_field_value(frm, "revised_planned_date", revised, silent);
     
     set_field_value(frm, "duration_left", get_duration_left_str(frm.doc.design_sample_target_date, frm.doc.work_initiation), silent);
@@ -815,13 +806,10 @@ function update_boq_section(frm, silent=false) {
     
     // Conditional to allow manual edits
     if (!frm.doc.boq_work_initiation && frm.doc.submission_date) {
-        set_field_value(frm, "boq_work_initiation", frm.doc.submission_date, silent);
+        set_field_value(frm, "boq_work_initiation", get_next_working_day(frm.doc.submission_date), silent);
     }
     
-    let revised = null;
-    if (frm.doc.boq_work_initiation && frm.doc.boq_no_of_days_planned) {
-        revised = add_working_days(frm.doc.boq_work_initiation, frm.doc.boq_no_of_days_planned);
-    }
+    let revised = get_revised_date(frm.doc.boq_work_initiation, frm.doc.boq_target_date, frm.doc.boq_submission_days_planned);
     set_field_value(frm, "revised_date", revised, silent);
     
     set_field_value(frm, "boq_duration_left", get_duration_left_str(frm.doc.boq_target_date, frm.doc.boq_work_initiation), silent);
@@ -838,13 +826,10 @@ function update_vendor_evaluation_section(frm, silent=false) {
     
     // Conditional to allow manual edits
     if (!frm.doc.vendor_evaluation_work_initiation && frm.doc.boq_submission_date) {
-        set_field_value(frm, "vendor_evaluation_work_initiation", frm.doc.boq_submission_date, silent);
+        set_field_value(frm, "vendor_evaluation_work_initiation", get_next_working_day(frm.doc.boq_submission_date), silent);
     }
     
-    let revised = null;
-    if (frm.doc.vendor_evaluation_work_initiation && frm.doc.vendor_evaluation_days_planned) {
-        revised = add_working_days(frm.doc.vendor_evaluation_work_initiation, frm.doc.vendor_evaluation_days_planned);
-    }
+    let revised = get_revised_date(frm.doc.vendor_evaluation_work_initiation, frm.doc.vendor_target_date, frm.doc.introduction_meet_days_planned);
     set_field_value(frm, "vendor_evaluation_revised_planned_date", revised, silent);
     
     set_field_value(frm, "vendor_evaluation_duration_left", get_duration_left_str(frm.doc.vendor_target_date, frm.doc.vendor_evaluation_work_initiation), silent);
@@ -861,13 +846,10 @@ function update_introduction_section(frm, silent=false) {
     
     // Conditional to allow manual edits
     if (!frm.doc.introduction_work_initiation && frm.doc.agreement_order_submit_date) {
-        set_field_value(frm, "introduction_work_initiation", frm.doc.agreement_order_submit_date, silent);
+        set_field_value(frm, "introduction_work_initiation", get_next_working_day(frm.doc.agreement_order_submit_date), silent);
     }
     
-    let revised = null;
-    if (frm.doc.introduction_work_initiation && frm.doc.introduction_days_planned) {
-        revised = add_working_days(frm.doc.introduction_work_initiation, frm.doc.introduction_days_planned);
-    }
+    let revised = get_revised_date(frm.doc.introduction_work_initiation, frm.doc.introduction_target_date, frm.doc.introduction_meeting_days_planned);
     set_field_value(frm, "introduction_revised_planned_date", revised, silent);
     
     set_field_value(frm, "introduction_duration_left", get_duration_left_str(frm.doc.introduction_target_date, frm.doc.introduction_work_initiation), silent);
@@ -891,61 +873,43 @@ function update_order_closure_section(frm, silent=false) {
     set_field_value(frm, "order_approval_target", frm.doc.order_approval_target_date || null, silent);
     set_field_value(frm, "agreement_order_days_planned", frm.doc.agreement_no_of_days_planned || null, silent);
     set_field_value(frm, "agreement_order_target_date", frm.doc.agreement_target_date || null, silent);
-
+    
     // Conditional to allow manual edits
     if (!frm.doc.floating_enquiries_work_initiation && frm.doc.vendor_evaluation_submission_date) {
-        set_field_value(frm, "floating_enquiries_work_initiation", frm.doc.vendor_evaluation_submission_date, silent);
+        set_field_value(frm, "floating_enquiries_work_initiation", get_next_working_day(frm.doc.vendor_evaluation_submission_date), silent);
     }
     if (!frm.doc.pre_bid_technical_meeting_work_initiation && frm.doc.floating_enquiries_submission_date) {
-        set_field_value(frm, "pre_bid_technical_meeting_work_initiation", frm.doc.floating_enquiries_submission_date, silent);
+        set_field_value(frm, "pre_bid_technical_meeting_work_initiation", get_next_working_day(frm.doc.floating_enquiries_submission_date), silent);
     }
     if (!frm.doc.negotiations_1_work_initiation && frm.doc.pre_bid_technical_meeting_submission_date) {
-        set_field_value(frm, "negotiations_1_work_initiation", frm.doc.pre_bid_technical_meeting_submission_date, silent);
+        set_field_value(frm, "negotiations_1_work_initiation", get_next_working_day(frm.doc.pre_bid_technical_meeting_submission_date), silent);
     }
     if (!frm.doc.negotiations_2_work_initiation && frm.doc.negotiations_1_submit_date) {
-        set_field_value(frm, "negotiations_2_work_initiation", frm.doc.negotiations_1_submit_date, silent);
+        set_field_value(frm, "negotiations_2_work_initiation", get_next_working_day(frm.doc.negotiations_1_submit_date), silent);
     }
     if (!frm.doc.order_approval_work_initiation && frm.doc.negotiations_2_submit_date) {
-        set_field_value(frm, "order_approval_work_initiation", frm.doc.negotiations_2_submit_date, silent);
+        set_field_value(frm, "order_approval_work_initiation", get_next_working_day(frm.doc.negotiations_2_submit_date), silent);
     }
     if (!frm.doc.agreement_order_work_initiation && frm.doc.order_approval_submit_date) {
-        set_field_value(frm, "agreement_order_work_initiation", frm.doc.order_approval_submit_date, silent);
+        set_field_value(frm, "agreement_order_work_initiation", get_next_working_day(frm.doc.order_approval_submit_date), silent);
     }
 
-    let float_revised = null;
-    if (frm.doc.floating_enquiries_work_initiation && frm.doc.floating_enquiries_no_of_days_planned) {
-        float_revised = add_working_days(frm.doc.floating_enquiries_work_initiation, frm.doc.floating_enquiries_no_of_days_planned);
-    }
+    let float_revised = get_revised_date(frm.doc.floating_enquiries_work_initiation, frm.doc.floating_enquiries_target, frm.doc.floating_enquiries_days_planned);
     set_field_value(frm, "floating_enquiries_revised_planned_date", float_revised, silent);
 
-    let prebid_revised = null;
-    if (frm.doc.pre_bid_technical_meeting_work_initiation && frm.doc.pre_bid_technical_meeting_no_of_days_planned) {
-        prebid_revised = add_working_days(frm.doc.pre_bid_technical_meeting_work_initiation, frm.doc.pre_bid_technical_meeting_no_of_days_planned);
-    }
+    let prebid_revised = get_revised_date(frm.doc.pre_bid_technical_meeting_work_initiation, frm.doc.pre_bid_technical_meeting_target_date, frm.doc.pre_bid_no_of_days_planned);
     set_field_value(frm, "pre_bid_technical_meeting_revised_planned_date", prebid_revised, silent);
 
-    let neg1_revised = null;
-    if (frm.doc.negotiations_1_work_initiation && frm.doc.negotiations_1_days_plan) {
-        neg1_revised = add_working_days(frm.doc.negotiations_1_work_initiation, frm.doc.negotiations_1_days_plan);
-    }
+    let neg1_revised = get_revised_date(frm.doc.negotiations_1_work_initiation, frm.doc.negotiations_1_target_date, frm.doc.quotation_1_days_planned);
     set_field_value(frm, "negotiations_1_rev_plan_date", neg1_revised, silent);
 
-    let neg2_revised = null;
-    if (frm.doc.negotiations_2_work_initiation && frm.doc.negotiations_2_days_plan) {
-        neg2_revised = add_working_days(frm.doc.negotiations_2_work_initiation, frm.doc.negotiations_2_days_plan);
-    }
+    let neg2_revised = get_revised_date(frm.doc.negotiations_2_work_initiation, frm.doc.negotiations_2_target_date, frm.doc.quotation_2_days_planned);
     set_field_value(frm, "negotiations_2_rev_plan_date", neg2_revised, silent);
 
-    let approval_revised = null;
-    if (frm.doc.order_approval_work_initiation && frm.doc.order_approval_days) {
-        approval_revised = add_working_days(frm.doc.order_approval_work_initiation, frm.doc.order_approval_days);
-    }
+    let approval_revised = get_revised_date(frm.doc.order_approval_work_initiation, frm.doc.order_approval_target, frm.doc.order_approval_days_planned);
     set_field_value(frm, "order_approval_revised_date", approval_revised, silent);
 
-    let agreement_revised = null;
-    if (frm.doc.agreement_order_work_initiation && frm.doc.agreement_order_days_planned) {
-        agreement_revised = add_working_days(frm.doc.agreement_order_work_initiation, frm.doc.agreement_order_days_planned);
-    }
+    let agreement_revised = get_revised_date(frm.doc.agreement_order_work_initiation, frm.doc.agreement_order_target_date, frm.doc.agreement_no_of_days_planned);
     set_field_value(frm, "agreement_order_revised_plan_date", agreement_revised, silent);
 
     // Timeline Status for all Order Closure sub-stages
@@ -991,18 +955,13 @@ function update_order_closure_section(frm, silent=false) {
 function update_vendor_onboarding_section(frm, silent=false) {
     set_field_value(frm, "final_vendor_name", frm.doc.finalized_vendor_name || null, silent);
     set_field_value(frm, "vendor_contact_details", frm.doc.contact_details || null, silent);
-    set_field_value(frm, "mobilization_days_planned", frm.doc.vendor_days_planned || null, silent);
-    set_field_value(frm, "mobilization_target_date", frm.doc.vendor_mobilization_target_date || null, silent);
     
     // Conditional to allow manual edits
     if (!frm.doc.mobilization_work_initiation && frm.doc.introduction_submission_date) {
-        set_field_value(frm, "mobilization_work_initiation", frm.doc.introduction_submission_date, silent);
+        set_field_value(frm, "mobilization_work_initiation", get_next_working_day(frm.doc.introduction_submission_date), silent);
     }
     
-    let revised = null;
-    if (frm.doc.mobilization_work_initiation && frm.doc.mobilization_days_planned) {
-        revised = add_working_days(frm.doc.mobilization_work_initiation, frm.doc.mobilization_days_planned);
-    }
+    let revised = get_revised_date(frm.doc.mobilization_work_initiation, frm.doc.mobilization_target_date, frm.doc.mobilization_days_planned);
     set_field_value(frm, "mobilization_revised_planned_date", revised, silent);
     
     set_field_value(frm, "mobilization_duration_left", get_duration_left_str(frm.doc.mobilization_target_date, frm.doc.mobilization_work_initiation), silent);
@@ -1019,33 +978,20 @@ function update_vendor_onboarding_section(frm, silent=false) {
 }
 
 frappe.ui.form.on("Tender Attachment", {
-    tender_attachment_add(frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        const mapping = {
-            "schematic_attachments": "Schematic",
-            "boq_attachments": "BOQ",
-            "negotiation_1_attachments": "Negotiation 1",
-            "negotiation_2_attachments": "Negotiation 2",
-            "order_approval_attachments": "Order Approval",
-            "agreement_order_attachments": "Order Issue",
-            "introduction_attachments": "Introduction Meeting",
-            "mobilization_attachments": "Mobilization"
-        };
-        if (row.parentfield && mapping[row.parentfield]) {
-            frappe.model.set_value(cdt, cdn, "stage", mapping[row.parentfield]);
-        }
-    },
     attachment(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         const mapping = {
-            "schematic_attachments": "Schematic",
-            "boq_attachments": "BOQ",
-            "negotiation_1_attachments": "Negotiation 1",
-            "negotiation_2_attachments": "Negotiation 2",
-            "order_approval_attachments": "Order Approval",
-            "agreement_order_attachments": "Order Issue",
-            "introduction_attachments": "Introduction Meeting",
-            "mobilization_attachments": "Mobilization"
+            "schematic_attachments": "schematic",
+            "boq_attachments": "boq",
+            "vendor_evaluation_attachments": "vendor evaluation",
+            "floating_enquiries_attachments": "floating enquiries",
+            "pre_bid_technical_meeting_attachments": "pre-bid / technical meeting",
+            "negotiation_1_attachments": "negotiation 1",
+            "negotiation_2_attachments": "negotiation 2",
+            "order_approval_attachments": "order approval",
+            "agreement_order_attachments": "agreement/order",
+            "introduction_meeting_attachments": "introduction meeting",
+            "mobilization_attachments": "mobilization"
         };
         if (row.parentfield && mapping[row.parentfield]) {
             frappe.model.set_value(cdt, cdn, "stage", mapping[row.parentfield]);
@@ -1053,25 +999,92 @@ frappe.ui.form.on("Tender Attachment", {
     }
 });
 
-function set_attachment_stages(frm) {
-    const mapping = {
-        "schematic_attachments": "Schematic",
-        "boq_attachments": "BOQ",
-        "negotiation_1_attachments": "Negotiation 1",
-        "negotiation_2_attachments": "Negotiation 2",
-        "order_approval_attachments": "Order Approval",
-        "agreement_order_attachments": "Order Issue",
-        "introduction_attachments": "Introduction Meeting",
-        "mobilization_attachments": "Mobilization"
-    };
-
-    for (let fieldname in mapping) {
-        let stage_val = mapping[fieldname];
-        let rows = frm.doc[fieldname] || [];
-        rows.forEach((row) => {
-            if (row.stage !== stage_val) {
-                frappe.model.set_value(row.doctype, row.name, "stage", stage_val);
-            }
-        });
+function update_approx_value_in_words(frm) {
+    let val = frm.doc.approx_value_in_lakhs;
+    if (val) {
+        let amount_in_rupees = val * 100000;
+        let words = num_to_words_indian(amount_in_rupees);
+        if (words) {
+            frm.set_df_property("approx_value_in_lakhs", "description", `<b>In Words:</b> ${words}`);
+        } else {
+            frm.set_df_property("approx_value_in_lakhs", "description", "");
+        }
+    } else {
+        frm.set_df_property("approx_value_in_lakhs", "description", "");
     }
+}
+
+function convert_whole_number(num) {
+    const a = [
+        "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+        "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+    ];
+    const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    
+    if (num === 0) return "Zero";
+    
+    function helper(n) {
+        let temp = "";
+        if (n < 20) {
+            temp = a[n];
+        } else if (n < 100) {
+            temp = b[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + a[n % 10] : "");
+        } else {
+            temp = a[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " " + helper(n % 100) : "");
+        }
+        return temp;
+    }
+    
+    let result = "";
+    
+    // Crore (1,00,00,000)
+    let crore = Math.floor(num / 10000000);
+    num %= 10000000;
+    if (crore > 0) {
+        result += helper(crore) + " Crore ";
+    }
+    
+    // Lakh (1,00,000)
+    let lakh = Math.floor(num / 100000);
+    num %= 100000;
+    if (lakh > 0) {
+        result += helper(lakh) + " Lakh ";
+    }
+    
+    // Thousand (1,000)
+    let thousand = Math.floor(num / 1000);
+    num %= 1000;
+    if (thousand > 0) {
+        result += helper(thousand) + " Thousand ";
+    }
+    
+    // Hundred and remaining
+    if (num > 0) {
+        result += helper(num);
+    }
+    
+    return result.trim();
+}
+
+function num_to_words_indian(num) {
+    if (isNaN(num) || num <= 0) return "";
+    
+    num = Math.round(num * 100) / 100;
+    
+    let str = num.toFixed(2);
+    let parts = str.split('.');
+    let whole = parseInt(parts[0]);
+    let decimal = parseInt(parts[1]);
+    
+    let words = "";
+    
+    if (whole > 0 && decimal > 0) {
+        words = convert_whole_number(whole) + " Rupees and " + convert_whole_number(decimal) + " Paise Only";
+    } else if (whole > 0) {
+        words = convert_whole_number(whole) + " Rupees Only";
+    } else if (decimal > 0) {
+        words = convert_whole_number(decimal) + " Paise Only";
+    }
+    
+    return words;
 }

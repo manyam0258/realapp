@@ -20,28 +20,61 @@ class Tender(Document):
         db_state = self.get_db_value("workflow_state")
         if db_state and self.workflow_state and db_state != self.workflow_state:
             today_str = frappe.utils.today()
-            if self.workflow_state == "BOQ Submission" and db_state == "Design Sample / Drawings":
-                if not self.submission_date:
-                    self.submission_date = today_str
-            elif self.workflow_state == "Order Closure" and db_state == "BOQ Submission":
-                if not self.boq_submission_date:
-                    self.boq_submission_date = today_str
-            elif self.workflow_state == "Vendor Finalisation" and db_state == "Order Closure":
-                for field in [
-                    "vendor_evaluation_submission_date",
-                    "floating_enquiries_submission_date",
-                    "pre_bid_technical_meeting_submission_date",
-                    "negotiations_1_submit_date",
-                    "negotiations_2_submit_date",
-                    "order_approval_submit_date",
-                    "agreement_order_submit_date"
-                ]:
-                    if not getattr(self, field):
-                        setattr(self, field, today_str)
-            elif self.workflow_state == "Completed" and db_state == "Vendor Finalisation":
-                for field in ["introduction_submission_date", "mobilization_submit_date"]:
-                    if not getattr(self, field):
-                        setattr(self, field, today_str)
+
+            if self._was_sent_back_to(self.workflow_state):
+                next_day = self.add_working_days(getdate(today_str), 1)
+                if self.workflow_state == "Tender Creation":
+                    self.initiated_date = next_day
+                elif self.workflow_state == "Design Sample / Drawings":
+                    self.submission_date = None
+                    self.work_initiation = next_day
+                elif self.workflow_state == "BOQ Submission":
+                    self.boq_submission_date = None
+                    self.boq_work_initiation = next_day
+                elif self.workflow_state == "Evaluation Process":
+                    self.vendor_evaluation_submission_date = None
+                    self.floating_enquiries_submission_date = None
+                    self.pre_bid_technical_meeting_submission_date = None
+                    self.negotiations_1_submit_date = None
+                    self.negotiations_2_submit_date = None
+                    self.vendor_evaluation_work_initiation = next_day
+                elif self.workflow_state == "Order Closure":
+                    self.order_approval_submit_date = None
+                    self.agreement_order_submit_date = None
+                    self.order_approval_work_initiation = next_day
+                elif self.workflow_state == "Vendor Finalisation":
+                    self.introduction_submission_date = None
+                    self.mobilization_submit_date = None
+                    self.introduction_work_initiation = next_day
+                    self.mobilization_work_initiation = next_day
+            else:
+                if self.workflow_state == "BOQ Submission" and db_state == "Design Sample / Drawings":
+                    if not self.submission_date:
+                        self.submission_date = today_str
+                elif self.workflow_state == "Evaluation Process" and db_state == "BOQ Submission":
+                    if not self.boq_submission_date:
+                        self.boq_submission_date = today_str
+                elif self.workflow_state == "Order Closure" and db_state == "Evaluation Process":
+                    for field in [
+                        "vendor_evaluation_submission_date",
+                        "floating_enquiries_submission_date",
+                        "pre_bid_technical_meeting_submission_date",
+                        "negotiations_1_submit_date",
+                        "negotiations_2_submit_date"
+                    ]:
+                        if not getattr(self, field):
+                            setattr(self, field, today_str)
+                elif self.workflow_state == "Vendor Finalisation" and db_state == "Order Closure":
+                    for field in [
+                        "order_approval_submit_date",
+                        "agreement_order_submit_date"
+                    ]:
+                        if not getattr(self, field):
+                            setattr(self, field, today_str)
+                elif self.workflow_state == "Completed" and db_state == "Vendor Finalisation":
+                    for field in ["introduction_submission_date", "mobilization_submit_date"]:
+                        if not getattr(self, field):
+                            setattr(self, field, today_str)
 
             # Handle revision status increment on Send Back transitions
             self.update_revision_status_on_sendback(db_state)
@@ -117,27 +150,32 @@ class Tender(Document):
         else:
             self.submission_status = "Yet to Submit"
 
-        # Chaining of dates: work initiation of next stage = submission date of previous stage (conditional to allow manual edits)
+        # Chaining of dates: work initiation of next stage = submission date of previous stage + 1 day (excluding Sundays)
+        def get_next_working_day(date_val):
+            if date_val:
+                return self.add_working_days(getdate(date_val), 1)
+            return None
+
         if not self.boq_work_initiation or self.has_value_changed("submission_date"):
-            self.boq_work_initiation = self.submission_date
+            self.boq_work_initiation = get_next_working_day(self.submission_date)
         if not self.vendor_evaluation_work_initiation or self.has_value_changed("boq_submission_date"):
-            self.vendor_evaluation_work_initiation = self.boq_submission_date
+            self.vendor_evaluation_work_initiation = get_next_working_day(self.boq_submission_date)
         if not self.floating_enquiries_work_initiation or self.has_value_changed("vendor_evaluation_submission_date"):
-            self.floating_enquiries_work_initiation = self.vendor_evaluation_submission_date
+            self.floating_enquiries_work_initiation = get_next_working_day(self.vendor_evaluation_submission_date)
         if not self.pre_bid_technical_meeting_work_initiation or self.has_value_changed("floating_enquiries_submission_date"):
-            self.pre_bid_technical_meeting_work_initiation = self.floating_enquiries_submission_date
+            self.pre_bid_technical_meeting_work_initiation = get_next_working_day(self.floating_enquiries_submission_date)
         if not self.negotiations_1_work_initiation or self.has_value_changed("pre_bid_technical_meeting_submission_date"):
-            self.negotiations_1_work_initiation = self.pre_bid_technical_meeting_submission_date
+            self.negotiations_1_work_initiation = get_next_working_day(self.pre_bid_technical_meeting_submission_date)
         if not self.negotiations_2_work_initiation or self.has_value_changed("negotiations_1_submit_date"):
-            self.negotiations_2_work_initiation = self.negotiations_1_submit_date
+            self.negotiations_2_work_initiation = get_next_working_day(self.negotiations_1_submit_date)
         if not self.order_approval_work_initiation or self.has_value_changed("negotiations_2_submit_date"):
-            self.order_approval_work_initiation = self.negotiations_2_submit_date
+            self.order_approval_work_initiation = get_next_working_day(self.negotiations_2_submit_date)
         if not self.agreement_order_work_initiation or self.has_value_changed("order_approval_submit_date"):
-            self.agreement_order_work_initiation = self.order_approval_submit_date
+            self.agreement_order_work_initiation = get_next_working_day(self.order_approval_submit_date)
         if not self.introduction_work_initiation or self.has_value_changed("agreement_order_submit_date"):
-            self.introduction_work_initiation = self.agreement_order_submit_date
+            self.introduction_work_initiation = get_next_working_day(self.agreement_order_submit_date)
         if not self.mobilization_work_initiation or self.has_value_changed("introduction_submission_date"):
-            self.mobilization_work_initiation = self.introduction_submission_date
+            self.mobilization_work_initiation = get_next_working_day(self.introduction_submission_date)
 
         self.boq_no_of_days_planned = self.boq_submission_days_planned
         self.boq_target_date = self.boq_submission_target_date
@@ -160,8 +198,6 @@ class Tender(Document):
         # Stage 4: Floating Enquiries
         self.floating_enquiries_no_of_days_planned = self.floating_enquiries_days_planned
         self.floating_enquiries_target = self.floating_enquiries_target_date
-        if not self.floating_enquiries_work_initiation or self.has_value_changed("vendor_evaluation_submission_date"):
-            self.floating_enquiries_work_initiation = self.vendor_evaluation_submission_date
         self.floating_enquiries_duration_left = self.get_duration_left_str(self.floating_enquiries_target, self.floating_enquiries_work_initiation)
         if self.floating_enquiries_submission_date:
             self.floating_enquiries_submission_status = "Submitted"
@@ -171,8 +207,6 @@ class Tender(Document):
         # Stage 5: Pre-Bid / Technical Meeting
         self.pre_bid_technical_meeting_no_of_days_planned = self.pre_bid_no_of_days_planned
         self.pre_bid_technical_meeting_target_date = self.pre_bid_target_date
-        if not self.pre_bid_technical_meeting_work_initiation or self.has_value_changed("floating_enquiries_submission_date"):
-            self.pre_bid_technical_meeting_work_initiation = self.floating_enquiries_submission_date
         self.pre_bid_technical_meeting_duration_left = self.get_duration_left_str(self.pre_bid_technical_meeting_target_date, self.pre_bid_technical_meeting_work_initiation)
         if self.pre_bid_technical_meeting_submission_date:
             self.pre_bid_technical_meeting_submission_status = "Submitted"
@@ -182,8 +216,6 @@ class Tender(Document):
         # Stage 6: Negotiations 1
         self.negotiations_1_days_plan = self.quotation_1_days_planned
         self.negotiations_1_target_date = self.quotation_1_target_date
-        if not self.negotiations_1_work_initiation or self.has_value_changed("pre_bid_technical_meeting_submission_date"):
-            self.negotiations_1_work_initiation = self.pre_bid_technical_meeting_submission_date
         self.negotiations_1_duration_left = self.get_duration_left_str(self.negotiations_1_target_date, self.negotiations_1_work_initiation)
         if self.negotiations_1_submit_date:
             self.negotiations_1_submit_status = "Submitted"
@@ -193,8 +225,6 @@ class Tender(Document):
         # Stage 7: Negotiations 2
         self.negotiations_2_days_plan = self.quotation_2_days_planned
         self.negotiations_2_target_date = self.quotation_2_target_date
-        if not self.negotiations_2_work_initiation or self.has_value_changed("negotiations_1_submit_date"):
-            self.negotiations_2_work_initiation = self.negotiations_1_submit_date
         self.negotiations_2_duration_left = self.get_duration_left_str(self.negotiations_2_target_date, self.negotiations_2_work_initiation)
         if self.negotiations_2_submit_date:
             self.negotiations_2_submit_status = "Submitted"
@@ -204,8 +234,6 @@ class Tender(Document):
         # Stage 8: Order Approval
         self.order_approval_days = self.order_approval_days_planned
         self.order_approval_target = self.order_approval_target_date
-        if not self.order_approval_work_initiation or self.has_value_changed("negotiations_2_submit_date"):
-            self.order_approval_work_initiation = self.negotiations_2_submit_date
         self.order_approval_duration_left = self.get_duration_left_str(self.order_approval_target, self.order_approval_work_initiation)
         if self.order_approval_submit_date:
             self.order_approval_submit_status = "Submitted"
@@ -215,8 +243,6 @@ class Tender(Document):
         # Stage 9: Agreement Order
         self.agreement_order_days_planned = self.agreement_no_of_days_planned
         self.agreement_order_target_date = self.agreement_target_date
-        if not self.agreement_order_work_initiation or self.has_value_changed("order_approval_submit_date"):
-            self.agreement_order_work_initiation = self.order_approval_submit_date
         self.agreement_order_duration_left = self.get_duration_left_str(self.agreement_order_target_date, self.agreement_order_work_initiation)
         if self.agreement_order_submit_date:
             self.agreement_order_submission = "Submitted"
@@ -234,10 +260,6 @@ class Tender(Document):
             self.introduction_submission_status = "Yet to Submit"
 
         # Stage 11: Mobilization
-        self.mobilization_days_planned = self.vendor_days_planned
-        self.mobilization_target_date = self.vendor_mobilization_target_date
-        if not self.mobilization_work_initiation or self.has_value_changed("introduction_submission_date"):
-            self.mobilization_work_initiation = self.introduction_submission_date
         self.mobilization_duration_left = self.get_duration_left_str(self.mobilization_target_date, self.mobilization_work_initiation)
         if self.mobilization_submit_date:
             self.mobilization_submit_status = "Submitted"
@@ -245,7 +267,6 @@ class Tender(Document):
             self.mobilization_submit_status = "Yet to Submit"
         self.set_ref_no()
         self.calculate_revised_target_dates()
-        self.set_attachment_stages()
 
     def get_duration_left_str(self, target_date, work_initiation=None):
         if target_date:
@@ -273,17 +294,20 @@ class Tender(Document):
             if self.is_new() or not self.ref_no:
                 existing = frappe.get_all(
                     "Tender",
+                    filters={
+                        "custom_work_package": self.custom_work_package
+                    },
                     pluck="ref_no"
                 )
                 max_no = 0
                 for ref in existing:
-                    if ref and ref.startswith("TR-"):
+                    if ref and ref.startswith(f"{self.custom_work_package}-"):
                         try:
-                            num = int(ref.replace("TR-", ""))
+                            num = int(ref.split("-")[-1])
                             max_no = max(max_no, num)
                         except Exception:
                             pass
-                self.ref_no = f"TR-{max_no + 1}"
+                self.ref_no = f"{self.custom_work_package}-{max_no + 1}"
         elif self.data_reference == "Order Request Mail":
             if not self.ref_no:
                 frappe.throw(
@@ -297,7 +321,8 @@ class Tender(Document):
             "Tender Creation": "revision_status",
             "Design Sample / Drawings": "revision_status",
             "BOQ Submission": "boq_revision_status",
-            "Order Closure": "vendor_evaluation_revision_status",
+            "Evaluation Process": "vendor_evaluation_revision_status",
+            "Order Closure": "order_approval_revision_status",
             "Vendor Finalisation": "introduction_revision_status"
         }
 
@@ -316,14 +341,15 @@ class Tender(Document):
     def _was_sent_back_to(self, target_state):
         """Check if the document was sent back (not forward) to the target state."""
         # The workflow transition is a send back if the target state is earlier in the workflow
-        # States in order: Tender Creation < Design Sample / Drawings < BOQ Submission < Order Closure < Vendor Finalisation < Completed
+        # States in order: Tender Creation < Design Sample / Drawings < BOQ Submission < Evaluation Process < Order Closure < Vendor Finalisation < Completed
         state_order = {
             "Tender Creation": 1,
             "Design Sample / Drawings": 2,
             "BOQ Submission": 3,
-            "Order Closure": 4,
-            "Vendor Finalisation": 5,
-            "Completed": 6
+            "Evaluation Process": 4,
+            "Order Closure": 5,
+            "Vendor Finalisation": 6,
+            "Completed": 7
         }
         db_state = self.get_db_value("workflow_state")
         if db_state and db_state in state_order and target_state in state_order:
@@ -340,107 +366,57 @@ class Tender(Document):
             return None
 
         # Tab 2: Schematic Readiness
-        if self.work_initiation and self.no_of_days_planned:
-            self.revised_planned_date = self.add_working_days(
-                getdate(self.work_initiation), int(self.no_of_days_planned)
-            )
-        else:
-            self.revised_planned_date = None
+        self.revised_planned_date = calculate_revised(
+            self.work_initiation, self.target_date, self.no_of_days_planned
+        )
 
         # Tab 3: BOQ Submission
-        if self.boq_work_initiation and self.boq_submission_days_planned:
-            self.revised_date = self.add_working_days(
-                getdate(self.boq_work_initiation), int(self.boq_submission_days_planned)
-            )
-        else:
-            self.revised_date = None
+        self.revised_date = calculate_revised(
+            self.boq_work_initiation, self.boq_target_date, self.boq_submission_days_planned
+        )
 
         # Tab 4: Order Closure - Vendor Evaluation
         # Note: Fixed discrepancy using introduction_meet_days_planned instead of introduction_meeting_days_planned
-        # Tab 4: Order Closure - Vendor Evaluation
-        # Note: Fixed discrepancy using introduction_meet_days_planned instead of introduction_meeting_days_planned
-        if self.vendor_evaluation_work_initiation and self.introduction_meet_days_planned:
-            self.vendor_evaluation_revised_planned_date = self.add_working_days(
-                getdate(self.vendor_evaluation_work_initiation), int(self.introduction_meet_days_planned)
-            )
-        else:
-            self.vendor_evaluation_revised_planned_date = None
+        self.vendor_evaluation_revised_planned_date = calculate_revised(
+            self.vendor_evaluation_work_initiation, self.vendor_target_date, self.introduction_meet_days_planned
+        )
 
         # Tab 4: Floating Enquiries
-        if self.floating_enquiries_work_initiation and self.floating_enquiries_days_planned:
-            self.floating_enquiries_revised_planned_date = self.add_working_days(
-                getdate(self.floating_enquiries_work_initiation), int(self.floating_enquiries_days_planned)
-            )
-        else:
-            self.floating_enquiries_revised_planned_date = None
+        self.floating_enquiries_revised_planned_date = calculate_revised(
+            self.floating_enquiries_work_initiation, self.floating_enquiries_target, self.floating_enquiries_days_planned
+        )
 
         # Tab 4: Pre-Bid Technical Meeting
-        if self.pre_bid_technical_meeting_work_initiation and self.pre_bid_no_of_days_planned:
-            self.pre_bid_technical_meeting_revised_planned_date = self.add_working_days(
-                getdate(self.pre_bid_technical_meeting_work_initiation), int(self.pre_bid_no_of_days_planned)
-            )
-        else:
-            self.pre_bid_technical_meeting_revised_planned_date = None
+        self.pre_bid_technical_meeting_revised_planned_date = calculate_revised(
+            self.pre_bid_technical_meeting_work_initiation, self.pre_bid_technical_meeting_target_date, self.pre_bid_no_of_days_planned
+        )
 
         # Tab 4: Negotiations 1
-        if self.negotiations_1_work_initiation and self.quotation_1_days_planned:
-            self.negotiations_1_rev_plan_date = self.add_working_days(
-                getdate(self.negotiations_1_work_initiation), int(self.quotation_1_days_planned)
-            )
-        else:
-            self.negotiations_1_rev_plan_date = None
+        self.negotiations_1_rev_plan_date = calculate_revised(
+            self.negotiations_1_work_initiation, self.negotiations_1_target_date, self.quotation_1_days_planned
+        )
 
         # Tab 4: Negotiations 2
-        if self.negotiations_2_work_initiation and self.quotation_2_days_planned:
-            self.negotiations_2_rev_plan_date = self.add_working_days(
-                getdate(self.negotiations_2_work_initiation), int(self.quotation_2_days_planned)
-            )
-        else:
-            self.negotiations_2_rev_plan_date = None
+        self.negotiations_2_rev_plan_date = calculate_revised(
+            self.negotiations_2_work_initiation, self.negotiations_2_target_date, self.quotation_2_days_planned
+        )
 
         # Tab 4: Order Approval
-        if self.order_approval_work_initiation and self.order_approval_days_planned:
-            self.order_approval_revised_date = self.add_working_days(
-                getdate(self.order_approval_work_initiation), int(self.order_approval_days_planned)
-            )
-        else:
-            self.order_approval_revised_date = None
+        self.order_approval_revised_date = calculate_revised(
+            self.order_approval_work_initiation, self.order_approval_target, self.order_approval_days_planned
+        )
 
         # Tab 5: Agreement Order
-        if self.agreement_order_work_initiation and self.agreement_no_of_days_planned:
-            self.agreement_order_revised_plan_date = self.add_working_days(
-                getdate(self.agreement_order_work_initiation), int(self.agreement_no_of_days_planned)
-            )
-        else:
-            self.agreement_order_revised_plan_date = None
+        self.agreement_order_revised_plan_date = calculate_revised(
+            self.agreement_order_work_initiation, self.agreement_order_target_date, self.agreement_no_of_days_planned
+        )
 
         # Tab 5: Introduction Meeting
-        if self.introduction_work_initiation and self.introduction_meeting_days_planned:
-            self.introduction_revised_planned_date = self.add_working_days(
-                getdate(self.introduction_work_initiation), int(self.introduction_meeting_days_planned)
-            )
-        else:
-            self.introduction_revised_planned_date = None
+        self.introduction_revised_planned_date = calculate_revised(
+            self.introduction_work_initiation, self.introduction_target_date, self.introduction_meeting_days_planned
+        )
 
         # Tab 5: Mobilization
-        if self.mobilization_work_initiation and self.mobilization_days_planned:
-            self.mobilization_revised_planned_date = self.add_working_days(
-                getdate(self.mobilization_work_initiation), int(self.mobilization_days_planned)
-            )
-        else:
-            self.mobilization_revised_planned_date = None
-
-    def set_attachment_stages(self):
-        mapping = {
-            "schematic_attachments": "Schematic",
-            "boq_attachments": "BOQ",
-            "negotiation_1_attachments": "Negotiation 1",
-            "negotiation_2_attachments": "Negotiation 2",
-            "order_approval_attachments": "Order Approval",
-            "agreement_order_attachments": "Order Issue",
-            "introduction_attachments": "Introduction Meeting",
-            "mobilization_attachments": "Mobilization"
-        }
-        for fieldname, stage_val in mapping.items():
-            for row in self.get(fieldname) or []:
-                row.stage = stage_val
+        self.mobilization_revised_planned_date = calculate_revised(
+            self.mobilization_work_initiation, self.mobilization_target_date, self.mobilization_days_planned
+        )

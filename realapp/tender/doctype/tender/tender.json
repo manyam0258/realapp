@@ -114,34 +114,34 @@
   "vendor_evaluation_work_initiation",
   "vendor_evaluation_revised_planned_date",
   "vendor_evaluation_submission_date",
+  "vendor_evaluation_attachments",
   "column_break_rpnu",
   "vendor_target_date",
   "vendor_evaluation_duration_left",
   "vendor_evaluation_revision_status",
   "vendor_evaluation_submission_status",
-  "vendor_evaluation_remarks",
   "floating_enquiries_section",
   "floating_enquiries_no_of_days_planned",
   "floating_enquiries_work_initiation",
   "floating_enquiries_revised_planned_date",
   "floating_enquiries_submission_date",
+  "floating_enquiries_attachments",
   "column_break_zozx",
   "floating_enquiries_target",
   "floating_enquiries_duration_left",
   "floating_enquiries_revision_status",
   "floating_enquiries_submission_status",
-  "floating_enquiries_remarks",
   "pre_bid_or_technical_meeting_section",
   "pre_bid_technical_meeting_no_of_days_planned",
   "pre_bid_technical_meeting_work_initiation",
   "pre_bid_technical_meeting_revised_planned_date",
   "pre_bid_technical_meeting_submission_date",
+  "pre_bid_technical_meeting_attachments",
   "column_break_naga",
   "pre_bid_technical_meeting_target_date",
   "pre_bid_technical_meeting_duration_left",
   "pre_bid_technical_meeting_revision_status",
   "pre_bid_technical_meeting_submission_status",
-  "pre_bid_technical_meeting_remarks",
   "quotations_collection_rate_comparison_and_negotiation__1_section",
   "negotiations_1_days_plan",
   "negotiations_1_work_initiation",
@@ -153,7 +153,6 @@
   "negotiations_1_duration_left",
   "negotiations_1_revision_status",
   "negotiations_1_submit_status",
-  "negotiations_1_remarks",
   "quotations_collection_rate_comparison_and_negotiation_2_section",
   "negotiations_2_days_plan",
   "negotiations_2_work_initiation",
@@ -165,7 +164,11 @@
   "negotiations_2_duration_left",
   "negotiations_2_revision_status",
   "negotiations_2_submit_status",
-  "negotiations_2_remarks",
+  "section_break_eval_remarks",
+  "evaluation_remarks",
+  "column_break_eval_remarks",
+  "evaluation_send_back_remarks",
+  "order_closure_tab",
   "orders_approval_section",
   "order_approval_days",
   "order_approval_work_initiation",
@@ -177,7 +180,6 @@
   "order_approval_duration_left",
   "order_approval_revision_status",
   "order_approval_submit_status",
-  "order_approval_remarks",
   "agreement_or_order_issue_section",
   "agreement_order_days_planned",
   "agreement_order_work_initiation",
@@ -189,7 +191,6 @@
   "agreement_order_duration_left",
   "agreement_order_revision_status",
   "agreement_order_submission",
-  "agreement_order_remarks",
   "section_break_tyfm",
   "finalized_vendor_name",
   "column_break_eawb",
@@ -208,26 +209,24 @@
   "introduction_work_initiation",
   "introduction_revised_planned_date",
   "introduction_submission_date",
+  "introduction_meeting_attachments",
   "column_break_vgli",
   "introduction_target_date",
   "introduction_duration_left",
   "introduction_revision_status",
   "introduction_submission_status",
-  "introduction_remarks",
-  "introduction_attachments",
   "vendor_mobilization_and_work_commencement_section",
   "mobilization_days_planned",
   "mobilization_work_initiation",
   "mobilization_revised_planned_date",
   "mobilization_submit_date",
+  "mobilization_attachments",
   "vendor_onboarding_remarks",
   "column_break_udrn",
   "mobilization_target_date",
   "mobilization_duration_left",
   "mobilization_revision_status",
   "mobilization_submit_status",
-  "mobilization_remarks",
-  "mobilization_attachments",
   "amended_from",
   "vendor_onboarding_send_back_remarks"
  ],
@@ -260,11 +259,10 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "RISE",
    "fieldname": "project",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Project",
-   "read_only": 1
+   "options": "Project"
   },
   {
    "fieldname": "block_name",
@@ -480,6 +478,30 @@
    "label": "Target Date"
   },
   {
+   "fieldname": "section_break_eval_remarks",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "evaluation_remarks",
+   "fieldtype": "Small Text",
+   "label": "Evaluation Remarks"
+  },
+  {
+   "fieldname": "column_break_eval_remarks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "evaluation_send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Evaluation Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "order_closure_tab",
+   "fieldtype": "Tab Break",
+   "label": "ORDER CLOSURE"
+  },
+  {
    "fieldname": "order_approval_section",
    "fieldtype": "Section Break",
    "label": "Order Approval"
@@ -593,7 +615,7 @@
   {
    "fieldname": "tab_4_tab",
    "fieldtype": "Tab Break",
-   "label": "ORDER CLOSURE"
+   "label": "EVALUATION PROCESS"
   },
   {
    "fieldname": "tab_5_tab",
@@ -1203,7 +1225,7 @@
   {
    "fieldname": "custom_others",
    "fieldtype": "Select",
-   "label": "Other Areas",
+   "label": "Others",
    "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
   },
   {
@@ -1331,52 +1353,25 @@
    "options": "Tender Attachment"
   },
   {
-   "fieldname": "vendor_evaluation_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
+   "fieldname": "vendor_evaluation_attachments",
+   "fieldtype": "Table",
+   "label": "Vendor Evaluation Attachments",
+   "options": "Tender Attachment"
   },
   {
-   "fieldname": "floating_enquiries_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
+   "fieldname": "floating_enquiries_attachments",
+   "fieldtype": "Table",
+   "label": "Floating Enquiries Attachments",
+   "options": "Tender Attachment"
   },
   {
-   "fieldname": "pre_bid_technical_meeting_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
+   "fieldname": "pre_bid_technical_meeting_attachments",
+   "fieldtype": "Table",
+   "label": "Pre-Bid / Technical Meeting Attachments",
+   "options": "Tender Attachment"
   },
   {
-   "fieldname": "negotiations_1_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "negotiations_2_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "order_approval_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "agreement_order_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "introduction_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "mobilization_remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "introduction_attachments",
+   "fieldname": "introduction_meeting_attachments",
    "fieldtype": "Table",
    "label": "Introduction Meeting Attachments",
    "options": "Tender Attachment"
@@ -1392,7 +1387,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-30 12:48:32.991841",
+ "modified": "2026-06-26 12:39:58.704683",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",
@@ -1416,6 +1411,5 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+ "states": []
 }
