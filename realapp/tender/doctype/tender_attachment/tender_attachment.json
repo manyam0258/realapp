@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-06-26 14:40:00.000000",
+ "creation": "2026-06-26 14:40:00",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -16,7 +16,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Stage",
-   "options": "Schematic\nBOQ\nNegotiation 1\nNegotiation 2\nOrder Approval\nOrder Issue\nIntroduction Meeting\nMobilization",
+   "options": "schematic\nboq\nvendor evaluation\nfloating enquiries\npre-bid / technical meeting\nnegotiation 1\nnegotiation 2\norder approval\nagreement/order\nintroduction meeting\nmobilization",
    "read_only": 1
   },
   {
@@ -24,6 +24,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Attachment",
+   "length": 500,
    "options": "URL"
   },
   {
@@ -36,7 +37,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-26 14:40:00.000000",
+ "modified": "2026-07-22 14:10:48.868679",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender Attachment",

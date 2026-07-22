@@ -244,7 +244,7 @@ doctype_js = {"Lead" : "realapp/custom/lead.js"}
 fixtures = [
     "Custom Field",
     {"dt": "Workflow", "filters": [["name", "=", "Tender Calendar Final WF"]]},
-    {"dt": "Workflow State", "filters": [["name", "in", ["Tender Creation", "Design Sample / Drawings", "BOQ Submission", "Order Closure", "Vendor Finalisation", "Completed"]]]},
-    {"dt": "Workflow Action", "filters": [["name", "in", ["Submit Design", "Submit BOQ", "Submit Order Closure", "Submit for Vendor Onboarding", "Vendor Onboarded", "Send Back"]]]}
+    {"dt": "Workflow State", "filters": [["name", "in", ["Tender Creation", "Design Sample / Drawings", "BOQ Submission", "Evaluation Process", "Order Closure", "Vendor Finalisation", "Completed"]]]},
+    {"dt": "Workflow Action", "filters": [["name", "in", ["Submit Design", "Submit BOQ", "Submit Evaluation", "Submit Order Closure", "Submit for Vendor Onboarding", "Vendor Onboarded", "Send Back"]]]}
 ]
 
