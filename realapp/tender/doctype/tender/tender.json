@@ -114,6 +114,7 @@
   "vendor_evaluation_work_initiation",
   "vendor_evaluation_revised_planned_date",
   "vendor_evaluation_submission_date",
+  "vendor_evaluation_attachments",
   "column_break_rpnu",
   "vendor_target_date",
   "vendor_evaluation_duration_left",
@@ -124,6 +125,7 @@
   "floating_enquiries_work_initiation",
   "floating_enquiries_revised_planned_date",
   "floating_enquiries_submission_date",
+  "floating_enquiries_attachments",
   "column_break_zozx",
   "floating_enquiries_target",
   "floating_enquiries_duration_left",
@@ -134,6 +136,7 @@
   "pre_bid_technical_meeting_work_initiation",
   "pre_bid_technical_meeting_revised_planned_date",
   "pre_bid_technical_meeting_submission_date",
+  "pre_bid_technical_meeting_attachments",
   "column_break_naga",
   "pre_bid_technical_meeting_target_date",
   "pre_bid_technical_meeting_duration_left",
@@ -161,6 +164,11 @@
   "negotiations_2_duration_left",
   "negotiations_2_revision_status",
   "negotiations_2_submit_status",
+  "section_break_eval_remarks",
+  "evaluation_remarks",
+  "column_break_eval_remarks",
+  "evaluation_send_back_remarks",
+  "order_closure_tab",
   "orders_approval_section",
   "order_approval_days",
   "order_approval_work_initiation",
@@ -201,6 +209,7 @@
   "introduction_work_initiation",
   "introduction_revised_planned_date",
   "introduction_submission_date",
+  "introduction_meeting_attachments",
   "column_break_vgli",
   "introduction_target_date",
   "introduction_duration_left",
@@ -211,6 +220,7 @@
   "mobilization_work_initiation",
   "mobilization_revised_planned_date",
   "mobilization_submit_date",
+  "mobilization_attachments",
   "vendor_onboarding_remarks",
   "column_break_udrn",
   "mobilization_target_date",
@@ -468,6 +478,30 @@
    "label": "Target Date"
   },
   {
+   "fieldname": "section_break_eval_remarks",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "evaluation_remarks",
+   "fieldtype": "Small Text",
+   "label": "Evaluation Remarks"
+  },
+  {
+   "fieldname": "column_break_eval_remarks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "evaluation_send_back_remarks",
+   "fieldtype": "Small Text",
+   "label": "Evaluation Send Back Remarks",
+   "read_only": 1
+  },
+  {
+   "fieldname": "order_closure_tab",
+   "fieldtype": "Tab Break",
+   "label": "ORDER CLOSURE"
+  },
+  {
    "fieldname": "order_approval_section",
    "fieldtype": "Section Break",
    "label": "Order Approval"
@@ -581,7 +615,7 @@
   {
    "fieldname": "tab_4_tab",
    "fieldtype": "Tab Break",
-   "label": "ORDER CLOSURE"
+   "label": "EVALUATION PROCESS"
   },
   {
    "fieldname": "tab_5_tab",
@@ -1316,6 +1350,36 @@
    "fieldname": "agreement_order_attachments",
    "fieldtype": "Table",
    "label": "Agreement/Order Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "vendor_evaluation_attachments",
+   "fieldtype": "Table",
+   "label": "Vendor Evaluation Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "floating_enquiries_attachments",
+   "fieldtype": "Table",
+   "label": "Floating Enquiries Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "pre_bid_technical_meeting_attachments",
+   "fieldtype": "Table",
+   "label": "Pre-Bid / Technical Meeting Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "introduction_meeting_attachments",
+   "fieldtype": "Table",
+   "label": "Introduction Meeting Attachments",
+   "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "mobilization_attachments",
+   "fieldtype": "Table",
+   "label": "Mobilization Attachments",
    "options": "Tender Attachment"
   }
  ],
