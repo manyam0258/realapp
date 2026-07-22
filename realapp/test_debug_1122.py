@@ -1,83 +1,119 @@
 import frappe
 from realapp.realapp.doctype.lead_scoring_engine.engine import LeadScoringEngine
 
-def test_test1122():
-    """Debug Test1122 template scoring"""
+def validate_engine():
+    print("Starting Lead Scoring Engine validation...")
     
-    # Get the lead
-    lead = frappe.get_doc("Lead", "CRM-LEAD-2025-00001")
-    
-    print("=" * 80)
-    print("LEAD DATA:")
-    print("=" * 80)
-    print(f"Name: {lead.name}")
-    print(f"Lead Name: {lead.lead_name}")
-    print(f"Employment Type: {lead.employment_type} (type: {type(lead.employment_type)})")
-    print(f"Marital Status: {lead.marital_status} (type: {type(lead.marital_status)})")
-    print(f"Age: {lead.lead_age} (type: {type(lead.lead_age)})")
-    print(f"Annual Income: {lead.annual_income} (type: {type(lead.annual_income)})")
-    print(f"Loan Pre-approved: {lead.loan_preapproved} (type: {type(lead.loan_preapproved)})")
-    print(f"Existing Property Owner: {lead.existing_property_owner} (type: {type(lead.existing_property_owner)})")
-    print(f"Has Kids: {lead.has_kids} (type: {type(lead.has_kids)})")
-    print(f"Site Visit Scheduled: {lead.site_visit_scheduled} (type: {type(lead.site_visit_scheduled)})")
-    print(f"Last Contact Days: {lead.last_contact_days} (type: {type(lead.last_contact_days)})")
-    print(f"Purchase Timeline: {lead.purchase_timeline} (type: {type(lead.purchase_timeline)})")
-    print(f"Decision Maker Type: {lead.decision_maker_type} (type: {type(lead.decision_maker_type)})")
-    print(f"Urgency Reason: {lead.urgency_reason} (type: {type(lead.urgency_reason)})")
-    print(f"Lead Latitude: {lead.lead_latitude}")
-    print(f"Lead Longitude: {lead.lead_longitude}")
-    
-    print("\n" + "=" * 80)
-    print("TESTING ENGINE:")
-    print("=" * 80)
-    
-    # Test engine
-    engine = LeadScoringEngine("Test1122")
-    template = engine.template
-    project = engine.project
-    
-    print(f"Template: {template.name}")
-    print(f"Project: {project.name}")
-    print(f"Project Lat: {project.latitude}, Lon: {project.longitude}")
-    
-    # Test each rule individually
-    print("\n" + "=" * 80)
-    print("RULE-BY-RULE EVALUATION:")
-    print("=" * 80)
-    
-    for rule in template.details:
-        if not rule.active:
-            continue
-            
-        param_def = engine.get_parameter_definition(rule.parameter)
-        if not param_def:
-            print(f"\n❌ {rule.parameter}: NO PARAMETER DEFINITION FOUND")
-            continue
+    # 1. Create a temporary project
+    proj_name = "Scoring Test Project"
+    if frappe.db.exists("Project", proj_name):
+        frappe.delete_doc("Project", proj_name, force=True)
         
-        # Get raw value
-        field_ref = param_def.field_reference
-        raw_value = lead.get(field_ref) if field_ref else None
+    project = frappe.get_doc({
+        "doctype": "Project",
+        "project_name": proj_name,
+        "latitude": 12.9716,
+        "longitude": 77.5946
+    }).insert(ignore_permissions=True)
+    print(f"Created temporary project: {project.name}")
+
+    # 2. Create temporary Lead Scoring Dimension
+    dim_name = "Financial"
+    if not frappe.db.exists("Lead Scoring Dimension", dim_name):
+        frappe.get_doc({
+            "doctype": "Lead Scoring Dimension",
+            "dimension_name": dim_name
+        }).insert(ignore_permissions=True)
+    print(f"Created temporary dimension: {dim_name}")
+
+    # 3. Create temporary lead scoring parameter
+    param_name = "Scoring Test Parameter"
+    if frappe.db.exists("Lead Scoring Parameter", param_name):
+        frappe.delete_doc("Lead Scoring Parameter", param_name, force=True)
         
-        # Evaluate
-        score = engine.evaluate_rule(rule, param_def, lead)
+    parameter = frappe.get_doc({
+        "doctype": "Lead Scoring Parameter",
+        "parameter_name": param_name,
+        "dimension": dim_name,
+        "scoring_logic_type": "Range",
+        "field_reference": "annual_income",
+        "max_score": 10,
+        "active": 1
+    }).insert(ignore_permissions=True)
+    print(f"Created temporary parameter: {parameter.name}")
+
+    # 3. Create temporary template
+    template_name = "Scoring Test Template"
+    if frappe.db.exists("Lead Scoring Template", template_name):
+        frappe.delete_doc("Lead Scoring Template", template_name, force=True)
         
-        print(f"\n📊 {rule.parameter}")
-        print(f"   Field: {field_ref}")
-        print(f"   Logic: {param_def.scoring_logic_type}")
-        print(f"   Criteria: {rule.criteria}")
-        print(f"   Raw Value: {raw_value} (type: {type(raw_value)})")
-        print(f"   Score: {score} / {rule.max_score}")
+    template = frappe.get_doc({
+        "doctype": "Lead Scoring Template",
+        "template_name": template_name,
+        "project": project.name,
+        "status": "Active",
+        "details": [
+            {
+                "parameter": parameter.name,
+                "weightage": 10,
+                "max_score": 10,
+                "criteria": "500000",
+                "scoring_logic_type": "Range",
+                "active": 1
+            }
+        ]
+    }).insert(ignore_permissions=True)
+    print(f"Created temporary template: {template.name}")
+
+    # 4. Create temporary lead
+    lead_name = "Scoring Test Lead"
+    existing = frappe.db.get_value("Lead", {"lead_name": lead_name})
+    if existing:
+        frappe.delete_doc("Lead", existing, force=True)
+        
+    lead = frappe.get_doc({
+        "doctype": "Lead",
+        "lead_name": lead_name,
+        "annual_income": 600000,
+        "latitude": 12.9716,
+        "longitude": 77.5946
+    }).insert(ignore_permissions=True)
+    print(f"Created temporary lead: {lead.name}")
+
+    # 5. Execute engine evaluation
+    print("Instantiating LeadScoringEngine...")
+    engine = LeadScoringEngine(template.name)
     
-    print("\n" + "=" * 80)
-    print("FINAL REPORT:")
-    print("=" * 80)
+    rule = template.details[0]
+    param_def = engine.get_parameter_definition(rule.parameter)
+    raw_val = lead.get(param_def.field_reference)
+    print(f"DEBUG: lead.annual_income = {lead.annual_income}")
+    print(f"DEBUG: raw_val = {raw_val}")
+    print(f"DEBUG: param_def.field_reference = {param_def.field_reference}")
+    print(f"DEBUG: rule.criteria = {rule.criteria}")
+    print(f"DEBUG: param_def.scoring_logic_type = {param_def.scoring_logic_type}")
+    print(f"DEBUG: rule.max_score = {rule.max_score} (type: {type(rule.max_score)})")
+    print(f"DEBUG: rule.scoring_logic_type = {rule.scoring_logic_type} (type: {type(rule.scoring_logic_type)})")
     
-    # Generate full report
+    # Run evaluate_rule
+    score = engine.evaluate_rule(rule, param_def, lead)
+    print(f"DEBUG: evaluate_rule returned = {score}")
+    
     total_possible = sum([float(d.max_score or 0) for d in template.details if d.active])
+    
+    print("Evaluating lead...")
     report = engine.evaluate_lead(lead, total_possible)
     
-    print(f"Total Score: {report['total_score']}")
-    print(f"Category: {report['category']}")
-    print(f"Section Scores: {report['section_scores']}")
+    print("=" * 40)
+    print(f"Total Score: {report['total_score']} (Expected: 100.0)")
+    print(f"Category: {report['category']} (Expected: Hot)")
+    print("=" * 40)
+    
+    # Assert correct behavior
+    assert report["total_score"] == 100.0, "Total score is not 100.0"
+    assert report["category"] == "Hot", "Category is not Hot"
+    
+    # Clean up created docs safely by rolling back
+    frappe.db.rollback()
+    print("Database changes rolled back. Lead Scoring Engine validated successfully!")
 
-test_test1122()

@@ -1,0 +1,593 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "SB-.MM.-.####",
+ "creation": "2025-12-04 12:33:17.074402",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "site_visit_date",
+  "date_of_booking",
+  "flat_no",
+  "sales_person",
+  "sales_manager",
+  "status",
+  "sap_sale_order",
+  "booking_form_hand_over_date_to_crm",
+  "column_break_pkfa",
+  "source",
+  "sub_source",
+  "existing_customer_referred_flat_number",
+  "existing_customer_referred_name",
+  "aos_date",
+  "applicant_details_section",
+  "applicant_name_1",
+  "mobile_number_1",
+  "email_1",
+  "pan_no_1",
+  "aadhar_number_1",
+  "date_of_birth_1",
+  "anniversary_date_1",
+  "industry",
+  "age",
+  "age_group",
+  "location",
+  "column_break_jjce",
+  "is_2nd_applicant",
+  "applicant_name_2",
+  "mobile_number_2",
+  "email_2",
+  "pan_no_2",
+  "aadhar_number_2",
+  "date_of_birth_2",
+  "anniversary_date_2",
+  "unit_info_section",
+  "base_price",
+  "floor",
+  "block",
+  "facing",
+  "salable_area",
+  "column_break_tfac",
+  "unit_cost",
+  "aos_value",
+  "aos_value_including_gst",
+  "net_payable",
+  "grand_total",
+  "section_break_qgse",
+  "offer",
+  "cash_back",
+  "gold_voucher",
+  "referral_amount",
+  "column_break_mhdy",
+  "remarks",
+  "section_break_jsrb",
+  "cp_invoice_raised",
+  "chanel_partner",
+  "cp_commission_amount",
+  "cp_commission_amount_with_taxes",
+  "tds_amount",
+  "net_amount",
+  "column_break_rzky",
+  "cp_invoice_raised_date",
+  "cp_invoice_paid_date",
+  "cp_transaction_id",
+  "incentive_details_section",
+  "incentive_amount",
+  "sales_person_incentive_amount",
+  "column_break_lsve",
+  "sales_manager_incentive_amount",
+  "paid_status",
+  "attachments_tab",
+  "booking_form",
+  "agreement_of_sales",
+  "extension_request_letter",
+  "tripartite_agreement",
+  "builder_noc",
+  "bank_noc",
+  "loan_processing",
+  "legal_notice",
+  "sbd_attachments"
+ ],
+ "fields": [
+  {
+   "fieldname": "site_visit_date",
+   "fieldtype": "Date",
+   "label": "Site Visit Date"
+  },
+  {
+   "fieldname": "date_of_booking",
+   "fieldtype": "Date",
+   "label": "Date of Booking"
+  },
+  {
+   "fieldname": "flat_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Flat No",
+   "options": "Unit"
+  },
+  {
+   "fieldname": "sales_person",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sales Person",
+   "options": "User"
+  },
+  {
+   "fieldname": "sales_manager",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sales Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nPending\nConfirmed\nToken Amount Paid\n10% Paid\n20% Paid\nAOS Done\nCancelled"
+  },
+  {
+   "fieldname": "sap_sale_order",
+   "fieldtype": "Data",
+   "label": "SAP Sale Order"
+  },
+  {
+   "fieldname": "booking_form_hand_over_date_to_crm",
+   "fieldtype": "Date",
+   "label": "Booking Form Hand Over Date to CRM"
+  },
+  {
+   "fieldname": "column_break_pkfa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Source",
+   "options": "Lead Source"
+  },
+  {
+   "fieldname": "sub_source",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Sub Source",
+   "options": "Sub Source"
+  },
+  {
+   "fieldname": "existing_customer_referred_flat_number",
+   "fieldtype": "Data",
+   "label": "Existing Customer Referred Flat Number"
+  },
+  {
+   "fieldname": "existing_customer_referred_name",
+   "fieldtype": "Data",
+   "label": "Existing Customer Referred Name"
+  },
+  {
+   "depends_on": "eval:doc.status == \"AOS Done\"",
+   "fieldname": "aos_date",
+   "fieldtype": "Date",
+   "label": "AOS Date"
+  },
+  {
+   "fieldname": "applicant_details_section",
+   "fieldtype": "Section Break",
+   "label": "Applicant Details"
+  },
+  {
+   "fieldname": "applicant_name_1",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Applicant Name 1"
+  },
+  {
+   "fieldname": "mobile_number_1",
+   "fieldtype": "Data",
+   "label": "Mobile Number 1"
+  },
+  {
+   "fieldname": "email_1",
+   "fieldtype": "Data",
+   "label": "Email 1"
+  },
+  {
+   "fieldname": "pan_no_1",
+   "fieldtype": "Data",
+   "label": "PAN No 1"
+  },
+  {
+   "fieldname": "aadhar_number_1",
+   "fieldtype": "Data",
+   "label": "Aadhar Number 1"
+  },
+  {
+   "fieldname": "date_of_birth_1",
+   "fieldtype": "Date",
+   "label": "Date of Birth 1"
+  },
+  {
+   "fieldname": "anniversary_date_1",
+   "fieldtype": "Date",
+   "label": "Anniversary Date 1"
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Link",
+   "label": "Industry",
+   "options": "Industry Type"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age"
+  },
+  {
+   "fieldname": "age_group",
+   "fieldtype": "Select",
+   "label": "Age Group",
+   "options": "\n20-30\n31-40\n41-50\n51-60\n61 Above"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "column_break_jjce",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_2nd_applicant",
+   "fieldtype": "Check",
+   "label": "Is 2nd Applicant"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "applicant_name_2",
+   "fieldtype": "Data",
+   "label": "Applicant Name 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "mobile_number_2",
+   "fieldtype": "Data",
+   "label": "Mobile Number 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "email_2",
+   "fieldtype": "Data",
+   "label": "Email 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "pan_no_2",
+   "fieldtype": "Data",
+   "label": "PAN No 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "aadhar_number_2",
+   "fieldtype": "Data",
+   "label": "Aadhar Number 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "date_of_birth_2",
+   "fieldtype": "Date",
+   "label": "Date of Birth 2"
+  },
+  {
+   "depends_on": "eval:doc.is_2nd_applicant == 1",
+   "fieldname": "anniversary_date_2",
+   "fieldtype": "Date",
+   "label": "Anniversary Date 2"
+  },
+  {
+   "fieldname": "unit_info_section",
+   "fieldtype": "Section Break",
+   "label": "Unit Info"
+  },
+  {
+   "fetch_from": "flat_no.basic_price_per_sft",
+   "fieldname": "base_price",
+   "fieldtype": "Float",
+   "label": "Base Price",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.floor_number",
+   "fieldname": "floor",
+   "fieldtype": "Int",
+   "label": "Floor",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.block",
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.facing",
+   "fieldname": "facing",
+   "fieldtype": "Data",
+   "label": "Facing",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.salable_area",
+   "fieldname": "salable_area",
+   "fieldtype": "Float",
+   "label": "Salable Area",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tfac",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "flat_no.unit_base_amount",
+   "fieldname": "unit_cost",
+   "fieldtype": "Float",
+   "label": "Unit Cost",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.aos_value",
+   "fieldname": "aos_value",
+   "fieldtype": "Float",
+   "label": "AOS Value",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.aos_value_gst",
+   "fieldname": "aos_value_including_gst",
+   "fieldtype": "Float",
+   "label": "AOS Value including GST",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "flat_no.net_payable",
+   "fieldname": "net_payable",
+   "fieldtype": "Float",
+   "label": "Net Payable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total"
+  },
+  {
+   "fieldname": "section_break_qgse",
+   "fieldtype": "Section Break",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "offer",
+   "fieldtype": "Select",
+   "label": "Offer",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.offer == 'Yes'",
+   "fieldname": "cash_back",
+   "fieldtype": "Currency",
+   "label": "Cash Back"
+  },
+  {
+   "depends_on": "eval:doc.offer == 'Yes'",
+   "fieldname": "gold_voucher",
+   "fieldtype": "Currency",
+   "label": "Gold Voucher"
+  },
+  {
+   "depends_on": "eval:doc.offer == 'Yes'",
+   "fieldname": "referral_amount",
+   "fieldtype": "Currency",
+   "label": "Referral Amount"
+  },
+  {
+   "fieldname": "column_break_mhdy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_jsrb",
+   "fieldtype": "Section Break",
+   "label": "Channel Partner"
+  },
+  {
+   "fieldname": "cp_invoice_raised",
+   "fieldtype": "Select",
+   "label": "CP Invoice Raised",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "chanel_partner",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "label": "Chanel Partner",
+   "options": "Channel Partner"
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "cp_commission_amount",
+   "fieldtype": "Currency",
+   "label": "CP Commission Amount",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "cp_commission_amount_with_taxes",
+   "fieldtype": "Currency",
+   "label": "CP Commission Amount With Taxes",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "tds_amount",
+   "fieldtype": "Currency",
+   "label": "TDS Amount",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "label": "Net Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rzky",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "cp_invoice_raised_date",
+   "fieldtype": "Date",
+   "label": "CP Invoice Raised Date"
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "cp_invoice_paid_date",
+   "fieldtype": "Date",
+   "label": "CP Invoice Paid Date"
+  },
+  {
+   "depends_on": "eval:doc.cp_invoice_raised == 'Yes'",
+   "fieldname": "cp_transaction_id",
+   "fieldtype": "Data",
+   "label": "CP Transaction ID"
+  },
+  {
+   "depends_on": "eval:doc.status == \"AOS Done\"",
+   "fieldname": "incentive_details_section",
+   "fieldtype": "Section Break",
+   "label": "Incentive Details"
+  },
+  {
+   "fieldname": "incentive_amount",
+   "fieldtype": "Currency",
+   "label": "Incentive Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_person_incentive_amount",
+   "fieldtype": "Currency",
+   "label": "Sales Person Incentive Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lsve",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_manager_incentive_amount",
+   "fieldtype": "Currency",
+   "label": "Sales Manager Incentive Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "paid_status",
+   "fieldtype": "Select",
+   "label": "Paid Status",
+   "options": "\nPaid\nUnpaid"
+  },
+  {
+   "fieldname": "attachments_tab",
+   "fieldtype": "Tab Break",
+   "label": "Attachments"
+  },
+  {
+   "fieldname": "booking_form",
+   "fieldtype": "Attach",
+   "label": "Booking Form"
+  },
+  {
+   "fieldname": "agreement_of_sales",
+   "fieldtype": "Attach",
+   "label": "Agreement of Sales"
+  },
+  {
+   "fieldname": "extension_request_letter",
+   "fieldtype": "Attach",
+   "label": "Letter of requests for extension of time for registration"
+  },
+  {
+   "fieldname": "tripartite_agreement",
+   "fieldtype": "Attach",
+   "label": "Tripartite Agreement"
+  },
+  {
+   "fieldname": "builder_noc",
+   "fieldtype": "Attach",
+   "label": "Builder NOC"
+  },
+  {
+   "fieldname": "bank_noc",
+   "fieldtype": "Attach",
+   "label": "Bank NOC"
+  },
+  {
+   "fieldname": "loan_processing",
+   "fieldtype": "Attach",
+   "label": "Loan Processing"
+  },
+  {
+   "fieldname": "legal_notice",
+   "fieldtype": "Attach",
+   "label": "Legal Notice"
+  },
+  {
+   "fieldname": "sbd_attachments",
+   "fieldtype": "Table",
+   "label": "Other Attachments",
+   "options": "SBD Attachment"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-19 23:21:28.199019",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Sales Booking Data",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:opportunity_stage",
+ "creation": "2026-06-03 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "stage_sl_no",
+  "opportunity_stage",
+  "op_short_name"
+ ],
+ "fields": [
+  {
+   "description": "Sequence number of the stage (1 = SV Done ... 13 = Closed Lost)",
+   "fieldname": "stage_sl_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Stage Sl No"
+  },
+  {
+   "fieldname": "opportunity_stage",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Opportunity Stage",
+   "unique": 1
+  },
+  {
+   "description": "Reporting bucket (e.g. 2. Cost Sheet, 3. Booking Process, 5. Sale, 6. Lost)",
+   "fieldname": "op_short_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Short Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-03 14:15:58.907352",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "OP Opportunity Stage",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Sales User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "stage_sl_no",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}

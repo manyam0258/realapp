@@ -1,15 +1,6 @@
 {
- "charts": [
-  {
-   "chart_name": "Tower Wise",
-   "label": "Tower Wise Units"
-  },
-  {
-   "chart_name": "Unit Types",
-   "label": "Unit Types"
-  }
- ],
- "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"GOIXGPNyMZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tower Wise Units\",\"col\":6}},{\"id\":\"PyRlKWA05n\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Unit Types\",\"col\":6}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}},{\"id\":\"BCi7LdbCrg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"n7RfkGJU9f\",\"type\":\"card\",\"data\":{\"card_name\":\"Lead Scoring\",\"col\":4}},{\"id\":\"LPNLr3ZpK4\",\"type\":\"card\",\"data\":{\"card_name\":\"Lead Scoring Report\",\"col\":4}}]",
+ "charts": [],
+ "content": "[{\"id\":\"XYHnj2Y5nS\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Realapp</span>\",\"col\":12}},{\"id\":\"GOIXGPNyMZ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tower Wise Units\",\"col\":6}},{\"id\":\"PyRlKWA05n\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Unit Types\",\"col\":6}},{\"id\":\"UvCNdXB5xA\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"wFel7dPWB3\",\"type\":\"card\",\"data\":{\"card_name\":\"Transactions\",\"col\":4}},{\"id\":\"BCi7LdbCrg\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"n7RfkGJU9f\",\"type\":\"card\",\"data\":{\"card_name\":\"Lead Scoring\",\"col\":4}},{\"id\":\"LPNLr3ZpK4\",\"type\":\"card\",\"data\":{\"card_name\":\"Lead Scoring Report\",\"col\":4}},{\"id\":\"C1T7QhQHB2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"fcH1eaMQbq\",\"type\":\"card\",\"data\":{\"card_name\":\"SFDC Reporting Master\",\"col\":4}},{\"id\":\"1Mgug6WI8u\",\"type\":\"card\",\"data\":{\"card_name\":\"SFDC Lead and Opp\",\"col\":4}}]",
  "creation": "2025-10-05 15:28:28.850428",
  "custom_blocks": [],
  "docstatus": 0,
@@ -22,55 +13,6 @@
  "is_hidden": 0,
  "label": "Realapp",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Transactions",
-   "link_count": 4,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Payment Scheme Template",
-   "link_count": 0,
-   "link_to": "Payment Scheme Template",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Cost Sheet",
-   "link_count": 0,
-   "link_to": "Cost Sheet",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Booking Order",
-   "link_count": 0,
-   "link_to": "Booking Order",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Realapp Settings",
-   "link_count": 0,
-   "link_to": "Realapp Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -189,23 +131,9 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 1,
-   "label": "Collection Report",
-   "link_count": 0,
-   "link_to": "Collection Report",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
    "is_query_report": 0,
-   "label": "Unit Dashboard",
-   "link_count": 0,
-   "link_to": "property-dashboard",
-   "link_type": "Page",
-   "label": "Lead Scoring",
-   "link_count": 3,
+   "label": "Transactions",
+   "link_count": 5,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -213,9 +141,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Lead Scoring Dimension",
+   "label": "Payment Scheme Template",
    "link_count": 0,
-   "link_to": "Lead Scoring Dimension",
+   "link_to": "Payment Scheme Template",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -223,9 +151,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Lead Scoring Parameter",
+   "label": "Cost Sheet",
    "link_count": 0,
-   "link_to": "Lead Scoring Parameter",
+   "link_to": "Cost Sheet",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -233,9 +161,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Lead Scoring Template",
+   "label": "Booking Order",
    "link_count": 0,
-   "link_to": "Lead Scoring Template",
+   "link_to": "Booking Order",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -243,8 +171,28 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Lead Scoring Report",
-   "link_count": 1,
+   "label": "Realapp Settings",
+   "link_count": 0,
+   "link_to": "Realapp Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Booking Data",
+   "link_count": 0,
+   "link_to": "Sales Booking Data",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SFDC Reporting Master",
+   "link_count": 6,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -252,16 +200,94 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Lead Scoring Report",
+   "label": "Lead Type",
    "link_count": 0,
-   "link_to": "Lead Scoring Report",
+   "link_to": "LD Lead Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Stage",
+   "link_count": 0,
+   "link_to": "LD Lead Stage",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Source",
+   "link_count": 0,
+   "link_to": "LD Lead Source",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Lead Sub Source",
+   "link_count": 0,
+   "link_to": "LD Lead Sub Source",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Opp Stage",
+   "link_count": 0,
+   "link_to": "OP Opportunity Stage",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Opp Sub Source",
+   "link_count": 0,
+   "link_to": "OP Opportunity Sub Source",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SFDC Lead and Opp",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SF Lead",
+   "link_count": 0,
+   "link_to": "sf_lead",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SF Opportunity",
+   "link_count": 0,
+   "link_to": "sf_opportunity",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-01-05 12:43:56.090540",
- "modified": "2025-10-30 10:48:15.991034",
+ "modified": "2026-06-03 14:24:38.821112",
  "modified_by": "Administrator",
  "module": "Realapp",
  "name": "Realapp",

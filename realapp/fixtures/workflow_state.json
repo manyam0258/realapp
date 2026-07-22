@@ -1,0 +1,65 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:32:29.374357",
+  "name": "Tender Creation",
+  "style": "",
+  "workflow_state_name": "Tender Creation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:32:39.624589",
+  "name": "Design Sample / Drawings",
+  "style": "",
+  "workflow_state_name": "Design Sample / Drawings"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:32:46.991145",
+  "name": "BOQ Submission",
+  "style": "",
+  "workflow_state_name": "BOQ Submission"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-07-22 11:30:00.000000",
+  "name": "Evaluation Process",
+  "style": "",
+  "workflow_state_name": "Evaluation Process"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:32:58.114260",
+  "name": "Order Closure",
+  "style": "",
+  "workflow_state_name": "Order Closure"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:33:05.798107",
+  "name": "Vendor Finalisation",
+  "style": "",
+  "workflow_state_name": "Vendor Finalisation"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-06-17 16:33:55.316717",
+  "name": "Completed",
+  "style": "",
+  "workflow_state_name": "Completed"
+ }
+]
