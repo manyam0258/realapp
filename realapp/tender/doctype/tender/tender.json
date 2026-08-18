@@ -11,18 +11,19 @@
   "custom_sno",
   "data_reference",
   "initiated_date",
-  "block_name",
+  "custom_location",
   "custom_work_package",
   "column_break_rstz",
   "custom_work_category",
   "work_category_others",
   "ref_no",
   "project",
-  "custom_others",
+  "block_name",
   "floor_level_section",
   "from",
-  "column_break_iqqt",
   "to",
+  "column_break_iqqt",
+  "floor_level",
   "section_break_yvjo",
   "unit",
   "new__amd",
@@ -32,7 +33,6 @@
   "order_type",
   "indigenous_import",
   "approx_value_in_lakhs",
-  "others",
   "schematic_readyness_section",
   "no_of_days_planned",
   "column_break_ztuk",
@@ -259,10 +259,11 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "RISE",
    "fieldname": "project",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Project",
-   "options": "Project"
+   "read_only": 1
   },
   {
    "fieldname": "block_name",
@@ -298,9 +299,8 @@
   },
   {
    "fieldname": "unit",
-   "fieldtype": "Link",
-   "label": "Unit",
-   "options": "Unit"
+   "fieldtype": "Data",
+   "label": "Unit"
   },
   {
    "fieldname": "column_break_cirl",
@@ -983,7 +983,7 @@
   {
    "fieldname": "negotiations_2_rev_plan_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "negotiations_2_target_date",
@@ -1114,7 +1114,7 @@
   {
    "fieldname": "floating_enquiries_revised_planned_date",
    "fieldtype": "Date",
-   "label": "Revised Planned Date"
+   "label": "Revised Target Date"
   },
   {
    "fieldname": "floating_enquiries_work_initiation",
@@ -1201,12 +1201,6 @@
    "label": "Vendor Details"
   },
   {
-   "fieldname": "others",
-   "fieldtype": "Select",
-   "label": "Others",
-   "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
-  },
-  {
    "fieldname": "custom_sno",
    "fieldtype": "Int",
    "label": "S.No"
@@ -1221,12 +1215,6 @@
    "fieldname": "custom_work_package",
    "fieldtype": "Data",
    "label": "Work Package"
-  },
-  {
-   "fieldname": "custom_others",
-   "fieldtype": "Select",
-   "label": "Others",
-   "options": "\nAll Towers\nAll Basements\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
   },
   {
    "depends_on": "eval:doc.custom_work_category == 'Others'",
@@ -1381,13 +1369,25 @@
    "fieldtype": "Table",
    "label": "Mobilization Attachments",
    "options": "Tender Attachment"
+  },
+  {
+   "fieldname": "custom_location",
+   "fieldtype": "Select",
+   "label": "Location",
+   "options": "\nAll Towers\nAll Basements\nBlock - wise\nBase 1\nBase 2\nBase 3\nPodium/stilt\nInfra\nClub house\nExternal Development"
+  },
+  {
+   "fieldname": "floor_level",
+   "fieldtype": "Select",
+   "label": "Floor Level",
+   "options": "\nAll Floors\nFloor - wise"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-26 12:39:58.704683",
+ "modified": "2026-08-18 11:38:08.264962",
  "modified_by": "Administrator",
  "module": "Tender",
  "name": "Tender",

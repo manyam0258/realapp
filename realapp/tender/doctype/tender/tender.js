@@ -547,17 +547,17 @@ function set_field_value(frm, fieldname, value, silent=false) {
     }
 }
 
-function get_duration_left_str(target_date, work_initiation=null) {
-    if (!target_date) return "";
-    let comparison_date = work_initiation ? work_initiation : frappe.datetime.get_today();
-    let diff = frappe.datetime.get_day_diff(target_date, comparison_date);
+function get_duration_left_str(revised_target_date) {
+    if (!revised_target_date) return "";
+    let today = frappe.datetime.get_today();
+    let diff = frappe.datetime.get_day_diff(revised_target_date, today);
     if (diff > 0) {
-        return diff === 1 ? "1 day left" : diff + " days left";
+        return diff === 1 ? "1 Day Left" : diff + " Days Left";
     } else if (diff === 0) {
-        return "Due today";
+        return "Due Today";
     } else {
         let abs_diff = Math.abs(diff);
-        return abs_diff === 1 ? "1 day delayed" : abs_diff + " days delayed";
+        return abs_diff === 1 ? "1 Day Delayed" : abs_diff + " Days Delayed";
     }
 }
 
@@ -774,13 +774,9 @@ function calculate_vendor_mobilization_target_date(frm) {
     }
 }
 
-function get_revised_date(start_date, target_date, days) {
-    if (start_date && target_date && days) {
-        let start = frappe.datetime.str_to_obj(start_date);
-        let target = frappe.datetime.str_to_obj(target_date);
-        if (start > target) {
-            return add_working_days(start_date, days);
-        }
+function get_revised_date(start_date, days) {
+    if (start_date && days) {
+        return add_working_days(start_date, days);
     }
     return null;
 }
@@ -789,10 +785,10 @@ function update_design_sample_section(frm, silent=false) {
     set_field_value(frm, "design_sample_days_planned", frm.doc.no_of_days_planned || null, silent);
     set_field_value(frm, "design_sample_target_date", frm.doc.target_date || null, silent);
     
-    let revised = get_revised_date(frm.doc.work_initiation, frm.doc.target_date, frm.doc.no_of_days_planned);
+    let revised = get_revised_date(frm.doc.work_initiation, frm.doc.no_of_days_planned);
     set_field_value(frm, "revised_planned_date", revised, silent);
     
-    set_field_value(frm, "duration_left", get_duration_left_str(frm.doc.design_sample_target_date, frm.doc.work_initiation), silent);
+    set_field_value(frm, "duration_left", get_duration_left_str(frm.doc.revised_planned_date), silent);
     if (frm.doc.submission_date) {
         set_field_value(frm, "submission_status", "Submitted", silent);
     } else {
@@ -809,10 +805,10 @@ function update_boq_section(frm, silent=false) {
         set_field_value(frm, "boq_work_initiation", get_next_working_day(frm.doc.submission_date), silent);
     }
     
-    let revised = get_revised_date(frm.doc.boq_work_initiation, frm.doc.boq_target_date, frm.doc.boq_submission_days_planned);
+    let revised = get_revised_date(frm.doc.boq_work_initiation, frm.doc.boq_submission_days_planned);
     set_field_value(frm, "revised_date", revised, silent);
     
-    set_field_value(frm, "boq_duration_left", get_duration_left_str(frm.doc.boq_target_date, frm.doc.boq_work_initiation), silent);
+    set_field_value(frm, "boq_duration_left", get_duration_left_str(frm.doc.revised_date), silent);
     if (frm.doc.boq_submission_date) {
         set_field_value(frm, "boq_submission_status", "Submitted", silent);
     } else {
@@ -829,10 +825,10 @@ function update_vendor_evaluation_section(frm, silent=false) {
         set_field_value(frm, "vendor_evaluation_work_initiation", get_next_working_day(frm.doc.boq_submission_date), silent);
     }
     
-    let revised = get_revised_date(frm.doc.vendor_evaluation_work_initiation, frm.doc.vendor_target_date, frm.doc.introduction_meet_days_planned);
+    let revised = get_revised_date(frm.doc.vendor_evaluation_work_initiation, frm.doc.introduction_meet_days_planned);
     set_field_value(frm, "vendor_evaluation_revised_planned_date", revised, silent);
     
-    set_field_value(frm, "vendor_evaluation_duration_left", get_duration_left_str(frm.doc.vendor_target_date, frm.doc.vendor_evaluation_work_initiation), silent);
+    set_field_value(frm, "vendor_evaluation_duration_left", get_duration_left_str(frm.doc.vendor_evaluation_revised_planned_date), silent);
     if (frm.doc.vendor_evaluation_submission_date) {
         set_field_value(frm, "vendor_evaluation_submission_status", "Submitted", silent);
     } else {
@@ -849,10 +845,10 @@ function update_introduction_section(frm, silent=false) {
         set_field_value(frm, "introduction_work_initiation", get_next_working_day(frm.doc.agreement_order_submit_date), silent);
     }
     
-    let revised = get_revised_date(frm.doc.introduction_work_initiation, frm.doc.introduction_target_date, frm.doc.introduction_meeting_days_planned);
+    let revised = get_revised_date(frm.doc.introduction_work_initiation, frm.doc.introduction_meeting_days_planned);
     set_field_value(frm, "introduction_revised_planned_date", revised, silent);
     
-    set_field_value(frm, "introduction_duration_left", get_duration_left_str(frm.doc.introduction_target_date, frm.doc.introduction_work_initiation), silent);
+    set_field_value(frm, "introduction_duration_left", get_duration_left_str(frm.doc.introduction_revised_planned_date), silent);
     if (frm.doc.introduction_submission_date) {
         set_field_value(frm, "introduction_submission_status", "Submitted", silent);
     } else {
@@ -894,31 +890,31 @@ function update_order_closure_section(frm, silent=false) {
         set_field_value(frm, "agreement_order_work_initiation", get_next_working_day(frm.doc.order_approval_submit_date), silent);
     }
 
-    let float_revised = get_revised_date(frm.doc.floating_enquiries_work_initiation, frm.doc.floating_enquiries_target, frm.doc.floating_enquiries_days_planned);
+    let float_revised = get_revised_date(frm.doc.floating_enquiries_work_initiation, frm.doc.floating_enquiries_days_planned);
     set_field_value(frm, "floating_enquiries_revised_planned_date", float_revised, silent);
 
-    let prebid_revised = get_revised_date(frm.doc.pre_bid_technical_meeting_work_initiation, frm.doc.pre_bid_technical_meeting_target_date, frm.doc.pre_bid_no_of_days_planned);
+    let prebid_revised = get_revised_date(frm.doc.pre_bid_technical_meeting_work_initiation, frm.doc.pre_bid_no_of_days_planned);
     set_field_value(frm, "pre_bid_technical_meeting_revised_planned_date", prebid_revised, silent);
 
-    let neg1_revised = get_revised_date(frm.doc.negotiations_1_work_initiation, frm.doc.negotiations_1_target_date, frm.doc.quotation_1_days_planned);
+    let neg1_revised = get_revised_date(frm.doc.negotiations_1_work_initiation, frm.doc.quotation_1_days_planned);
     set_field_value(frm, "negotiations_1_rev_plan_date", neg1_revised, silent);
 
-    let neg2_revised = get_revised_date(frm.doc.negotiations_2_work_initiation, frm.doc.negotiations_2_target_date, frm.doc.quotation_2_days_planned);
+    let neg2_revised = get_revised_date(frm.doc.negotiations_2_work_initiation, frm.doc.quotation_2_days_planned);
     set_field_value(frm, "negotiations_2_rev_plan_date", neg2_revised, silent);
 
-    let approval_revised = get_revised_date(frm.doc.order_approval_work_initiation, frm.doc.order_approval_target, frm.doc.order_approval_days_planned);
+    let approval_revised = get_revised_date(frm.doc.order_approval_work_initiation, frm.doc.order_approval_days_planned);
     set_field_value(frm, "order_approval_revised_date", approval_revised, silent);
 
-    let agreement_revised = get_revised_date(frm.doc.agreement_order_work_initiation, frm.doc.agreement_order_target_date, frm.doc.agreement_no_of_days_planned);
+    let agreement_revised = get_revised_date(frm.doc.agreement_order_work_initiation, frm.doc.agreement_no_of_days_planned);
     set_field_value(frm, "agreement_order_revised_plan_date", agreement_revised, silent);
 
     // Timeline Status for all Order Closure sub-stages
-    set_field_value(frm, "floating_enquiries_duration_left", get_duration_left_str(frm.doc.floating_enquiries_target, frm.doc.floating_enquiries_work_initiation), silent);
-    set_field_value(frm, "pre_bid_technical_meeting_duration_left", get_duration_left_str(frm.doc.pre_bid_technical_meeting_target_date, frm.doc.pre_bid_technical_meeting_work_initiation), silent);
-    set_field_value(frm, "negotiations_1_duration_left", get_duration_left_str(frm.doc.negotiations_1_target_date, frm.doc.negotiations_1_work_initiation), silent);
-    set_field_value(frm, "negotiations_2_duration_left", get_duration_left_str(frm.doc.negotiations_2_target_date, frm.doc.negotiations_2_work_initiation), silent);
-    set_field_value(frm, "order_approval_duration_left", get_duration_left_str(frm.doc.order_approval_target, frm.doc.order_approval_work_initiation), silent);
-    set_field_value(frm, "agreement_order_duration_left", get_duration_left_str(frm.doc.agreement_order_target_date, frm.doc.agreement_order_work_initiation), silent);
+    set_field_value(frm, "floating_enquiries_duration_left", get_duration_left_str(frm.doc.floating_enquiries_revised_planned_date), silent);
+    set_field_value(frm, "pre_bid_technical_meeting_duration_left", get_duration_left_str(frm.doc.pre_bid_technical_meeting_revised_planned_date), silent);
+    set_field_value(frm, "negotiations_1_duration_left", get_duration_left_str(frm.doc.negotiations_1_rev_plan_date), silent);
+    set_field_value(frm, "negotiations_2_duration_left", get_duration_left_str(frm.doc.negotiations_2_rev_plan_date), silent);
+    set_field_value(frm, "order_approval_duration_left", get_duration_left_str(frm.doc.order_approval_revised_date), silent);
+    set_field_value(frm, "agreement_order_duration_left", get_duration_left_str(frm.doc.agreement_order_revised_plan_date), silent);
     
     if (frm.doc.floating_enquiries_submission_date) {
         set_field_value(frm, "floating_enquiries_submission_status", "Submitted", silent);
@@ -955,16 +951,18 @@ function update_order_closure_section(frm, silent=false) {
 function update_vendor_onboarding_section(frm, silent=false) {
     set_field_value(frm, "final_vendor_name", frm.doc.finalized_vendor_name || null, silent);
     set_field_value(frm, "vendor_contact_details", frm.doc.contact_details || null, silent);
+    set_field_value(frm, "mobilization_days_planned", frm.doc.vendor_days_planned || null, silent);
+    set_field_value(frm, "mobilization_target_date", frm.doc.vendor_mobilization_target_date || null, silent);
     
     // Conditional to allow manual edits
     if (!frm.doc.mobilization_work_initiation && frm.doc.introduction_submission_date) {
         set_field_value(frm, "mobilization_work_initiation", get_next_working_day(frm.doc.introduction_submission_date), silent);
     }
     
-    let revised = get_revised_date(frm.doc.mobilization_work_initiation, frm.doc.mobilization_target_date, frm.doc.mobilization_days_planned);
+    let revised = get_revised_date(frm.doc.mobilization_work_initiation, frm.doc.mobilization_days_planned || frm.doc.vendor_days_planned);
     set_field_value(frm, "mobilization_revised_planned_date", revised, silent);
     
-    set_field_value(frm, "mobilization_duration_left", get_duration_left_str(frm.doc.mobilization_target_date, frm.doc.mobilization_work_initiation), silent);
+    set_field_value(frm, "mobilization_duration_left", get_duration_left_str(frm.doc.mobilization_revised_planned_date), silent);
     if (frm.doc.introduction_submission_date) {
         set_field_value(frm, "introduction_submission_status", "Submitted", silent);
     } else {
