@@ -109,8 +109,8 @@ class CostSheet(Document):
         gst_rate = flt(s.gst_rate or 5)
         tds_rate = flt(s.tds_rate or 1)
 
-        # Full Unit Value mirrors Unit’s formula; fallback to base * area + ex_bp
-        self.full_unit_value = flt(self._unit_ctx.full_unit_value or (base * area + ex_bp), 2)
+        # Full Unit Value mirrors Unit’s formula: base * area + ex_bp
+        self.full_unit_value = flt(base * area + ex_bp, 2)
 
         # AOS Computation (includes Car Parking)
         self.aos_value = flt(base * area + ex_bp + car_park, 2)
