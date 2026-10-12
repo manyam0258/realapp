@@ -17,9 +17,9 @@ def execute():
     for fieldname, datatype in fields_to_add.items():
         if fieldname not in existing_fields:
             frappe.db.add_column(doctype, fieldname, datatype)
-            frappe.logger().info(f"✅ Added missing column '{fieldname}' in {doctype} table.")
+            frappe.logger().info(f"Added missing column '{fieldname}' in {doctype} table.")
         else:
-            frappe.logger().info(f"ℹ️ Column '{fieldname}' already exists in {doctype} table.")
+            frappe.logger().info(f"Column '{fieldname}' already exists in {doctype} table.")
 
     frappe.db.commit()
-    frappe.logger().info(f"🔄 Reloaded {doctype} doctype successfully with new premium amount fields.")
+    frappe.logger().info(f"Reloaded {doctype} doctype successfully with new premium amount fields.")
