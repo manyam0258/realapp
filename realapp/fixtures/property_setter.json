@@ -1,0 +1,18 @@
+[
+ {
+  "default_value": null,
+  "doc_type": "Purchase Order Item",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "rate",
+  "is_system_generated": 1,
+  "modified": "2026-10-09 11:47:41.548114",
+  "module": null,
+  "name": "Purchase Order Item-rate-reqd",
+  "property": "reqd",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ }
+]

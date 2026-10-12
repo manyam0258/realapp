@@ -248,3 +248,9 @@ fixtures = [
     {"dt": "Workflow Action", "filters": [["name", "in", ["Submit Design", "Submit BOQ", "Submit Evaluation", "Submit Order Closure", "Submit for Vendor Onboarding", "Vendor Onboarded", "Send Back"]]]}
 ]
 
+
+doc_events = {
+    "Purchase Order": {
+        "validate": "realapp.overrides.purchase_order.validate_items"
+    }
+}
