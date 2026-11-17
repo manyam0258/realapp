@@ -1,0 +1,202 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2026-10-06 11:23:33.348842",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_details_section",
+  "customer",
+  "customer_name",
+  "email",
+  "mobile_no",
+  "unit",
+  "consent_choices_section",
+  "phone_calls",
+  "call_recording",
+  "column_break_ydvq",
+  "digital_communication",
+  "marketing_communication",
+  "status_and_tracking_section",
+  "status",
+  "responded_on",
+  "reminder_count",
+  "otp_hash",
+  "otp_expiry",
+  "otp_sent_on",
+  "column_break_pdrd",
+  "first_clicked_on",
+  "click_count",
+  "notice_version",
+  "token",
+  "otp_attempts"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "label": "Unit"
+  },
+  {
+   "fieldname": "customer_details_section",
+   "fieldtype": "Section Break",
+   "label": "Customer details"
+  },
+  {
+   "fieldname": "consent_choices_section",
+   "fieldtype": "Section Break",
+   "label": "Consent choices"
+  },
+  {
+   "default": "0",
+   "fieldname": "phone_calls",
+   "fieldtype": "Check",
+   "label": "Phone Calls"
+  },
+  {
+   "default": "0",
+   "fieldname": "call_recording",
+   "fieldtype": "Check",
+   "label": "Call Recording"
+  },
+  {
+   "fieldname": "column_break_ydvq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "digital_communication",
+   "fieldtype": "Check",
+   "label": "Digital Communication"
+  },
+  {
+   "default": "0",
+   "fieldname": "marketing_communication",
+   "fieldtype": "Check",
+   "label": "Marketing Communication"
+  },
+  {
+   "fieldname": "status_and_tracking_section",
+   "fieldtype": "Section Break",
+   "label": "Status and tracking"
+  },
+  {
+   "fieldname": "column_break_pdrd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nResponded\nNo Response\nWithdrawn"
+  },
+  {
+   "fieldname": "responded_on",
+   "fieldtype": "Datetime",
+   "label": "Responded On"
+  },
+  {
+   "fieldname": "reminder_count",
+   "fieldtype": "Int",
+   "label": "Reminder Count"
+  },
+  {
+   "fieldname": "first_clicked_on",
+   "fieldtype": "Datetime",
+   "label": "First Clicked On"
+  },
+  {
+   "fieldname": "click_count",
+   "fieldtype": "Int",
+   "label": "Click Count"
+  },
+  {
+   "fieldname": "notice_version",
+   "fieldtype": "Data",
+   "label": "Notice Version"
+  },
+  {
+   "fieldname": "token",
+   "fieldtype": "Data",
+   "label": "Token"
+  },
+  {
+   "fieldname": "otp_hash",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "OTP Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "otp_expiry",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "OTP Expiry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "otp_sent_on",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "OTP Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "otp_attempts",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "OTP Attempts",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-10-07 10:47:48.510094",
+ "modified_by": "Administrator",
+ "module": "Realapp",
+ "name": "Marketing Consent",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
